@@ -62,3 +62,14 @@ var querypg = function (phrase, params, callback) {
 var phrasebook  = generateSwigqlPhrasebook(__dirname + '/queries/', [
   'test'
 ]);
+
+exports.test = function (callback) {
+  querypg('test', {}, function (err, rows) {
+    if (err) {
+      return callback(err);
+    } else {
+      return callback(null, rows);
+    }
+  });
+};
+

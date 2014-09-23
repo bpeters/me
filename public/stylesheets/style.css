@@ -1,0 +1,71 @@
+.header {
+  background-color: #000;
+  height: 60px;
+}
+.header .menu {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 60px;
+  width: 60px;
+  color: #ddd;
+  text-align: center;
+  padding-top: 20px;
+  font-size: 20px
+}
+.header .menu:hover {
+  cursor:pointer;
+  color: #ccc;
+}
+.sidebar {
+  position: fixed;
+  width: 60px;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  background-color: #ddd;
+  display: none;
+}
+.sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sidebar ul li {
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.sidebar ul li:hover {
+  cursor:pointer;
+  background-color: #ccc;
+}
+.sidebar ul li span {
+  color: #000;
+  font-size: 20px
+}
+.sidebar-add {
+  position: fixed;
+  width: 400px;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  z-index: 900;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  background-color: #aaa;
+  display: none;
+}
+.sidebar-add .cancel-add {
+  color: #fff;
+  margin-top: 20px;
+  margin-left: 20px;
+  font-size: 20px;
+}
+.sidebar-add .cancel-add:hover {
+  cursor:pointer;
+  color: #ddd;
+}

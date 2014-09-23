@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-var logfmt = require('logfmt');
 var path = require('path');
 var swig  = require('swig');
 var _      = require('lodash');
@@ -13,7 +12,6 @@ var GoogleStrategy = require('passport-google').Strategy;
 var passwordHash = require('password-hash');
 var flash = require('connect-flash');
 var routes = require('./routes');
-var model = require('./model');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -24,7 +22,6 @@ app.use(bodyParser.json());
 // parse application/vnd.api+json as json
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
-app.use(logfmt.requestLogger());
 app.use(express.cookieParser());
 app.use(express.session({ secret: 'happy days' }));
 app.use(flash());

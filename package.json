@@ -1,6 +1,6 @@
 {
-  "name": "mission-everything",
-  "description": "mission",
+  "name": "me",
+  "description": "mission everything",
   "version": "0.0.1-2",
   "private": true,
   "dependencies": {
@@ -8,7 +8,6 @@
     "config": "^1.0.2",
     "connect-flash": "^0.1.1",
     "express": "3.x",
-    "lodash": "^2.4.1",
     "logfmt": "^1.1.2",
     "passport": "^0.2.0",
     "passport-facebook": "^1.0.3",

@@ -2,7 +2,7 @@
   background-color: #000;
   height: 60px;
 }
-.header .menu {
+.header .user {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -13,11 +13,38 @@
   padding-top: 20px;
   font-size: 20px
 }
-.header .menu:hover {
+.header .user:hover {
   cursor:pointer;
   color: #ccc;
 }
-.sidebar {
+.header .globe {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  height: 60px;
+  width: 60px;
+  color: #ddd;
+  text-align: center;
+  padding-top: 20px;
+  font-size: 20px
+}
+.header .globe:hover {
+  cursor:pointer;
+  color: #ccc;
+}
+.sidebar-right {
+  position: fixed;
+  width: 60px;
+  top: 60px;
+  bottom: 0;
+  right: 0;
+  z-index: 1000;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  background-color: #ddd;
+  display: none;
+}
+.sidebar-left {
   position: fixed;
   width: 60px;
   top: 60px;
@@ -47,7 +74,7 @@
   color: #000;
   font-size: 20px
 }
-.sidebar-add {
+.add-mission {
   position: fixed;
   width: 400px;
   top: 60px;
@@ -59,13 +86,30 @@
   background-color: #aaa;
   display: none;
 }
-.sidebar-add .cancel-add {
+.add-mission .cancel-mission-btn {
   color: #fff;
   margin-top: 20px;
   margin-left: 20px;
   font-size: 20px;
 }
-.sidebar-add .cancel-add:hover {
+.add-mission .cancel-mission-btn:hover {
   cursor:pointer;
   color: #ddd;
 }
+.add-mission .container {
+  width: 360px;
+  margin-left: 20px;
+  text-align: center;
+}
+.add-mission .container h2 {
+  color: #fff;
+}
+.add-mission .container input {
+  width: 100%;
+  margin-top: 20px;
+}
+.add-mission .container button {
+  width: 100%;
+  margin-top: 20px;
+}
+

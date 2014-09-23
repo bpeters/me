@@ -4,22 +4,42 @@
 <div class="container-fluid">
   <div class="row header">
     <div class="col-md-4">
-      <span class="menu glyphicon glyphicon-globe"></span>
+      <span class="user glyphicon glyphicon-user"></span>
     </div>
-    <div class="col-md-8"></div>
+    <div class="col-md-8">
+      <span class="globe glyphicon glyphicon-globe"></span>
+    </div>
   </div>
   <div class="row">
 
-    <div class="sidebar">
+    <div class="sidebar-left sidebar">
       <ul>
-        <li class="add">
+        <li class="add-mission-btn">
           <span class="glyphicon glyphicon-plus"></span>
         </li>
       </ul>
     </div>
 
-    <div class="sidebar-add">
-      <span class="cancel-add glyphicon glyphicon-remove"></span>
+    <div class="sidebar-right sidebar">
+      <ul>
+        <li class="add-objective-btn">
+          <span class="glyphicon glyphicon-plus"></span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="add-mission">
+      <span class="cancel-mission-btn glyphicon glyphicon-remove"></span>
+      <div class="container">
+        <div class="row">
+          <h2>Create New Mission</h2>
+        </div>
+        <div class="row">
+          <input class="form-control input-lg" type="text" placeholder="Mission Name">
+          <button type="button" class="btn btn-default btn-lg">Create Mission</button>
+        </div>
+
+      </div>
     </div>
 
 

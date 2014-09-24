@@ -1,6 +1,12 @@
 .header {
   background-color: #000;
   height: 60px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 1000;
+  width: 100%;
+  margin: 0;
 }
 .header .user {
   position: fixed;
@@ -74,7 +80,7 @@
   color: #000;
   font-size: 20px
 }
-.add-mission {
+.create-mission {
   position: fixed;
   width: 400px;
   top: 60px;
@@ -83,33 +89,81 @@
   z-index: 900;
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-  background-color: #aaa;
+  background-color: rgba(0,0,0,0.5);
   display: none;
+
 }
-.add-mission .cancel-mission-btn {
+.create-mission .cancel-mission-btn {
   color: #fff;
+  float: left;
   margin-top: 20px;
   margin-left: 20px;
   font-size: 20px;
 }
-.add-mission .cancel-mission-btn:hover {
+.create-mission .cancel-mission-btn:hover {
   cursor:pointer;
   color: #ddd;
 }
-.add-mission .container {
+.create-mission .container {
   width: 360px;
   margin-left: 20px;
   text-align: center;
 }
-.add-mission .container h2 {
+.create-mission .container h2 {
   color: #fff;
 }
-.add-mission .container input {
+.create-mission .container input {
   width: 100%;
   margin-top: 20px;
 }
-.add-mission .container button {
+.create-mission .container button {
   width: 100%;
   margin-top: 20px;
+}
+.create-objective {
+  position: fixed;
+  width: 400px;
+  top: 60px;
+  bottom: 0;
+  right: 0;
+  z-index: 900;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  background-color: rgba(0,0,0,0.5);
+  display: none;
+}
+.create-objective .cancel-objective-btn {
+  color: #fff;
+  float: right;
+  margin-right: 20px;
+  margin-top: 20px;
+  font-size: 20px;
+}
+.create-objective .cancel-objective-btn:hover {
+  cursor:pointer;
+  color: #ddd;
+}
+.create-objective .container {
+  width: 360px;
+  margin-right: 20px;
+  text-align: center;
+}
+.create-objective .container h2 {
+  color: #fff;
+}
+.create-objective .container input {
+  width: 100%;
+  margin-top: 20px;
+}
+.create-objective .container button {
+  width: 100%;
+  margin-top: 20px;
+}
+.objectives {
+  margin-top: 140px;
+}
+.objective-action {
+  margin-right: 10px;
+  display: none;
 }
 

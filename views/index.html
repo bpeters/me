@@ -3,32 +3,53 @@
 {% block content %}
 <div class="container-fluid">
   <div class="row header">
-    <div class="col-md-4">
       <span class="user glyphicon glyphicon-user"></span>
-    </div>
-    <div class="col-md-8">
       <span class="globe glyphicon glyphicon-globe"></span>
-    </div>
   </div>
   <div class="row">
 
     <div class="sidebar-left sidebar">
       <ul>
-        <li class="add-mission-btn">
+        <li class="create-mission-btn">
           <span class="glyphicon glyphicon-plus"></span>
         </li>
       </ul>
+    </div>
+
+    <div class="col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main">
+      <div class="objectives table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Objectives</th>
+              <th><span class="glyphicon glyphicon-ok"></span></th>
+              <th><span class="glyphicon glyphicon-heart"></span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="objective">
+                <span class="objective-action glyphicon glyphicon-ok"></span>
+                <span class="objective-action glyphicon glyphicon-heart"></span>
+                Lorem ipsum dolor sit amet
+              </td>
+              <td>120</td>
+              <td>100</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="sidebar-right sidebar">
       <ul>
-        <li class="add-objective-btn">
+        <li class="create-objective-btn">
           <span class="glyphicon glyphicon-plus"></span>
         </li>
       </ul>
     </div>
 
-    <div class="add-mission">
+    <div class="create-mission">
       <span class="cancel-mission-btn glyphicon glyphicon-remove"></span>
       <div class="container">
         <div class="row">
@@ -38,7 +59,19 @@
           <input class="form-control input-lg" type="text" placeholder="Mission Name">
           <button type="button" class="btn btn-default btn-lg">Create Mission</button>
         </div>
+      </div>
+    </div>
 
+    <div class="create-objective">
+      <span class="cancel-objective-btn glyphicon glyphicon-remove"></span>
+      <div class="container">
+        <div class="row">
+          <h2>Create New Objective</h2>
+        </div>
+        <div class="row">
+          <input class="form-control input-lg" type="text" placeholder="Objective">
+          <button type="button" class="btn btn-default btn-lg">Create Objective</button>
+        </div>
       </div>
     </div>
 

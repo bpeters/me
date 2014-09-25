@@ -1,3 +1,11 @@
+$(document).ready(function() {
+  $('#objectives').dataTable({
+    "paging": false,
+    "bFilter": false,
+    "info": false
+  });
+});
+
 var left_bounce_in_big = new Bounce();
 left_bounce_in_big
   .translate({
@@ -144,8 +152,21 @@ $( ".cancel-objective-btn" ).click(function() {
 });
 
 $( ".objective" ).hover(function() {
-  $( ".objective-action" ).show();
-  objective_action_in.applyTo($(".objective-action"));
+  $( this ).children(".objective-action").show();
+  objective_action_in.applyTo($( this ).children(".objective-action"));
 }, function() {
-  $( ".objective-action" ).hide();
+  $( this ).children(".objective-action").hide();
+});
+
+$( "th" ).click(function() {
+  if ($( this ).children("span").hasClass("sort-desc")) {
+    $( "th" ).children("span").removeClass("sort-desc");
+    $( "th" ).children("span").removeClass("sort-asc");
+    $( this ).children("span").addClass("sort-asc");
+  } else {
+    $( "th" ).children("span").removeClass("sort-desc");
+    $( "th" ).children("span").removeClass("sort-asc");
+    $( this ).children("span").addClass("sort-desc");
+  }
+
 });

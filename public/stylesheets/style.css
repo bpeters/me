@@ -166,4 +166,20 @@
   margin-right: 10px;
   display: none;
 }
+.table thead th:focus {
+  outline: none;
+}
+.table thead th:hover {
+  cursor: pointer;
+}
+.stats {
+  width: 100px;
+}
+.sort-desc {
+  color: #36B1DA;
+}
+.sort-asc {
+  color: #6D7D83;
+}
+
 

@@ -124,7 +124,7 @@ $( ".cancel-mission-btn" ).click(function() {
   });
 });
 
-$( ".globe" ).click(function() {
+$( ".globe-btn" ).click(function() {
   if ($(".sidebar-right").is(":visible")) {
     right_bounce_out_small.applyTo($(".sidebar-right")).then(function () {
       $( ".sidebar-right" ).hide();

@@ -3,8 +3,14 @@
 {% block content %}
 <div class="container-fluid">
   <div class="row header">
-      <span class="user glyphicon glyphicon-user"></span>
-      <span class="globe glyphicon glyphicon-globe"></span>
+    <div class="user">
+      <span class="glyphicon glyphicon-user"></span>
+      <span class="header-text">User Name</span>
+    </div>
+    <div class="globe">
+      <span class="globe-btn glyphicon glyphicon-globe"></span>
+      <span class="header-text">Austin / Texas</span>
+    </div>
   </div>
   <div class="row">
 
@@ -15,8 +21,11 @@
         </li>
       </ul>
     </div>
-
     <div class="col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main">
+      <button type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus"></span>
+        Add to a Mission
+      </button>
       <div class="objectives table-responsive">
         <table id="objectives" class="table">
           <thead>
@@ -30,6 +39,9 @@
               <th class="stats">
                 <span class="glyphicon glyphicon-heart"></span>
               </th>
+              <th>
+                <span class="glyphicon glyphicon-plus"></span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -41,6 +53,7 @@
               </td>
               <td>120</td>
               <td>100</td>
+              <td><input type="checkbox"></td>
             </tr>
             <tr>
               <td class="objective">
@@ -50,6 +63,7 @@
               </td>
               <td>110</td>
               <td>130</td>
+              <td><input type="checkbox"></td>
             </tr>
           </tbody>
         </table>
@@ -85,6 +99,7 @@
         </div>
         <div class="row">
           <input class="form-control input-lg" type="text" placeholder="Objective">
+          <input class="form-control input-lg" type="text" placeholder="URL">
           <button type="button" class="btn btn-default btn-lg">Create Objective</button>
         </div>
       </div>

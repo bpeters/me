@@ -8,12 +8,15 @@
   width: 100%;
   margin: 0;
 }
+.header .header-text {
+  font-size: 15px;
+}
 .header .user {
   position: fixed;
   top: 0px;
   left: 0px;
   height: 60px;
-  width: 60px;
+  width: 20%;
   color: #ddd;
   text-align: center;
   padding-top: 20px;
@@ -23,20 +26,28 @@
   cursor:pointer;
   color: #ccc;
 }
+.header .user span {
+  float: left;
+  margin-left: 20px;
+}
 .header .globe {
   position: fixed;
   top: 0px;
   right: 0px;
   height: 60px;
-  width: 60px;
+  width: 80%;
   color: #ddd;
   text-align: center;
   padding-top: 20px;
   font-size: 20px
 }
-.header .globe:hover {
+.header .globe-btn:hover {
   cursor:pointer;
   color: #ccc;
+}
+.header .globe span {
+  float: right;
+  margin-right: 20px;
 }
 .sidebar-right {
   position: fixed;
@@ -79,6 +90,9 @@
 .sidebar ul li span {
   color: #000;
   font-size: 20px
+}
+.main {
+  margin-top: 140px;
 }
 .create-mission {
   position: fixed;
@@ -160,7 +174,7 @@
   margin-top: 20px;
 }
 .objectives {
-  margin-top: 140px;
+  margin-top: 20px;
 }
 .objective-action {
   margin-right: 10px;

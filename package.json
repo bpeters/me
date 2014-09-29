@@ -9,6 +9,7 @@
     "connect-flash": "^0.1.1",
     "express": "3.x",
     "logfmt": "^1.1.2",
+    "normalize.css": "^3.0.1",
     "passport": "^0.2.0",
     "passport-facebook": "^1.0.3",
     "passport-google": "^0.3.0",

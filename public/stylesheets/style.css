@@ -1,0 +1,199 @@
+.header {
+  background-color: #000;
+  height: 60px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 1000;
+  width: 100%;
+  margin: 0;
+}
+.header .header-text {
+  font-size: 15px;
+}
+.header .user {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 60px;
+  width: 20%;
+  color: #ddd;
+  text-align: center;
+  padding-top: 20px;
+  font-size: 20px
+}
+.header .user:hover {
+  cursor:pointer;
+  color: #ccc;
+}
+.header .user span {
+  float: left;
+  margin-left: 20px;
+}
+.header .globe {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  height: 60px;
+  width: 80%;
+  color: #ddd;
+  text-align: center;
+  padding-top: 20px;
+  font-size: 20px
+}
+.header .globe-btn:hover {
+  cursor:pointer;
+  color: #ccc;
+}
+.header .globe span {
+  float: right;
+  margin-right: 20px;
+}
+.sidebar-right {
+  position: fixed;
+  width: 60px;
+  top: 60px;
+  bottom: 0;
+  right: 0;
+  z-index: 1000;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  background-color: #ddd;
+  display: none;
+}
+.sidebar-left {
+  position: fixed;
+  width: 60px;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  background-color: #ddd;
+  display: none;
+}
+.sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sidebar ul li {
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.sidebar ul li:hover {
+  cursor:pointer;
+  background-color: #ccc;
+}
+.sidebar ul li span {
+  color: #000;
+  font-size: 20px
+}
+.main {
+  margin-top: 140px;
+}
+.create-mission {
+  position: fixed;
+  width: 400px;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  z-index: 900;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  background-color: rgba(0,0,0,0.5);
+  display: none;
+
+}
+.create-mission .cancel-mission-btn {
+  color: #fff;
+  float: left;
+  margin-top: 20px;
+  margin-left: 20px;
+  font-size: 20px;
+}
+.create-mission .cancel-mission-btn:hover {
+  cursor:pointer;
+  color: #ddd;
+}
+.create-mission .container {
+  width: 360px;
+  margin-left: 20px;
+  text-align: center;
+}
+.create-mission .container h2 {
+  color: #fff;
+}
+.create-mission .container input {
+  width: 100%;
+  margin-top: 20px;
+}
+.create-mission .container button {
+  width: 100%;
+  margin-top: 20px;
+}
+.create-objective {
+  position: fixed;
+  width: 400px;
+  top: 60px;
+  bottom: 0;
+  right: 0;
+  z-index: 900;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  background-color: rgba(0,0,0,0.5);
+  display: none;
+}
+.create-objective .cancel-objective-btn {
+  color: #fff;
+  float: right;
+  margin-right: 20px;
+  margin-top: 20px;
+  font-size: 20px;
+}
+.create-objective .cancel-objective-btn:hover {
+  cursor:pointer;
+  color: #ddd;
+}
+.create-objective .container {
+  width: 360px;
+  margin-right: 20px;
+  text-align: center;
+}
+.create-objective .container h2 {
+  color: #fff;
+}
+.create-objective .container input {
+  width: 100%;
+  margin-top: 20px;
+}
+.create-objective .container button {
+  width: 100%;
+  margin-top: 20px;
+}
+.objectives {
+  margin-top: 20px;
+}
+.objective-action {
+  margin-right: 10px;
+  display: none;
+}
+.table thead th:focus {
+  outline: none;
+}
+.table thead th:hover {
+  cursor: pointer;
+}
+.stats {
+  width: 100px;
+}
+.sort-desc {
+  color: #36B1DA;
+}
+.sort-asc {
+  color: #6D7D83;
+}
+
+

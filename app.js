@@ -3,12 +3,7 @@ var app = express();
 var path = require('path');
 var swig  = require('swig');
 var _      = require('lodash');
-var CONFIG = require('config');
-var passport = require('passport');
 var bodyParser = require('body-parser');
-var LocalStrategy = require('passport-local').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
-var GoogleStrategy = require('passport-google').Strategy;
 var passwordHash = require('password-hash');
 var flash = require('connect-flash');
 var routes = require('./routes');
@@ -25,8 +20,6 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(express.cookieParser());
 app.use(express.session({ secret: 'happy days' }));
 app.use(flash());
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(express.static(path.join(__dirname, '/public')));
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
@@ -36,6 +29,10 @@ swig.setDefaults({ cache: false });
 
 //routes
 app.get('/', routes.index);
+
+//api routes
+app.post('/api/1/addObjective/:name', routes.addObjective);
+app.get('/api/1/getObjective', routes.getObjective);
 
 var port = Number(process.env.PORT || 3000);
 app.listen(port, function() {

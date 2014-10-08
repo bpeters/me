@@ -168,5 +168,15 @@ $( "th" ).click(function() {
     $( "th" ).children("span").removeClass("sort-asc");
     $( this ).children("span").addClass("sort-desc");
   }
+});
 
+$("#newObjective").click(function( event ) {
+  event.preventDefault();
+  var $form = $( this ).parent();
+  var name = $form.find( "input[name='n']" ).val();
+  $.post( "/api/1/addObjective/" + name, function(d) {
+    console.log(d);
+    $( ".main" ).prepend('<div class="alert alert-success" role="alert">Objective Created</div>');
+  })
+  .error(function() { $( "#objectiveForm" ).prepend('<div class="alert alert-danger" role="alert">Error Creating Objective</div>'); });
 });

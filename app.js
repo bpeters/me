@@ -32,6 +32,9 @@ app.get('/', routes.index);
 
 //api routes
 app.post('/api/1/addObjective/:name', routes.addObjective);
+
+app.get('/api/1/getCity', routes.getCity);
+app.get('/api/1/getCity/:id', routes.getCityById);
 app.get('/api/1/getObjective', routes.getObjective);
 
 var port = Number(process.env.PORT || 3000);

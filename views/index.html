@@ -1,116 +1,193 @@
 {% extends 'layout.html' %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-<div class="container-fluid">
-  <div class="row header">
-    <div class="user">
-      <span class="glyphicon glyphicon-user"></span>
-      <span class="header-text">User Name</span>
-    </div>
-    <div class="globe">
-      <span class="globe-btn glyphicon glyphicon-globe"></span>
-      <span class="header-text">Austin / Texas</span>
-    </div>
-  </div>
-  <div class="row">
-
-    <div class="sidebar-left sidebar">
-      <ul>
-        <li class="create-mission-btn">
-          <span class="glyphicon glyphicon-plus"></span>
-        </li>
-      </ul>
-    </div>
-    <div class="col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main">
-      <button type="button" class="btn btn-default">
-        <span class="glyphicon glyphicon-plus"></span>
-        Add to a Mission
-      </button>
-      <div class="objectives table-responsive">
-        <table id="objectives" class="table">
-          <thead>
-            <tr>
-              <th>
-                <span>Objectives</span>
-              </th>
-              <th class="stats">
-                <span class="glyphicon glyphicon-ok"></span>
-              </th>
-              <th class="stats">
-                <span class="glyphicon glyphicon-heart"></span>
-              </th>
-              <th>
-                <span class="glyphicon glyphicon-plus"></span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="objective">
-                <span class="objective-action glyphicon glyphicon-ok"></span>
-                <span class="objective-action glyphicon glyphicon-heart"></span>
-                Lorem ipsum dolor sit amet
-              </td>
-              <td>120</td>
-              <td>100</td>
-              <td><input type="checkbox"></td>
-            </tr>
-            <tr>
-              <td class="objective">
-                <span class="objective-action glyphicon glyphicon-ok"></span>
-                <span class="objective-action glyphicon glyphicon-heart"></span>
-                Donec in imperdiet massa
-              </td>
-              <td>110</td>
-              <td>130</td>
-              <td><input type="checkbox"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="sidebar-right sidebar">
-      <ul>
-        <li class="create-objective-btn">
-          <span class="glyphicon glyphicon-plus"></span>
-        </li>
-      </ul>
-    </div>
-
-    <div class="create-mission">
-      <span class="cancel-mission-btn glyphicon glyphicon-remove"></span>
-      <div class="container">
-        <div class="row">
-          <h2>Create New Mission</h2>
-        </div>
-        <div class="row">
-          <input class="form-control input-lg" type="text" placeholder="Mission Name">
-          <button type="button" class="btn btn-default btn-lg">Create Mission</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="create-objective">
-      <span class="cancel-objective-btn glyphicon glyphicon-remove"></span>
-      <div class="container">
-        <div class="row">
-          <h2>Create New Objective</h2>
-        </div>
-        <div class="row">
-          <form id="objectiveForm">
-            <input class="form-control input-lg" name="n" type="text" placeholder="Objective">
-            <button id="newObjective" type="button" class="btn btn-default btn-lg">Create Objective</button>
-          </form>
-        </div>
-      </div>
-    </div>
-
-
-
-  </div>
-</div>
+<div class="container-fluid" id="content"></div>
 {% endblock %}
 {% block script %}
   {% parent %}
+    <script type="text/jsx">
+      /** @jsx React.DOM */
+
+      var sidebar_left;
+
+      var Header = React.createClass({
+        handleUserClick: function(event) {
+          sidebar_left = !sidebar_left;
+          if (sidebar_left) {
+            $( ".sidebar-left" ).show();
+          } else {
+            $( ".sidebar-left" ).hide();
+          }
+        },
+        render: function() {
+          return (
+              <div className='row header'>
+              <div className='user'>
+                <span className='user-btn glyphicon glyphicon-user' onClick={this.handleUserClick}></span>
+                <span className='header-text'>User Name</span>
+              </div>
+              <CurrentCity url="/api/1/getCity/1" pollInterval={1000 * 60} />
+            </div>
+          );
+        }
+      });
+
+      var CurrentCity = React.createClass({
+        loadCityFromServer: function() {
+          $.ajax({
+            url: this.props.url,
+            dataType: 'json',
+            success: function(data) {
+              this.setState({data: data});
+            }.bind(this),
+            error: function(xhr, status, err) {
+              console.error(this.props.url, status, err.toString());
+            }.bind(this)
+          });
+        },
+        getInitialState: function() {
+          return {data: []};
+        },
+        componentDidMount: function() {
+          this.loadCityFromServer();
+          setInterval(this.loadCityFromServer, this.props.pollInterval);
+        },
+        render: function() {
+          return (
+            <div className='globe'>
+              <span className='globe-btn glyphicon glyphicon-globe'></span>
+              <span className='header-text'>
+                <a>
+                  {this.state.data.city}
+                </a>
+              </span>
+            </div>
+          );
+        }
+      });
+
+      var CityLink = React.createClass({
+        render: function() {
+          console.log(this.props.data);
+          var cityItem = this.props.data.map(function(city) {
+            return (
+              <a key={city.id}>
+                {city.city}
+              </a>
+            );
+          });
+          return (
+            <span className='header-text'>
+              {cityItem}
+            </span>
+          );
+        }
+      });
+
+      var SidebarLeft = React.createClass({
+        render: function() {
+          return (
+            <div className='sidebar-left sidebar'>
+              <ul>
+                <li className='create-mission-btn'>
+                  <span className='glyphicon glyphicon-plus'></span>
+                </li>
+              </ul>
+            </div>
+          );
+        }
+      });
+
+      var ObjectiveTable = React.createClass({
+        loadObjectivesFromServer: function() {
+          $.ajax({
+            url: this.props.url,
+            dataType: 'json',
+            success: function(data) {
+              this.setState({data: data});
+            }.bind(this),
+            error: function(xhr, status, err) {
+              console.error(this.props.url, status, err.toString());
+            }.bind(this)
+          });
+        },
+        getInitialState: function() {
+          return {data: []};
+        },
+        componentDidMount: function() {
+          this.loadObjectivesFromServer();
+          setInterval(this.loadObjectivesFromServer, this.props.pollInterval);
+        },
+        render: function() {
+          return (
+            <div className='col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main'>
+              <div className='objectives table-responsive'>
+                <table className='table'>
+                  <thead>
+                    <tr>
+                      <th>
+                        <span>Objectives</span>
+                      </th>
+                      <th>
+                        <span className='glyphicon glyphicon-ok'></span>
+                      </th>
+                      <th>
+                        <span className='glyphicon glyphicon-heart'></span>
+                      </th>
+                    </tr>
+                  </thead>
+                    <ObjectiveList data={this.state.data} />
+                </table>
+              </div>
+            </div>
+          );
+        }
+      });
+
+      var ObjectiveList = React.createClass({
+        render: function() {
+          var objectiveItem = this.props.data.map(function(objective) {
+            return (
+              <tr key={objective.id}>
+                <td>{objective.name}</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+            );
+          });
+          return (
+            <tbody>
+              {objectiveItem}
+            </tbody>
+          );
+        }
+      });
+
+      var CityPage = React.createClass({
+        render: function() {
+          var imgUrl = '/images/city.jpg'
+          var cityStyle = {
+            backgroundImage: 'url(' + imgUrl + ')',
+            height: '400px',
+            width: '100%',
+            backgroundPosition: 'center',
+            /* Make the background image cover the area of the <div>, and clip the excess */
+            backgroundSize: 'cover'
+          };
+          return (
+            <div>
+              <Header />
+              <div className='row'>
+                <SidebarLeft />
+                <div style={cityStyle} alt="city" className='city-image'></div>
+                <ObjectiveTable url="/api/1/getObjective" pollInterval={1000 * 60} />
+              </div>
+            </div>
+          );
+        }
+      });
+
+      React.renderComponent(<CityPage />, document.getElementById('content'));
+      
+    </script>
 {% endblock %}

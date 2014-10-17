@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% block title %}{{ title }}{% endblock %}
+{% block title %}{{ title | capitalize }}{% endblock %}
 {% block content %}
 <div class="container-fluid" id="content"></div>
 {% endblock %}
@@ -26,7 +26,7 @@
                 <span className='user-btn glyphicon glyphicon-user' onClick={this.handleUserClick}></span>
                 <span className='header-text'>User Name</span>
               </div>
-              <CurrentCity url="/api/1/getCity/1" pollInterval={1000 * 60} />
+              <CurrentCity url="/api/1/getCity/{{ id }}" pollInterval={1000 * 60} />
             </div>
           );
         }
@@ -163,7 +163,7 @@
               <div className='row'>
                 <SidebarLeft />
                 <div style={cityStyle} alt="city" className='city-image'></div>
-                <ObjectiveTable url="/api/1/getObjective" pollInterval={1000 * 60} />
+                <ObjectiveTable url="/api/1/getObjective/{{ id }}" pollInterval={1000 * 60} />
               </div>
             </div>
           );

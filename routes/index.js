@@ -5,6 +5,20 @@ exports.index = function(req, res) {
     res.render('index', {});
 };
 
+exports.list = function(req, res) {
+    res.render('list', {
+      title: req.params.id
+    });
+};
+
+exports.objective = function(req, res) {
+    res.render('objective', {
+      id: req.params.id,
+      by: req.params.id,
+      title: req.params.id
+    });
+};
+
 exports.getCity = function(req, res) {
   Q.all([
     Q.ninvoke(model, 'getCity'),
@@ -41,13 +55,12 @@ exports.getObjective = function(req, res) {
   });
 };
 
-exports.addObjective = function(req, res) {
-  console.log(req.params.name);
+exports.getObjectiveById = function(req, res) {
   Q.all([
-    Q.ninvoke(model, 'addObjective', req.params.name),
+    Q.ninvoke(model, 'getObjectiveById', req.params.id),
   ])
-  .spread(function(objective) {
-    res.json(objective);
+  .spread(function(objectives) {
+    res.json(objectives);
   })
   .fail(function (err) {
     return next(err);

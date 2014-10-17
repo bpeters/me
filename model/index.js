@@ -41,6 +41,20 @@ exports.getObjective = function (callback) {
   });
 };
 
+exports.getObjectiveById = function (id, callback) {
+  var query = new Parse.Query(Objective);
+  query.equalTo("city_id", parseInt(id,0));
+  query.find({
+    success: function(results) {
+      console.log("Successfully retrieved " + results.length + " objectives.");
+      return callback(null, results);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+    }
+  });
+};
+
 exports.addObjective = function (name, callback) {
   var objective = new Objective();
   objective.set("name", name);

@@ -11,6 +11,13 @@
 .header .header-text {
   font-size: 15px;
 }
+.header-text a {
+  color: #FFF;
+}
+.header-text a:hover {
+  cursor: pointer;
+  color: #ccc;
+}
 .header .user {
   position: fixed;
   top: 0;

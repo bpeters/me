@@ -30,12 +30,20 @@ swig.setDefaults({ cache: false });
 //routes
 app.get('/', routes.index);
 
-//api routes
-app.post('/api/1/addObjective/:name', routes.addObjective);
+//:list could be a list of whatever you want to group by: city, state, country, etc.
+// www.missioneverything.com/list/city
+app.get('/list/:id', routes.list);
 
+//:by could be what you want to list objectives by: city, state, country, etc.
+//:id is the detail of the :by: if :by = city then :id could be austin.
+// www.missioneverything.com/objective/city/austin
+app.get('/objective/:by/:id', routes.objective);
+
+//api routes
 app.get('/api/1/getCity', routes.getCity);
 app.get('/api/1/getCity/:id', routes.getCityById);
 app.get('/api/1/getObjective', routes.getObjective);
+app.get('/api/1/getObjective/:id', routes.getObjectiveById);
 
 var port = Number(process.env.PORT || 3000);
 app.listen(port, function() {

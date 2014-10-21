@@ -29,21 +29,21 @@ swig.setDefaults({ cache: false });
 
 //routes
 app.get('/', routes.index);
-
-//:list could be a list of whatever you want to group by: city, state, country, etc.
-// www.missioneverything.com/list/city
-app.get('/list/:id', routes.list);
-
-//:by could be what you want to list objectives by: city, state, country, etc.
-//:id is the detail of the :by: if :by = city then :id could be austin.
-// www.missioneverything.com/objective/city/austin
-app.get('/objective/:by/:id', routes.objective);
+app.get('/list/:by', routes.list);
+app.get('/location/:by/:id', routes.location);
+app.get('/objective/:id', routes.objective);
+app.get('/journal/:id', routes.journal);
+app.get('/author/:id', routes.author);
+app.get('/mission/:id', routes.mission);
 
 //api routes
-app.get('/api/1/getCity', routes.getCity);
-app.get('/api/1/getCity/:id', routes.getCityById);
-app.get('/api/1/getObjective', routes.getObjective);
-app.get('/api/1/getObjective/:id', routes.getObjectiveById);
+app.get('/api/1/getObjective/:by/:id', routes.getObjectiveById);
+app.get('/api/1/getJournal/:by/:id', routes.getJournalById);
+app.get('/api/1/getAuthor/:id', routes.getAuthorById);
+app.get('/api/1/getMission/:by/:id', routes.getMissionById);
+app.get('/api/1/getMissionObjectives/:id', routes.getMissionObjectives);
+app.get('/api/1/getList/:by', routes.getList);
+app.get('/api/1/getName/:by/:id', routes.getNameById);
 
 var port = Number(process.env.PORT || 3000);
 app.listen(port, function() {

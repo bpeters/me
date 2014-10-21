@@ -17,6 +17,7 @@
 .header-text a:hover {
   cursor: pointer;
   color: #ccc;
+  text-decoration: none;
 }
 .header .user {
   position: fixed;
@@ -83,7 +84,7 @@
   font-size: 20px
 }
 .main {
-  margin-top: 20px;
+  margin-top: 40px;
   margin-bottom: 20px;
 }
 .create-mission {
@@ -123,9 +124,6 @@
 }
 .create-mission .container button {
   width: 100%;
-  margin-top: 20px;
-}
-.objectives {
   margin-top: 20px;
 }
 .objective-action {

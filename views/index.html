@@ -26,42 +26,13 @@
                 <span className='user-btn glyphicon glyphicon-user' onClick={this.handleUserClick}></span>
                 <span className='header-text'>User Name</span>
               </div>
-              <CurrentCity url="/api/1/getCity/1" pollInterval={1000 * 60} />
-            </div>
-          );
-        }
-      });
-
-      var CurrentCity = React.createClass({
-        loadCityFromServer: function() {
-          $.ajax({
-            url: this.props.url,
-            dataType: 'json',
-            success: function(data) {
-              this.setState({data: data});
-            }.bind(this),
-            error: function(xhr, status, err) {
-              console.error(this.props.url, status, err.toString());
-            }.bind(this)
-          });
-        },
-        getInitialState: function() {
-          return {data: []};
-        },
-        componentDidMount: function() {
-          this.loadCityFromServer();
-          setInterval(this.loadCityFromServer, this.props.pollInterval);
-        },
-        render: function() {
-          return (
-            <div className='globe'>
-              <span className='globe-btn glyphicon glyphicon-globe'></span>
-              <span className='header-text'>
-                <a> {this.state.data.continent}</a>
-                <a> / {this.state.data.country}</a>
-                <a> / {this.state.data.state}</a>
-                <a> / {this.state.data.city}</a>
-              </span>
+              <div className='globe'>
+                <span className='globe-btn glyphicon glyphicon-globe'></span>
+                <span className='header-text'>
+                  <a>{{ state }} / </a>
+                  <a>{{ city }}</a>
+                </span>
+              </div>
             </div>
           );
         }
@@ -163,7 +134,7 @@
               <div className='row'>
                 <SidebarLeft />
                 <div style={cityStyle} alt="city" className='city-image'></div>
-                <ObjectiveTable url="/api/1/getObjective" pollInterval={1000 * 60} />
+                <ObjectiveTable url="/api/1/getObjective/{{ by }}/{{ id }}" pollInterval={1000 * 60} />
               </div>
             </div>
           );

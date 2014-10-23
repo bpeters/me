@@ -24,13 +24,15 @@
               <div className='row header'>
               <div className='user'>
                 <span className='user-btn glyphicon glyphicon-user' onClick={this.handleUserClick}></span>
-                <span className='header-text'>User Name</span>
+                <span className='header-text'><a>Log In</a></span>
+                <span className='header-text'><a>Sign Up</a></span>
               </div>
               <div className='globe'>
                 <span className='globe-btn glyphicon glyphicon-globe'></span>
                 <span className='header-text'>
-                  <a>{{ state }} / </a>
-                  <a>{{ city }}</a>
+                  <a href={'/objective/{{ id }}'}>{{ objective }} / </a>
+                  <a href={'/location/city/{{ city_id }}'}>{{ city }} / </a>
+                  <a href={'/location/state/{{ state_id }}'}>{{ state }}</a>
                 </span>
               </div>
             </div>
@@ -52,8 +54,8 @@
         }
       });
 
-      var ObjectiveTable = React.createClass({
-        loadObjectivesFromServer: function() {
+      var JournalTable = React.createClass({
+        loadJournalsFromServer: function() {
           $.ajax({
             url: this.props.url,
             dataType: 'json',
@@ -69,28 +71,24 @@
           return {data: []};
         },
         componentDidMount: function() {
-          this.loadObjectivesFromServer();
-          setInterval(this.loadObjectivesFromServer, this.props.pollInterval);
+          this.loadJournalsFromServer();
         },
         render: function() {
           return (
             <div className='col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main'>
-              <div className='objectives table-responsive'>
+              <div className='table-responsive'>
                 <table className='table'>
                   <thead>
                     <tr>
                       <th>
-                        <span>Objectives</span>
+                        <span>Journal</span>
                       </th>
                       <th>
-                        <span className='glyphicon glyphicon-ok'></span>
-                      </th>
-                      <th>
-                        <span className='glyphicon glyphicon-heart'></span>
+                        <span>Author</span>
                       </th>
                     </tr>
                   </thead>
-                    <ObjectiveList data={this.state.data} />
+                    <JournalList data={this.state.data} />
                 </table>
               </div>
             </div>
@@ -98,26 +96,25 @@
         }
       });
 
-      var ObjectiveList = React.createClass({
+      var JournalList = React.createClass({
         render: function() {
-          var objectiveItem = this.props.data.map(function(objective) {
+          var journalItem = this.props.data.map(function(journal) {
             return (
-              <tr key={objective.id}>
-                <td>{objective.name}</td>
-                <td>0</td>
-                <td>0</td>
+              <tr key={journal.id}>
+                <td><a href={'/journal/' + journal.journal_id}>{journal.journal}</a></td>
+                <td><a href={'/author/' + journal.author_id}>{journal.author}</a></td>
               </tr>
             );
           });
           return (
             <tbody>
-              {objectiveItem}
+              {journalItem}
             </tbody>
           );
         }
       });
 
-      var CityPage = React.createClass({
+      var ObjectivePage = React.createClass({
         render: function() {
           var imgUrl = '/images/city.jpg'
           var cityStyle = {
@@ -134,14 +131,14 @@
               <div className='row'>
                 <SidebarLeft />
                 <div style={cityStyle} alt="city" className='city-image'></div>
-                <ObjectiveTable url="/api/1/getObjective/{{ by }}/{{ id }}" pollInterval={1000 * 60} />
+                <JournalTable url="/api/1/getJournal/objective/{{ id }}" />
               </div>
             </div>
           );
         }
       });
 
-      React.renderComponent(<CityPage />, document.getElementById('content'));
+      React.renderComponent(<ObjectivePage />, document.getElementById('content'));
       
     </script>
 {% endblock %}

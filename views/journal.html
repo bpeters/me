@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="container-fluid" id="content"></div>
+{% endblock %}
+{% block script %}
+  {% parent %}
+    <script type="text/jsx">
+      /** @jsx React.DOM */
+
+      var sidebar_left;
+
+      var Header = React.createClass({
+        handleUserClick: function(event) {
+          sidebar_left = !sidebar_left;
+          if (sidebar_left) {
+            $( ".sidebar-left" ).show();
+          } else {
+            $( ".sidebar-left" ).hide();
+          }
+        },
+        render: function() {
+          return (
+              <div className='row header'>
+              <div className='user'>
+                <span className='user-btn glyphicon glyphicon-user' onClick={this.handleUserClick}></span>
+                <span className='header-text'><a>Log In</a></span>
+                <span className='header-text'><a>Sign Up</a></span>
+              </div>
+              <div className='globe'>
+                <span className='globe-btn glyphicon glyphicon-globe'></span>
+                <span className='header-text'>
+                  <a href={'/journal/{{ id }}'}>{{ journal }} / </a>
+                  <a href={'/objective/{{ objective_id }}'}>{{ objective }} / </a>
+                  <a href={'/location/city/{{ city_id }}'}>{{ city }} / </a>
+                  <a href={'/location/state/{{ state_id }}'}>{{ state }}</a>
+                </span>
+              </div>
+            </div>
+          );
+        }
+      });
+
+      var SidebarLeft = React.createClass({
+        render: function() {
+          return (
+            <div className='sidebar-left sidebar'>
+              <ul>
+                <li className='create-mission-btn'>
+                  <span className='glyphicon glyphicon-plus'></span>
+                </li>
+              </ul>
+            </div>
+          );
+        }
+      });
+
+      var JournalPage = React.createClass({
+        render: function() {
+          var imgUrl = '/images/city.jpg'
+          var cityStyle = {
+            backgroundImage: 'url(' + imgUrl + ')',
+            height: '400px',
+            width: '100%',
+            backgroundPosition: 'center',
+            /* Make the background image cover the area of the <div>, and clip the excess */
+            backgroundSize: 'cover'
+          };
+          return (
+            <div>
+              <Header />
+              <div className='row'>
+                <SidebarLeft />
+                <div style={cityStyle} alt="city" className='city-image'></div>
+              </div>
+            </div>
+          );
+        }
+      });
+
+      React.renderComponent(<JournalPage />, document.getElementById('content'));
+      
+    </script>
+{% endblock %}

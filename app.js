@@ -29,13 +29,21 @@ swig.setDefaults({ cache: false });
 
 //routes
 app.get('/', routes.index);
+app.get('/list/:by', routes.list);
+app.get('/location/:by/:id', routes.location);
+app.get('/objective/:id', routes.objective);
+app.get('/journal/:id', routes.journal);
+app.get('/author/:id', routes.author);
+app.get('/mission/:id', routes.mission);
 
 //api routes
-app.post('/api/1/addObjective/:name', routes.addObjective);
-
-app.get('/api/1/getCity', routes.getCity);
-app.get('/api/1/getCity/:id', routes.getCityById);
-app.get('/api/1/getObjective', routes.getObjective);
+app.get('/api/1/getObjective/:by/:id', routes.getObjectiveById);
+app.get('/api/1/getJournal/:by/:id', routes.getJournalById);
+app.get('/api/1/getAuthor/:id', routes.getAuthorById);
+app.get('/api/1/getMission/:by/:id', routes.getMissionById);
+app.get('/api/1/getMissionObjectives/:id', routes.getMissionObjectives);
+app.get('/api/1/getList/:by', routes.getList);
+app.get('/api/1/getName/:by/:id', routes.getNameById);
 
 var port = Number(process.env.PORT || 3000);
 app.listen(port, function() {

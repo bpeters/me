@@ -8,27 +8,27 @@
     <script type="text/jsx">
       /** @jsx React.DOM */
 
-      var sidebar_left;
+      var sidebar_right;
 
       var Header = React.createClass({
-        handleUserClick: function(event) {
-          sidebar_left = !sidebar_left;
-          if (sidebar_left) {
-            $( ".sidebar-left" ).show();
+        handleSidebarRightClick: function(event) {
+          sidebar_right = !sidebar_right;
+          if (sidebar_right) {
+            $( ".sidebar-right" ).show();
           } else {
-            $( ".sidebar-left" ).hide();
+            $( ".sidebar-right" ).hide();
           }
         },
         render: function() {
           return (
               <div className='row header'>
               <div className='user'>
-                <span className='user-btn glyphicon glyphicon-user' onClick={this.handleUserClick}></span>
+                <span className='glyphicon glyphicon-user'></span>
                 <span className='header-text'><a>Log In</a></span>
                 <span className='header-text'><a>Sign Up</a></span>
               </div>
               <div className='globe'>
-                <span className='globe-btn glyphicon glyphicon-globe'></span>
+                <i className='sidebar-right-btn fa fa-globe' onClick={this.handleSidebarRightClick}></i>
                 <span className='header-text'>
                   {% if by == 'city' %} All Cities {% else %} All States {% endif %}
                 </span>
@@ -38,13 +38,30 @@
         }
       });
 
-      var SidebarLeft = React.createClass({
+      var SidebarRight = React.createClass({
         render: function() {
+          var location;
+          var location_href;
+          if ('{{ by }}' == 'city') {
+            location = 'All States';
+            location_href = '/list/state';
+          } else {
+            location = 'All Cities';
+            location_href = '/list/city';
+          }
           return (
-            <div className='sidebar-left sidebar'>
+            <div className='sidebar-right sidebar'>
               <ul>
-                <li className='create-mission-btn'>
-                  <span className='glyphicon glyphicon-plus'></span>
+                <li>
+                  <span className='sidebar-title'>List</span>
+                </li>
+                <li>
+                  <a href={location_href}>
+                    <i className='sidebar-btn fa fa-globe'></i>
+                    <span className='header-text'>
+                      {location}
+                    </span>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -125,7 +142,7 @@
           var imgUrl = '/images/city.jpg'
           var cityStyle = {
             backgroundImage: 'url(' + imgUrl + ')',
-            height: '400px',
+            height: '500px',
             width: '100%',
             backgroundPosition: 'center',
             /* Make the background image cover the area of the <div>, and clip the excess */
@@ -135,7 +152,7 @@
             <div>
               <Header />
               <div className='row'>
-                <SidebarLeft />
+                <SidebarRight />
                 <div style={cityStyle} alt="city" className='city-image'></div>
                 <ListTable url="/api/1/getList/{{ by }}" />
               </div>

@@ -8,27 +8,27 @@
     <script type="text/jsx">
       /** @jsx React.DOM */
 
-      var sidebar_left;
+      var sidebar_right;
 
       var Header = React.createClass({
-        handleUserClick: function(event) {
-          sidebar_left = !sidebar_left;
-          if (sidebar_left) {
-            $( ".sidebar-left" ).show();
+        handleSidebarRightClick: function(event) {
+          sidebar_right = !sidebar_right;
+          if (sidebar_right) {
+            $( ".sidebar-right" ).show();
           } else {
-            $( ".sidebar-left" ).hide();
+            $( ".sidebar-right" ).hide();
           }
         },
         render: function() {
           return (
               <div className='row header'>
               <div className='user'>
-                <span className='user-btn glyphicon glyphicon-user' onClick={this.handleUserClick}></span>
+                <span className='glyphicon glyphicon-user'></span>
                 <span className='header-text'><a>Log In</a></span>
                 <span className='header-text'><a>Sign Up</a></span>
               </div>
               <div className='globe'>
-                <span className='globe-btn glyphicon glyphicon-globe'></span>
+                <i className='sidebar-right-btn fa fa-globe' onClick={this.handleSidebarRightClick}></i>
                 <span className='header-text'>
                   {% if by == 'city' %}<a href={'/location/city/{{ city_id }}'}>{{ city }} / </a>{% endif %}
                   <a href={'/location/state/{{ state_id }}'}>{{ state }}</a>
@@ -39,70 +39,139 @@
         }
       });
 
-      var SidebarLeft = React.createClass({
+      var SidebarRight = React.createClass({
+        handleClick: function(i) {
+          $('.display-list li a').removeClass('display-current');
+          $('#display' + this.props.display[i]).addClass('display-current');
+          this.setState({
+            display_page: this.props.display[i]
+          });
+        },
+        getInitialState: function() {
+          return {
+            objective_url: "/api/1/getObjective/{{ by }}/{{ id }}",
+            journal_url: "/api/1/getJournal/{{ by }}/{{ id }}",
+            mission_url: "/api/1/getMissionObjectives/{{ by }}/{{ id }}",
+            display_page: "Objectives"
+          };
+        },
         render: function() {
           return (
-            <div className='sidebar-left sidebar'>
-              <ul>
-                <li className='create-mission-btn'>
-                  <span className='glyphicon glyphicon-plus'></span>
-                </li>
-              </ul>
+            <div>
+              <div className='sidebar-right sidebar'>
+                <ul>
+                  <li>
+                    <span className='sidebar-title'>List</span>
+                  </li>
+                  <li>
+                    <a href='/list/city'>
+                      <i className='sidebar-btn fa fa-globe'></i>
+                      <span className='header-text'>
+                        All Cities
+                      </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href='/list/state'>
+                      <i className='sidebar-btn fa fa-globe'></i>
+                      <span className='header-text'>
+                        All States
+                      </span>
+                    </a>
+                  </li>
+                </ul>
+                <ul className='display-list'>
+                  <li>
+                    <span className='sidebar-title'>Display</span>
+                  </li>
+                  {this.props.display.map(function(item, i) {
+                    var icon_class;
+                    var displayed;
+                    if (item == 'Objectives') {
+                      icon_class = 'fa-dot-circle-o';
+                      displayed = 'display-current';
+                    } else if (item == 'Journals') {
+                      icon_class = 'fa-book';
+                    } else {
+                      icon_class = 'fa-rocket';
+                    }
+                    return (
+                      <li>
+                        <a className={displayed} id={'display' + item} onClick={this.handleClick.bind(this, i)} key={i} >
+                          <i className={'sidebar-btn fa ' + icon_class}></i>
+                          <span className='header-text'>
+                            {item}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  }, this)}
+                </ul>
+              </div>
+              <Table display_page={this.state.display_page} objective_url={this.state.objective_url} journal_url={this.state.journal_url} mission_url={this.state.mission_url} />
             </div>
           );
         }
       });
 
-      var ObjectiveTable = React.createClass({
-        loadObjectivesFromServer: function() {
+      var Table = React.createClass({
+        loadDataFromServer: function() {
           $.ajax({
-            url: this.props.url,
+            url: this.props.objective_url,
             dataType: 'json',
-            success: function(data) {
-              this.setState({data: data});
+            success: function(objectives) {
+              this.setState({objectives: objectives});
             }.bind(this),
             error: function(xhr, status, err) {
-              console.error(this.props.url, status, err.toString());
+              console.error(this.props.objective_url, status, err.toString());
+            }.bind(this)
+          });
+          $.ajax({
+            url: this.props.journal_url,
+            dataType: 'json',
+            success: function(journals) {
+              this.setState({journals: journals});
+            }.bind(this),
+            error: function(xhr, status, err) {
+              console.error(this.props.journal_url, status, err.toString());
+            }.bind(this)
+          });
+          $.ajax({
+            url: this.props.mission_url,
+            dataType: 'json',
+            success: function(missions) {
+              this.setState({missions: missions});
+            }.bind(this),
+            error: function(xhr, status, err) {
+              console.error(this.props.mission_url, status, err.toString());
             }.bind(this)
           });
         },
         getInitialState: function() {
-          return {data: []};
+          return {
+            objectives: [],
+            journals: [],
+            missions: [],
+            display_page: this.props.display_page
+          };
         },
         componentDidMount: function() {
-          this.loadObjectivesFromServer();
+          this.loadDataFromServer();
         },
         render: function() {
+          console.log(this.state.display_page);
+          var displayList;
+          if (this.props.display_page == 'Objectives') {
+            displayList = <ObjectiveList data={this.state.objectives} />;
+          } else if (this.props.display_page == 'Journals') {
+            displayList = <JournalList data={this.state.journals} />;
+          } else {
+            displayList = <MissionList data={this.state.missions} />;
+          }
           return (
             <div className='col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main'>
               <div className='table-responsive'>
-                <table className='table'>
-                  <thead>
-                    <tr>
-                      <th>
-                        <span>Objective</span>
-                      </th>
-                      {% if by != 'city' %} 
-                      <th>
-                        <span>City</span>
-                      </th>
-                      {% endif %}
-                      <th>
-                        <span>Journals</span>
-                      </th>
-                      <th>
-                        <span>Missions</span>
-                      </th>
-                      <th>
-                        <span className='glyphicon glyphicon-ok'></span>
-                      </th>
-                      <th>
-                        <span className='glyphicon glyphicon-heart'></span>
-                      </th>
-                    </tr>
-                  </thead>
-                    <ObjectiveList data={this.state.data} />
-                </table>
+                {displayList}
               </div>
             </div>
           );
@@ -124,9 +193,81 @@
             );
           });
           return (
-            <tbody>
-              {objectiveItem}
-            </tbody>
+            <table className='table'>
+              <thead>
+                <tr>
+                  <th><span>Objective</span></th>
+                  {% if by != 'city' %} <th><span>City</span></th>{% endif %}
+                  <th><span>Journals</span></th>
+                  <th><span>Missions</span></th>
+                  <th><span className='glyphicon glyphicon-ok'></span></th>
+                  <th><span className='glyphicon glyphicon-heart'></span></th>
+                </tr>
+              </thead>
+              <tbody>
+                {objectiveItem}
+              </tbody>
+            </table>
+          );
+        }
+      });
+
+      var JournalList = React.createClass({
+        render: function() {
+          var journalItem = this.props.data.map(function(journal) {
+            return (
+              <tr key={journal.id}>
+                <td><a href={'/journal/' + journal.journal_id}>{journal.journal}</a></td>
+                <td><a href={'/objective/' + journal.objective_id}>{journal.objective}</a></td>
+                <td><a href={'/author/' + journal.author_id}>{journal.author}</a></td>
+                {% if by != 'city' %}<td><a href={'/location/city/' + journal.city_id}>{journal.city}</a></td>{% endif %}
+              </tr>
+            );
+          });
+          return (
+            <table className='table'>
+              <thead>
+                <tr>
+                  <th><span>Journal</span></th>
+                  <th><span>Objective</span></th>
+                  <th><span>Author</span></th>
+                  {% if by != 'city' %} <th><span>City</span></th>{% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                {journalItem}
+              </tbody>
+            </table>
+          );
+        }
+      });
+
+      var MissionList = React.createClass({
+        render: function() {
+          var missionItem = this.props.data.map(function(mission) {
+            return (
+              <tr key={mission.id}>
+                <td><a href={'/mission/' + mission.mission_id}>{mission.mission}</a></td>
+                <td><a href={'/objective/' + mission.objective_id}>{mission.objective}</a></td>
+                {% if by != 'city' %}<td><a href={'/location/city/' + mission.city_id}>{mission.city}</a></td>{% endif %}
+                <td>{mission.missionobjective_journal_cnt}</td>
+              </tr>
+            );
+          });
+          return (
+            <table className='table'>
+              <thead>
+                <tr>
+                  <th><span>Mission</span></th>
+                  <th><span>Objective</span></th>
+                  {% if by != 'city' %} <th><span>City</span></th>{% endif %}
+                  <th><span>Journals</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                {missionItem}
+              </tbody>
+            </table>
           );
         }
       });
@@ -136,7 +277,7 @@
           var imgUrl = '/images/city.jpg'
           var cityStyle = {
             backgroundImage: 'url(' + imgUrl + ')',
-            height: '400px',
+            height: '500px',
             width: '100%',
             backgroundPosition: 'center',
             /* Make the background image cover the area of the <div>, and clip the excess */
@@ -146,9 +287,8 @@
             <div>
               <Header />
               <div className='row'>
-                <SidebarLeft />
                 <div style={cityStyle} alt="city" className='city-image'></div>
-                <ObjectiveTable url="/api/1/getObjective/{{ by }}/{{ id }}" />
+                <SidebarRight display={['Objectives', 'Journals', 'Missions']}/>
               </div>
             </div>
           );

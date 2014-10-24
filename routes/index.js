@@ -13,6 +13,8 @@ var getById = function(by) {
     by_id = 'journal_id';
   } else if (by == 'mission') {
     by_id = 'mission_id';
+  } else if (by == 'author') {
+    by_id = 'author_id';
   }
   return by_id;
 };
@@ -177,9 +179,10 @@ exports.getMissionById = function(req, res) {
   });
 };
 
-exports.getMissionObjectives = function(req, res) {
+exports.getMissionObjectivesById = function(req, res) {
+  var by_id = getById(req.params.by);
   Q.all([
-    Q.ninvoke(model, 'getMissionObjectives', req.params.id),
+    Q.ninvoke(model, 'getMissionObjectivesById', by_id, req.params.id),
   ])
   .spread(function(mission) {
     res.json(mission);

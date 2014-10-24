@@ -1,5 +1,5 @@
 .header {
-  background-color: #000;
+  background-color: rgba(0,0,0,.8);
   height: 60px;
   position: fixed;
   top: 0;
@@ -12,7 +12,7 @@
   font-size: 15px;
 }
 .header-text a {
-  color: #FFF;
+  color: #ddd;
 }
 .header-text a:hover {
   cursor: pointer;
@@ -30,7 +30,7 @@
   padding-top: 20px;
   font-size: 20px
 }
-.header .user-btn:hover {
+.header .sidebar-right-btn:hover {
   cursor:pointer;
   color: #ccc;
 }
@@ -49,7 +49,7 @@
   padding-top: 20px;
   font-size: 20px
 }
-.header .globe span {
+.header .sidebar-right-btn, .header span {
   float: right;
   margin-right: 20px;
 }
@@ -65,83 +65,65 @@
   background-color: #ddd;
   display: none;
 }
+.sidebar-right {
+  position: fixed;
+  top: 60px;
+  bottom: 0px;
+  right: 0;
+  z-index: 1000;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  background-color: rgba(0,0,0,.6);
+  display: none;
+  color: #ddd;
+  border-left: 1px solid #aaa;
+}
 .sidebar ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
+.sidebar ul li:first-child , .sidebar ul li:last-child {
+  border-bottom: 1px solid #aaa;
+}
+.sidebar ul li:first-child {
+  color: #aaa;
+}
 .sidebar ul li {
-  text-align: center;
+  height: 40px;
   padding-top: 10px;
   padding-bottom: 10px;
 }
-.sidebar ul li:hover {
-  cursor:pointer;
-  background-color: #ccc;
+.sidebar ul li a {
+  text-decoration: none;
+  color: #ddd;
 }
-.sidebar ul li span {
-  color: #000;
-  font-size: 20px
+.sidebar ul li a:hover {
+  cursor: pointer;
+  color: #ccc;
+}
+.sidebar ul span {
+  margin-left: 20px;
+  float: right;
+  margin-right: 20px;
+}
+.sidebar .sidebar-btn {
+  font-size: 20px;
+  float: right;
+  margin-right: 20px;
+}
+.sidebar .sidebar-title {
+  font-weight: bold;
+}
+.sidebar .display-current {
+  color: #26ACC3;
+}
+.sidebar .display-current:hover {
+  color: #26ACC3;
 }
 .main {
   margin-top: 40px;
   margin-bottom: 20px;
+  color: #222;
 }
-.create-mission {
-  position: fixed;
-  width: 400px;
-  top: 60px;
-  bottom: 0;
-  left: 0;
-  z-index: 900;
-  overflow-x: hidden;
-  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-  background-color: rgba(0,0,0,0.5);
-  display: none;
-}
-.create-mission .cancel-mission-btn {
-  color: #fff;
-  float: left;
-  margin-top: 20px;
-  margin-left: 20px;
-  font-size: 20px;
-}
-.create-mission .cancel-mission-btn:hover {
-  cursor:pointer;
-  color: #ddd;
-}
-.create-mission .container {
-  width: 360px;
-  margin-left: 20px;
-  text-align: center;
-}
-.create-mission .container h2 {
-  color: #fff;
-}
-.create-mission .container input {
-  width: 100%;
-  margin-top: 20px;
-}
-.create-mission .container button {
-  width: 100%;
-  margin-top: 20px;
-}
-.objective-action {
-  margin-right: 10px;
-  display: none;
-}
-.table thead th:focus {
-  outline: none;
-}
-.table thead th:hover {
-  cursor: pointer;
-}
-.stats {
-  width: 100px;
-}
-.sort-desc {
-  color: #36B1DA;
-}
-.sort-asc {
-  color: #6D7D83;
-}
+

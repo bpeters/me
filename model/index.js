@@ -52,9 +52,9 @@ exports.getMissionById = function (by_id, id, callback) {
   });
 };
 
-exports.getMissionObjectives = function (id, callback) {
+exports.getMissionObjectivesById = function (by_id, id, callback) {
   var query = new Parse.Query(MissionObjectives);
-  query.equalTo('mission_id', parseInt(id,0));
+  query.equalTo(by_id, parseInt(id,0));
   query.find({
     success: function(results) {
       console.log("Successfully retrieved " + results.length + " mission objectives.");

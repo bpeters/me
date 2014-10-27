@@ -97,6 +97,7 @@ exports.journal = function(req, res) {
       author: journal[0].attributes.author,
       author_id: journal[0].attributes.author_id,
       id: req.params.id,
+      by: 'journal',
       title: title
     });
   })

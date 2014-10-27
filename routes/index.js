@@ -69,6 +69,7 @@ exports.objective = function(req, res) {
       state_id: objective[0].attributes.state_id,
       objective: objective[0].attributes.objective,
       id: req.params.id,
+      by: 'objective',
       title: title
     });
   })
@@ -132,6 +133,7 @@ exports.mission = function(req, res) {
     res.render('mission', {
       mission: mission[0].attributes.mission,
       id: req.params.id,
+      by: 'mission',
       title: title
     });
   })
@@ -183,6 +185,19 @@ exports.getMissionObjectivesById = function(req, res) {
   var by_id = getById(req.params.by);
   Q.all([
     Q.ninvoke(model, 'getMissionObjectivesById', by_id, req.params.id),
+  ])
+  .spread(function(mission) {
+    res.json(mission);
+  })
+  .fail(function (err) {
+    return next(err);
+  });
+};
+
+exports.getMissionJournalsById = function(req, res) {
+  var by_id = getById(req.params.by);
+  Q.all([
+    Q.ninvoke(model, 'getMissionJournalsById', by_id, req.params.id),
   ])
   .spread(function(mission) {
     res.json(mission);

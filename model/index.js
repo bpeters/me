@@ -11,6 +11,45 @@ var User = Parse.Object.extend("User");
 var City = Parse.Object.extend("City");
 var State = Parse.Object.extend("State");
 
+exports.getUserById = function (user_id, callback) {
+  var query = new Parse.Query(User);
+  query.equalTo('user_id', user_id);
+  query.find({
+    success: function(results) {
+      if (results[0]) {
+        console.log("Successfully retrieved " + results[0].get("user")  + ".");
+        return callback(null, results[0]);
+      } else {
+        return callback(null, null);
+      }
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(null, null);
+    }
+  });
+};
+
+exports.getUserByEmail = function (email, callback) {
+  console.log(email);
+  var query = new Parse.Query(User);
+  query.equalTo('email', email);
+  query.find({
+    success: function(results) {
+      if (results[0]) {
+        console.log("Successfully retrieved " + results[0].get("user")  + ".");
+        return callback(null, results[0]);
+      } else {
+        return callback(null, null);
+      }
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(null, null);
+    }
+  });
+};
+
 exports.getObjectiveById = function (by_id, id, callback) {
   var query = new Parse.Query(Objective);
   query.equalTo(by_id, parseInt(id,0));

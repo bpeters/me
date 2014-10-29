@@ -23,10 +23,23 @@ exports.index = function(req, res) {
   res.redirect('/list/city');
 };
 
+exports.login = function(req, res) {
+  res.render('login', {
+    user: req.user,
+    messages: req.flash('error'),
+    title: 'login'
+  });
+};
+
+exports.account = function(req, res) {
+
+};
+
 exports.list = function(req, res) {
   var title = req.params.by + " List";
   title = title.charAt(0).toUpperCase() + title.slice(1);
   res.render('list', {
+    user: req.user,
     by: req.params.by,
     title: title
   });

@@ -24,13 +24,12 @@
               <div className='row header'>
               <div className='user'>
                 <i className="sidebar-left-btn fa fa-user"></i>
-                <span className='header-text'><a href='/login'>Log In</a></span>
                 <span className='header-text'><a href='/signup'>Sign Up</a></span>
               </div>
               <div className='globe'>
                 <i className='sidebar-right-btn fa fa-globe' onClick={this.handleSidebarRightClick}></i>
                 <span className='header-text'>
-                  <a href={'/author/{{ id }}'}>{{ author }}</a>
+                  Log In
                 </span>
               </div>
             </div>
@@ -70,7 +69,32 @@
         }
       });
 
-      var AuthorPage = React.createClass({
+      var LoginForm = React.createClass({
+        render: function() {
+          return (
+            <div className='row'>
+              <div className='col-sm-offset-4 col-md-offset-4 col-md-4 col-sm-4 login-form'>
+                {% for message in messages %}
+                <div className="alert alert-danger" role="alert">{{ message }}</div>
+                {% endfor %}
+                <form action="/login" method="post" role="form">
+                  <div className="form-group">
+                    <label>Email address</label>
+                    <input type="email" className="form-control" name="email" placeholder="john@email.com" />
+                  </div>
+                  <div className="form-group">
+                    <label>Password</label>
+                    <input type="password" className="form-control" name="password" placeholder="********" />
+                  </div>
+                  <button type="submit" className="btn btn-default">Log In</button>
+                </form>
+              </div>
+            </div>
+          );
+        }
+      });
+
+      var LoginPage = React.createClass({
         render: function() {
           var imgUrl = '/images/city.jpg'
           var cityStyle = {
@@ -81,14 +105,16 @@
               <Header />
               <div className='row'>
                 <SidebarRight />
-                <div style={cityStyle} alt="city" className='city-image'></div>
+                <div style={cityStyle} alt="city" className='city-image-login'>
+                  <LoginForm />
+                </div>
               </div>
             </div>
           );
         }
       });
 
-      React.renderComponent(<AuthorPage />, document.getElementById('content'));
+      React.renderComponent(<LoginPage />, document.getElementById('content'));
       
     </script>
 {% endblock %}

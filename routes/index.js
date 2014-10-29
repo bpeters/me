@@ -23,10 +23,23 @@ exports.index = function(req, res) {
   res.redirect('/list/city');
 };
 
+exports.login = function(req, res) {
+  res.render('login', {
+    user: req.user,
+    messages: req.flash('error'),
+    title: 'login'
+  });
+};
+
+exports.account = function(req, res) {
+
+};
+
 exports.list = function(req, res) {
   var title = req.params.by + " List";
   title = title.charAt(0).toUpperCase() + title.slice(1);
   res.render('list', {
+    user: req.user,
     by: req.params.by,
     title: title
   });
@@ -69,6 +82,7 @@ exports.objective = function(req, res) {
       state_id: objective[0].attributes.state_id,
       objective: objective[0].attributes.objective,
       id: req.params.id,
+      by: 'objective',
       title: title
     });
   })
@@ -96,6 +110,7 @@ exports.journal = function(req, res) {
       author: journal[0].attributes.author,
       author_id: journal[0].attributes.author_id,
       id: req.params.id,
+      by: 'journal',
       title: title
     });
   })
@@ -132,6 +147,7 @@ exports.mission = function(req, res) {
     res.render('mission', {
       mission: mission[0].attributes.mission,
       id: req.params.id,
+      by: 'mission',
       title: title
     });
   })
@@ -183,6 +199,19 @@ exports.getMissionObjectivesById = function(req, res) {
   var by_id = getById(req.params.by);
   Q.all([
     Q.ninvoke(model, 'getMissionObjectivesById', by_id, req.params.id),
+  ])
+  .spread(function(mission) {
+    res.json(mission);
+  })
+  .fail(function (err) {
+    return next(err);
+  });
+};
+
+exports.getMissionJournalsById = function(req, res) {
+  var by_id = getById(req.params.by);
+  Q.all([
+    Q.ninvoke(model, 'getMissionJournalsById', by_id, req.params.id),
   ])
   .spread(function(mission) {
     res.json(mission);

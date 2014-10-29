@@ -6,9 +6,49 @@ var Objective = Parse.Object.extend("Objective");
 var Journal = Parse.Object.extend("Journal");
 var Mission = Parse.Object.extend("Mission");
 var MissionObjectives = Parse.Object.extend("MissionObjectives");
+var MissionJournals = Parse.Object.extend("MissionJournals");
 var User = Parse.Object.extend("User");
 var City = Parse.Object.extend("City");
 var State = Parse.Object.extend("State");
+
+exports.getUserById = function (user_id, callback) {
+  var query = new Parse.Query(User);
+  query.equalTo('user_id', user_id);
+  query.find({
+    success: function(results) {
+      if (results[0]) {
+        console.log("Successfully retrieved " + results[0].get("user")  + ".");
+        return callback(null, results[0]);
+      } else {
+        return callback(null, null);
+      }
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(null, null);
+    }
+  });
+};
+
+exports.getUserByEmail = function (email, callback) {
+  console.log(email);
+  var query = new Parse.Query(User);
+  query.equalTo('email', email);
+  query.find({
+    success: function(results) {
+      if (results[0]) {
+        console.log("Successfully retrieved " + results[0].get("user")  + ".");
+        return callback(null, results[0]);
+      } else {
+        return callback(null, null);
+      }
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(null, null);
+    }
+  });
+};
 
 exports.getObjectiveById = function (by_id, id, callback) {
   var query = new Parse.Query(Objective);
@@ -58,6 +98,20 @@ exports.getMissionObjectivesById = function (by_id, id, callback) {
   query.find({
     success: function(results) {
       console.log("Successfully retrieved " + results.length + " mission objectives.");
+      return callback(null, results);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+    }
+  });
+};
+
+exports.getMissionJournalsById = function (by_id, id, callback) {
+  var query = new Parse.Query(MissionJournals);
+  query.equalTo(by_id, parseInt(id,0));
+  query.find({
+    success: function(results) {
+      console.log("Successfully retrieved " + results.length + " mission journals.");
       return callback(null, results);
     },
     error: function(error) {

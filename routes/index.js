@@ -14,7 +14,7 @@ var getById = function(by) {
   } else if (by == 'mission') {
     by_id = 'mission_id';
   } else if (by == 'author') {
-    by_id = 'author_id';
+    by_id = 'author';
   }
   return by_id;
 };
@@ -28,6 +28,14 @@ exports.login = function(req, res) {
     user: req.user,
     messages: req.flash('error'),
     title: 'login'
+  });
+};
+
+exports.signup = function(req, res) {
+  res.render('signup', {
+    user: req.user,
+    messages: req.flash('error'),
+    title: 'signup'
   });
 };
 
@@ -54,6 +62,7 @@ exports.location = function(req, res) {
     var title = req.params.by + " Of " + name.name;
     title = title.charAt(0).toUpperCase() + title.slice(1);
     res.render('location', {
+      user: req.user,
       city: name.city,
       city_id: name.city_id,
       state: name.state,
@@ -76,6 +85,7 @@ exports.objective = function(req, res) {
     var title = objective[0].attributes.objective;
     title = title.charAt(0).toUpperCase() + title.slice(1);
     res.render('objective', {
+      user: req.user,
       city: objective[0].attributes.city,
       city_id: objective[0].attributes.city_id,
       state: objective[0].attributes.state,
@@ -99,6 +109,7 @@ exports.journal = function(req, res) {
     var title = journal[0].attributes.journal;
     title = title.charAt(0).toUpperCase() + title.slice(1);
     res.render('journal', {
+      user: req.user,
       city: journal[0].attributes.city,
       city_id: journal[0].attributes.city_id,
       state: journal[0].attributes.state,
@@ -121,14 +132,14 @@ exports.journal = function(req, res) {
 
 exports.author = function(req, res) {
   Q.all([
-    Q.ninvoke(model, 'getAuthorById', req.params.id),
+    Q.ninvoke(model, 'getAuthorByUsername', req.params.username),
   ])
   .spread(function(author) {
-    var title = author[0].attributes.user;
+    var title = author[0].attributes.username;
     title = title.charAt(0).toUpperCase() + title.slice(1);
     res.render('author', {
-      author: author[0].attributes.user,
-      id: req.params.id,
+      user: req.user,
+      author: author[0].attributes.username,
       title: title
     });
   })
@@ -145,6 +156,7 @@ exports.mission = function(req, res) {
     var title = mission[0].attributes.mission;
     title = title.charAt(0).toUpperCase() + title.slice(1);
     res.render('mission', {
+      user: req.user,
       mission: mission[0].attributes.mission,
       id: req.params.id,
       by: 'mission',
@@ -221,9 +233,9 @@ exports.getMissionJournalsById = function(req, res) {
   });
 };
 
-exports.getAuthorById = function(req, res) {
+exports.getAuthorByUsername = function(req, res) {
   Q.all([
-    Q.ninvoke(model, 'getAuthorById', req.params.id),
+    Q.ninvoke(model, 'getAuthorByUsername', req.params.username),
   ])
   .spread(function(author) {
     res.json(author);

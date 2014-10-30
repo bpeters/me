@@ -23,15 +23,18 @@
           return (
               <div className='row header'>
               <div className='user'>
-                <i className="sidebar-left-btn fa fa-user"></i>
+                {% if user %}
+                <i className="sidebar-left-btn fa fa-user" onClick={this.handleSidebarLeftClick}></i>
+                <span className='header-text'>{{ user.username }}</span>
+                {% else %}
+                <i className="fa fa-user"></i>
                 <span className='header-text'><a href='/login'>Log In</a></span>
                 <span className='header-text'><a href='/signup'>Sign Up</a></span>
+                {% endif %}
               </div>
               <div className='globe'>
                 <i className='sidebar-right-btn fa fa-globe' onClick={this.handleSidebarRightClick}></i>
-                <span className='header-text'>
-                  <a href={'/mission/{{ id }}'}>{{ mission }}</a>
-                </span>
+                <span className='header-text'><a href={'/mission/{{ id }}'}>{{ mission }}</a></span>
               </div>
             </div>
           );
@@ -58,8 +61,8 @@
             <div>
               <div className='sidebar-right sidebar'>
                 <ul>
-                  <li>
-                    <span className='sidebar-title'>List</span>
+                  <li className='sidebar-title'>
+                    <span>List</span>
                   </li>
                   <li>
                     <a href='/list/city'>
@@ -79,8 +82,8 @@
                   </li>
                 </ul>
                 <ul className='display-list'>
-                  <li>
-                    <span className='sidebar-title'>Display</span>
+                  <li className='sidebar-title'>
+                    <span>Display</span>
                   </li>
                   {this.props.display.map(function(item, i) {
                     var icon_class;

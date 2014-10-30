@@ -11,41 +11,109 @@ var User = Parse.Object.extend("User");
 var City = Parse.Object.extend("City");
 var State = Parse.Object.extend("State");
 
-exports.getUserById = function (user_id, callback) {
+exports.logIn = function (username, password, callback) {
+  Parse.User.logIn(username.toLowerCase(), password.toString(), {
+    success: function(user_object) {
+      console.log(user_object.get('username') + ' logged in.');
+      var user = {
+        id: user_object.id,
+        username: user_object.get("username"),
+        email: user_object.get("email")
+      };
+      return callback(null, user);
+    },
+    error: function(user, error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.signUp = function (email, username, password, callback) {
+  var user = new User();
+  user.set("email", email);
+  user.set("username", username.toLowerCase());
+  user.set("password", password.toString());
+  user.signUp(null, {
+    success: function(user_object) {
+      console.log(user_object.get('username') + ' signed up.');
+      var user = {
+        id: user_object.id,
+        username: user_object.get("username"),
+        email: user_object.get("email")
+      };
+      return callback(null, user);
+    },
+    error: function(user, error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.getUserById = function (id, callback) {
   var query = new Parse.Query(User);
-  query.equalTo('user_id', user_id);
+  query.get(id, {
+    success: function(user_object) {
+      console.log("Successfully retrieved " + user_object.get("username")  + ".");
+        var user = {
+          id: user_object.id,
+          username: user_object.get("username"),
+          email: user_object.get("email")
+        };
+        return callback(null, user);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.getUserByUsername= function (username, callback) {
+  var query = new Parse.Query(User);
+  query.equalTo('username', username.toLowerCase());
   query.find({
     success: function(results) {
       if (results[0]) {
-        console.log("Successfully retrieved " + results[0].get("user")  + ".");
-        return callback(null, results[0]);
+        console.log("Successfully retrieved " + results[0].get("username")  + ".");
+        var user = {
+          id: results[0].id,
+          username: results[0].get("username"),
+          email: results[0].get("email")
+        };
+        return callback(null, user);
       } else {
         return callback(null, null);
       }
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
-      return callback(null, null);
+      return callback(error, null);
     }
   });
 };
 
 exports.getUserByEmail = function (email, callback) {
-  console.log(email);
   var query = new Parse.Query(User);
   query.equalTo('email', email);
   query.find({
     success: function(results) {
       if (results[0]) {
-        console.log("Successfully retrieved " + results[0].get("user")  + ".");
-        return callback(null, results[0]);
+        console.log("Successfully retrieved " + results[0].get("username")  + ".");
+        var user = {
+          id: results[0].id,
+          username: results[0].get("username"),
+          email: results[0].get("email")
+        };
+        return callback(null, user);
       } else {
         return callback(null, null);
       }
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
-      return callback(null, null);
+      return callback(error, null);
     }
   });
 };
@@ -60,6 +128,7 @@ exports.getObjectiveById = function (by_id, id, callback) {
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
     }
   });
 };
@@ -74,6 +143,7 @@ exports.getJournalById = function (by_id, id, callback) {
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
     }
   });
 };
@@ -88,6 +158,7 @@ exports.getMissionById = function (by_id, id, callback) {
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
     }
   });
 };
@@ -102,6 +173,7 @@ exports.getMissionObjectivesById = function (by_id, id, callback) {
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
     }
   });
 };
@@ -116,20 +188,22 @@ exports.getMissionJournalsById = function (by_id, id, callback) {
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
     }
   });
 };
 
-exports.getAuthorById = function (id, callback) {
+exports.getAuthorByUsername = function (username, callback) {
   var query = new Parse.Query(User);
-  query.equalTo('user_id', parseInt(id,0));
+  query.equalTo('username', username);
   query.find({
     success: function(results) {
-      console.log("Successfully retrieved " + results[0].get('user') + ".");
+      console.log("Successfully retrieved " + results[0].get('username') + ".");
       return callback(null, results);
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
     }
   });
 };
@@ -159,6 +233,7 @@ exports.getList = function (by, by_id, callback) {
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
     }
   });
 };
@@ -175,29 +250,12 @@ exports.getNameById = function (by, by_id, id, callback) {
         city_id: results[0].get('city_id'),
         state : results[0].get('state'),
         state_id : results[0].get('state_id')
-      }
+      };
       return callback(null, object);
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
     }
   });
 };
-
-exports.addObjective = function (name, callback) {
-  var objective = new Objective();
-  objective.set("name", name);
-  objective.save(null, {
-    success: function(objective) {
-      // Execute any logic that should take place after the object is saved.
-      console.log('New object created with objectId: ' + objective.id);
-      return callback(null, objective.id);
-    },
-    error: function(objective, error) {
-      // Execute any logic that should take place if the save fails.
-      // error is a Parse.Error with an error code and message.
-      console.log('Failed to create new object, with error code: ' + error.message);
-    }
-  });
-};
-

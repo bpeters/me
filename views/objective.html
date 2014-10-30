@@ -23,17 +23,22 @@
           return (
               <div className='row header'>
               <div className='user'>
-                <i className="sidebar-left-btn fa fa-user"></i>
+                {% if user %}
+                <i className="sidebar-left-btn fa fa-user" onClick={this.handleSidebarLeftClick}></i>
+                <span className='header-text'>{{ user.username }}</span>
+                {% else %}
+                <i className="fa fa-user"></i>
                 <span className='header-text'><a href='/login'>Log In</a></span>
                 <span className='header-text'><a href='/signup'>Sign Up</a></span>
+                {% endif %}
               </div>
               <div className='globe'>
                 <i className='sidebar-right-btn fa fa-globe' onClick={this.handleSidebarRightClick}></i>
-                <span className='header-text'>
-                  <a href={'/objective/{{ id }}'}>{{ objective }} / </a>
-                  <a href={'/location/city/{{ city_id }}'}>{{ city }} / </a>
-                  <a href={'/location/state/{{ state_id }}'}>{{ state }}</a>
-                </span>
+                <span className='header-text'><a href={'/location/state/{{ state_id }}'}>{{ state }}</a></span>
+                <span className='header-text'>/</span>
+                <span className='header-text'><a href={'/location/city/{{ city_id }}'}>{{ city }}</a></span>
+                <span className='header-text'>/</span>
+                <span className='header-text'><a href={'/objective/{{ id }}'}>{{ objective }}</a></span>
               </div>
             </div>
           );
@@ -60,8 +65,8 @@
             <div>
               <div className='sidebar-right sidebar'>
                 <ul>
-                  <li>
-                    <span className='sidebar-title'>List</span>
+                  <li className='sidebar-title'>
+                    <span>List</span>
                   </li>
                   <li>
                     <a href='/list/city'>
@@ -81,8 +86,8 @@
                   </li>
                 </ul>
                 <ul className='display-list'>
-                  <li>
-                    <span className='sidebar-title'>Display</span>
+                  <li className='sidebar-title'>
+                    <span>Display</span>
                   </li>
                   {this.props.display.map(function(item, i) {
                     var icon_class;
@@ -168,7 +173,7 @@
             return (
               <tr key={journal.id}>
                 <td><a href={'/journal/' + journal.journal_id}>{journal.journal}</a></td>
-                <td><a href={'/author/' + journal.author_id}>{journal.author}</a></td>
+                <td><a href={'/author/' + journal.author}>{journal.author}</a></td>
               </tr>
             );
           });
@@ -194,7 +199,7 @@
             return (
               <tr key={mission.id}>
                 <td><a href={'/mission/' + mission.mission_id}>{mission.mission}</a></td>
-                <td><a href={'/author/' + mission.author_id}>{mission.author}</a></td>
+                <td><a href={'/author/' + mission.author}>{mission.author}</a></td>
                 <td>{mission.missionobjective_objective_cnt}</td>
                 <td>{mission.missionobjective_journal_cnt}</td>
               </tr>

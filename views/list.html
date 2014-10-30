@@ -9,6 +9,7 @@
       /** @jsx React.DOM */
 
       var sidebar_right;
+      var sidebar_left;
 
       var Header = React.createClass({
         handleSidebarRightClick: function(event) {
@@ -19,13 +20,32 @@
             $( ".sidebar-right" ).hide();
           }
         },
+        handleSidebarLeftClick: function(event) {
+          sidebar_left = !sidebar_left;
+          if (sidebar_left) {
+            $( ".sidebar-left" ).show();
+          } else {
+            $( ".sidebar-left" ).hide();
+          }
+        },
+        handleNewMissionClick: function(event) {
+
+          $( ".new-mission-panel" ).show();
+
+        },
         render: function() {
           return (
               <div className='row header'>
               <div className='user'>
-                <i className="sidebar-left-btn fa fa-user"></i>
+                {% if user %}
+                <i className="sidebar-left-btn fa fa-user" onClick={this.handleSidebarLeftClick}></i>
+                <span className='header-text'>{{ user.username }}</span>
+                <button className="create-btn btn btn-default" onClick={this.handleNewMissionClick}>New Mission</button>
+                {% else %}
+                <i className="fa fa-user"></i>
                 <span className='header-text'><a href='/login'>Log In</a></span>
                 <span className='header-text'><a href='/signup'>Sign Up</a></span>
+                {% endif %}
               </div>
               <div className='globe'>
                 <i className='sidebar-right-btn fa fa-globe' onClick={this.handleSidebarRightClick}></i>
@@ -52,8 +72,8 @@
           return (
             <div className='sidebar-right sidebar'>
               <ul>
-                <li>
-                  <span className='sidebar-title'>List</span>
+                <li className='sidebar-title'>
+                  <span>List</span>
                 </li>
                 <li>
                   <a href={location_href}>
@@ -64,6 +84,79 @@
                   </a>
                 </li>
               </ul>
+            </div>
+          );
+        }
+      });
+
+      var SidebarLeft = React.createClass({
+        render: function() {
+          return (
+            <div className='sidebar-left sidebar'>
+              <ul>
+                <li className='sidebar-title'>
+                  <span>Profile</span>
+                </li>
+                <li>
+                  <a href='/author/{{ user.username }}/stats'>
+                    <i className='sidebar-btn fa fa-bar-chart'></i>
+                    <span className='header-text'>Stats</span>
+                  </a>
+                </li>
+                <li>
+                  <a href='/author/{{ user.username }}/journals'>
+                    <i className='sidebar-btn fa fa-book'></i>
+                    <span className='header-text'>Journals</span>
+                  </a>
+                </li>
+                <li>
+                  <a href='/author/{{ user.username }}/missions'>
+                    <i className='sidebar-btn fa fa-rocket'></i>
+                    <span className='header-text'>Missions</span>
+                  </a>
+                </li>
+              </ul>
+              <ul>
+                <li className='sidebar-title'>
+                  <span>Account</span>
+                </li>
+                <li>
+                  <a href='/account'>
+                    <i className='sidebar-btn fa fa-cog'></i>
+                    <span className='header-text'>Settings</span>
+                  </a>
+                </li>
+                <li>
+                  <a href='/logout'>
+                    <i className='sidebar-btn fa fa-sign-out'></i>
+                    <span className='header-text'>Log Out</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          );
+        }
+      });
+
+      var NewMissionPanel = React.createClass({
+        handleClick: function(event) {
+          $( ".new-mission-panel" ).hide();
+          $('form').find("input[type=text]").val("");
+        },
+        render: function() {
+          return (
+            <div className='new-mission-panel clear-form col-sm-offset-4 col-md-offset-4 col-md-4 col-sm-4'>
+              {% for message in messages %}
+              <div className="alert alert-danger" role="alert">{{ message }}</div>
+              {% endfor %}
+              <form action="/api/1/addMission/{{ user.username }}" method="post" role="form">
+                <div className="form-group">
+                  <label>Mission Title</label>
+                  <input type="text" className="form-control" name="title" placeholder="Mission Impossible" />
+                </div>
+                <button type="submit" className="btn btn-success">Create New Mission</button>
+                <div className="btn btn-danger" onClick={this.handleClick}>Cancel</div>
+              </form>
             </div>
           );
         }
@@ -147,7 +240,9 @@
             <div>
               <Header />
               <div className='row'>
+                <NewMissionPanel />
                 <SidebarRight />
+                <SidebarLeft />
                 <div style={cityStyle} alt="city" className='city-image'></div>
                 <ListTable url="/api/1/getList/{{ by }}" />
               </div>

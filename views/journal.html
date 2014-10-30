@@ -23,18 +23,24 @@
           return (
               <div className='row header'>
               <div className='user'>
-                <i className="sidebar-left-btn fa fa-user"></i>
+                {% if user %}
+                <i className="sidebar-left-btn fa fa-user" onClick={this.handleSidebarLeftClick}></i>
+                <span className='header-text'>{{ user.username }}</span>
+                {% else %}
+                <i className="fa fa-user"></i>
                 <span className='header-text'><a href='/login'>Log In</a></span>
                 <span className='header-text'><a href='/signup'>Sign Up</a></span>
+                {% endif %}
               </div>
               <div className='globe'>
                 <i className='sidebar-right-btn fa fa-globe' onClick={this.handleSidebarRightClick}></i>
-                <span className='header-text'>
-                  <a href={'/journal/{{ id }}'}>{{ journal }} / </a>
-                  <a href={'/objective/{{ objective_id }}'}>{{ objective }} / </a>
-                  <a href={'/location/city/{{ city_id }}'}>{{ city }} / </a>
-                  <a href={'/location/state/{{ state_id }}'}>{{ state }}</a>
-                </span>
+                <span className='header-text'><a href={'/location/state/{{ state_id }}'}>{{ state }}</a></span>
+                <span className='header-text'>/</span>
+                <span className='header-text'><a href={'/location/city/{{ city_id }}'}>{{ city }}</a></span>
+                <span className='header-text'>/</span>
+                <span className='header-text'><a href={'/objective/{{ objective_id }}'}>{{ objective }}</a></span>
+                <span className='header-text'>/</span>
+                <span className='header-text'><a href={'/journal/{{ id }}'}>{{ journal }}</a></span>
               </div>
             </div>
           );
@@ -47,8 +53,8 @@
             <div>
               <div className='sidebar-right sidebar'>
                 <ul>
-                  <li>
-                    <span className='sidebar-title'>List</span>
+                  <li className='sidebar-title'>
+                    <span>List</span>
                   </li>
                   <li>
                     <a href='/list/city'>
@@ -78,7 +84,7 @@
           return (
             <div className='main col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6'>
               <h3>{{ journal }}</h3>
-              <h5>by <a href={'/author/{{ author_id }}'}>{{ author }}</a></h5>
+              <h5>by <a href={'/author/{{ author }}'}>{{ author }}</a></h5>
               <div>
                 <span className='journal-highlight'>
                   <span>{{ journal_entry }}</span>

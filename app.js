@@ -122,7 +122,7 @@ app.get('/author/:username/missions', routes.author);
 app.get('/mission/:id', routes.mission);
 
 //private route
-app.get('/account', ensureAuthenticated, routes.profile);
+app.get('/account', ensureAuthenticated, routes.account);
 
 //api routes
 app.get('/api/1/getObjective/:by/:id', routes.getObjectiveById);

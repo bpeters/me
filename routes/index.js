@@ -1,3 +1,6 @@
+require('node-jsx').install({extension: '.jsx'});
+var App = require('../react/App.jsx');
+var React = require('react');
 var Q = require('q');
 var model = require('../model');
 
@@ -20,7 +23,21 @@ var getById = function(by) {
 };
 
 exports.index = function(req, res) {
-  res.redirect('/list/city');
+  var markup = React.renderComponentToString(App({
+    page: 'ListPage',
+    title: 'List - Cities'
+  }));
+  res.send('<!DOCTYPE html>' + markup);
+};
+
+exports.list = function(req, res) {
+  var title = "List - " + req.params.by.charAt(0).toUpperCase() + req.params.by.slice(1);
+  var markup = React.renderComponentToString(App({
+    page: 'ListPage',
+    title: title,
+    params: req.params
+  }));
+  res.send('<!DOCTYPE html>' + markup);
 };
 
 exports.login = function(req, res) {
@@ -41,16 +58,6 @@ exports.signup = function(req, res) {
 
 exports.account = function(req, res) {
 
-};
-
-exports.list = function(req, res) {
-  var title = req.params.by + " List";
-  title = title.charAt(0).toUpperCase() + title.slice(1);
-  res.render('list', {
-    user: req.user,
-    by: req.params.by,
-    title: title
-  });
 };
 
 exports.location = function(req, res) {

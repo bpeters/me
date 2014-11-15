@@ -1,3 +1,6 @@
+#props  {
+  display: none;
+}
 .main {
   margin-top: 60px;
   margin-bottom: 20px;
@@ -153,7 +156,7 @@
 .new-mission-panel {
   display: none;
 }
-.city-image {
+.canvas {
   height: 500px;
   width: 100%;
   background-position: center;

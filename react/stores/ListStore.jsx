@@ -5,6 +5,7 @@
  *  For storing list data.
  */
 var Reflux = require('reflux');
+var request = require('superagent');
 
 var ListStore = Reflux.createStore({
 
@@ -13,7 +14,9 @@ var ListStore = Reflux.createStore({
     },
 
     loadList: function(url) {
-        return [{"name":"Dallas","id":2,"objectives":2,"journals":0,"missions":1},{"name":"Austin","id":1,"objectives":6,"journals":1,"missions":1}];
+        request.get('/api/1/getList/city').end(function(res) {
+            return res.body;
+        });
     },
 
     getList: function() {

@@ -8,7 +8,8 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var ListTable = require('./ListTable.jsx');
-var ListStore = require('../stores/ListStore.jsx');
+var ListStore = require('../stores/ListStore');
+var ListActions = require('../actions/ListActions');
 
 var ListPage = React.createClass({
     getDefaultProps: function() {
@@ -30,12 +31,15 @@ var ListPage = React.createClass({
                 url: '/images/' + this.props.params.by + '.jpg'
             },
             by: this.props.params.by,
-            list: ListStore.getList()
+            list: []
         };
     },
     componentDidMount: function() {
-        ListStore.listen(this.listChanged);
-        console.log()
+        this.unsubscribe = ListStore.listen(this.listChanged);
+        ListActions.load();
+    },
+    componentWillUnmount: function() {
+        this.unsubscribe();
     },
     listChanged: function(list) {
         this.setState({

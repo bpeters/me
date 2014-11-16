@@ -1,8 +1,7 @@
 var Reflux = require('reflux');
 
 var ListActions = Reflux.createActions([
-    "createNote",
-    "editNote"
+   "load"
 ]);
 
 module.exports = ListActions;

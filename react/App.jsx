@@ -5,7 +5,6 @@
  *  For rendering the app on server side.
  */
 var React = require('react');
-var ListPage = require('./components/ListPage.jsx');
 
 function safeStringify(obj) {
   return JSON.stringify(obj).replace(/<\/script/g, '<\\/script').replace(/<!--/g, '<\\!--');
@@ -34,7 +33,7 @@ var App = React.createClass({
                     <link href="/css/style.css" rel="stylesheet" />
                 </head>
                 <body>
-                    <ListPage params={this.state.params} />
+                    <div id="body"></div>
                     <span id="props" dangerouslySetInnerHTML={{__html: json}}></span>
                     <script type="text/javascript" src="/js/browserify/bundle.js"></script>
                 </body>

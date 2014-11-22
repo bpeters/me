@@ -1,16 +1,19 @@
 var express = require('express');
-var app = express();
 var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var app = express();
 var swig  = require('swig');
 var _      = require('lodash');
-var bodyParser = require('body-parser');
 var routes = require('./routes');
 var model = require('./model');
 var passport = require('passport');
 var flash = require('connect-flash');
 var passwordHash = require('password-hash');
 var LocalStrategy = require('passport-local').Strategy;
-var Q = require('q');
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -33,7 +36,7 @@ passport.use('local-login', new LocalStrategy({
           return done(null, false, { message: 'Invalid email: ' + username });
         }
         model.logIn(user.username, password, function(err, user) {
-          if (err) { return done(err); }
+          if (err) { return done(null, false, { message: 'Invalid password for ' + username }); }
           return done(null, user);
         });
       });
@@ -75,15 +78,18 @@ passport.use('local-signup', new LocalStrategy({
   }
 ));
 
-app.use(bodyParser.urlencoded({ extended: false }));
+// uncomment after placing your favicon in /public
+//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
-app.use(express.cookieParser());
-app.use(express.session({ secret: 'happy days' }));
+app.use(cookieParser());
+app.use(session({secret: 'happy days', saveUninitialized: true, resave: true}));
+app.use(express.static(path.join(__dirname, '/public')));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(path.join(__dirname, '/public')));
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
@@ -115,11 +121,11 @@ app.get('/list/:by', routes.list);
 app.get('/location/:by/:id', routes.location);
 app.get('/objective/:id', routes.objective);
 app.get('/journal/:id', routes.journal);
+app.get('/mission/:id', routes.mission);
 app.get('/author/:username', routes.author);
 app.get('/author/:username/stats', routes.author);
 app.get('/author/:username/journals', routes.author);
 app.get('/author/:username/missions', routes.author);
-app.get('/mission/:id', routes.mission);
 
 //private route
 app.get('/account', ensureAuthenticated, routes.account);
@@ -143,3 +149,35 @@ function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
   res.redirect('/login');
 }
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
+
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+    app.use(function(err, req, res, next) {
+        console.log(err);
+        res.status(err.status || 500);
+        res.send({
+            message: err.message,
+            error: err
+        });
+    });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.send({
+        message: err.message,
+        error: {}
+    });
+});

@@ -1,3 +1,6 @@
+#props  {
+  display: none;
+}
 .main {
   margin-top: 60px;
   margin-bottom: 20px;
@@ -83,7 +86,6 @@
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
   background-color: rgba(0,0,0,.6);
-  display: none;
   border-right: 1px solid #aaa;
 }
 .sidebar-right {
@@ -94,7 +96,6 @@
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
   background-color: rgba(0,0,0,.6);
-  display: none;
   color: #ddd;
   border-left: 1px solid #aaa;
 }
@@ -153,13 +154,13 @@
 .new-mission-panel {
   display: none;
 }
-.city-image {
+.canvas {
   height: 500px;
   width: 100%;
   background-position: center;
   background-size: cover;
 }
-.city-image-login {
+.canvas-login {
   position: fixed;
   top: 0;
   left: 0;
@@ -168,7 +169,7 @@
   background-position: center;
   background-size: cover;
 }
-.city-image-split {
+.canvas-half {
   position: fixed;
   top: 0;
   left: 0;

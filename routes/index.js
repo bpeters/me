@@ -1,3 +1,6 @@
+require('node-jsx').install({extension: '.jsx'});
+var App = require('../react/App.jsx');
+var React = require('react');
 var Q = require('q');
 var model = require('../model');
 
@@ -20,37 +23,49 @@ var getById = function(by) {
 };
 
 exports.index = function(req, res) {
-  res.redirect('/list/city');
+  var markup = React.renderComponentToString(App({
+    page: 'ListPage',
+    title: 'List - Cities',
+    user: req.user
+  }));
+  res.send('<!DOCTYPE html>' + markup);
+};
+
+exports.list = function(req, res) {
+  var title = "List - " + req.params.by.charAt(0).toUpperCase() + req.params.by.slice(1);
+  var markup = React.renderComponentToString(App({
+    page: 'ListPage',
+    title: title,
+    params: req.params,
+    user: req.user
+  }));
+  res.send('<!DOCTYPE html>' + markup);
 };
 
 exports.login = function(req, res) {
-  res.render('login', {
+  var markup = React.renderComponentToString(App({
+    page: 'LoginPage',
+    title: 'Login',
+    params: req.params,
     user: req.user,
-    messages: req.flash('error'),
-    title: 'login'
-  });
+    messages: req.flash('error')
+  }));
+  res.send('<!DOCTYPE html>' + markup);
 };
 
 exports.signup = function(req, res) {
-  res.render('signup', {
+  var markup = React.renderComponentToString(App({
+    page: 'SignupPage',
+    title: 'Signup',
+    params: req.params,
     user: req.user,
-    messages: req.flash('error'),
-    title: 'signup'
-  });
+    messages: req.flash('error')
+  }));
+  res.send('<!DOCTYPE html>' + markup);
 };
 
 exports.account = function(req, res) {
 
-};
-
-exports.list = function(req, res) {
-  var title = req.params.by + " List";
-  title = title.charAt(0).toUpperCase() + title.slice(1);
-  res.render('list', {
-    user: req.user,
-    by: req.params.by,
-    title: title
-  });
 };
 
 exports.location = function(req, res) {
@@ -58,23 +73,22 @@ exports.location = function(req, res) {
   Q.all([
     Q.ninvoke(model, 'getNameById', req.params.by, by_id, req.params.id),
   ])
-  .spread(function(name) {
-    var title = req.params.by + " Of " + name.name;
+  .spread(function(location) {
+    var title = req.params.by + " Of " + location.name;
     title = title.charAt(0).toUpperCase() + title.slice(1);
-    res.render('location', {
+    var markup = React.renderComponentToString(App({
+      page: 'LocationPage',
       user: req.user,
-      city: name.city,
-      city_id: name.city_id,
-      state: name.state,
-      state_id: name.state_id,
-      id: req.params.id,
-      by: req.params.by,
+      location: location,
+      params: req.params,
       title: title
-    });
+    }));
+    res.send('<!DOCTYPE html>' + markup);
   })
   .fail(function (err) {
     return next(err);
   });
+
 };
 
 exports.objective = function(req, res) {
@@ -84,17 +98,14 @@ exports.objective = function(req, res) {
   .spread(function(objective) {
     var title = objective[0].attributes.objective;
     title = title.charAt(0).toUpperCase() + title.slice(1);
-    res.render('objective', {
+    var markup = React.renderComponentToString(App({
+      page: 'ObjectivePage',
       user: req.user,
-      city: objective[0].attributes.city,
-      city_id: objective[0].attributes.city_id,
-      state: objective[0].attributes.state,
-      state_id: objective[0].attributes.state_id,
-      objective: objective[0].attributes.objective,
-      id: req.params.id,
-      by: 'objective',
+      objective: objective[0].attributes,
+      params: req.params,
       title: title
-    });
+    }));
+    res.send('<!DOCTYPE html>' + markup);
   })
   .fail(function (err) {
     return next(err);
@@ -108,40 +119,14 @@ exports.journal = function(req, res) {
   .spread(function(journal) {
     var title = journal[0].attributes.journal;
     title = title.charAt(0).toUpperCase() + title.slice(1);
-    res.render('journal', {
+    var markup = React.renderComponentToString(App({
+      page: 'JournalPage',
       user: req.user,
-      city: journal[0].attributes.city,
-      city_id: journal[0].attributes.city_id,
-      state: journal[0].attributes.state,
-      state_id: journal[0].attributes.state_id,
-      objective: journal[0].attributes.objective,
-      objective_id: journal[0].attributes.objective_id,
-      journal: journal[0].attributes.journal,
-      journal_entry: journal[0].attributes.journal_entry,
-      author: journal[0].attributes.author,
-      author_id: journal[0].attributes.author_id,
-      id: req.params.id,
-      by: 'journal',
+      journal: journal[0].attributes,
+      params: req.params,
       title: title
-    });
-  })
-  .fail(function (err) {
-    return next(err);
-  });
-};
-
-exports.author = function(req, res) {
-  Q.all([
-    Q.ninvoke(model, 'getAuthorByUsername', req.params.username),
-  ])
-  .spread(function(author) {
-    var title = author[0].attributes.username;
-    title = title.charAt(0).toUpperCase() + title.slice(1);
-    res.render('author', {
-      user: req.user,
-      author: author[0].attributes.username,
-      title: title
-    });
+    }));
+    res.send('<!DOCTYPE html>' + markup);
   })
   .fail(function (err) {
     return next(err);
@@ -155,13 +140,35 @@ exports.mission = function(req, res) {
   .spread(function(mission) {
     var title = mission[0].attributes.mission;
     title = title.charAt(0).toUpperCase() + title.slice(1);
-    res.render('mission', {
+    var markup = React.renderComponentToString(App({
+      page: 'MissionPage',
       user: req.user,
-      mission: mission[0].attributes.mission,
-      id: req.params.id,
-      by: 'mission',
+      mission: mission[0].attributes,
+      params: req.params,
       title: title
-    });
+    }));
+    res.send('<!DOCTYPE html>' + markup);
+  })
+  .fail(function (err) {
+    return next(err);
+  });
+};
+
+exports.author = function(req, res) {
+  Q.all([
+    Q.ninvoke(model, 'getAuthorByUsername', req.params.username),
+  ])
+  .spread(function(author) {
+    var title = author[0].attributes.username;
+    title = title.charAt(0).toUpperCase() + title.slice(1);
+    var markup = React.renderComponentToString(App({
+      page: 'AuthorPage',
+      user: req.user,
+      author: author[0].attributes,
+      params: req.params,
+      title: title
+    }));
+    res.send('<!DOCTYPE html>' + markup);
   })
   .fail(function (err) {
     return next(err);

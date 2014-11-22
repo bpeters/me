@@ -28827,17 +28827,26 @@ var React = require('react');
 var $ = require('jquery');
 var App = require('./App.jsx');
 var ListPage = require('./components/ListPage.jsx');
+var LoginPage = require('./components/LoginPage.jsx');
 var props = document.getElementById("props").innerHTML;
 props = JSON.parse(props);
+
+var page;
+
+if (props.page === 'ListPage') {
+  page = ListPage({params: props.params, user: props.user});
+} else if (props.page === 'LoginPage') {
+  page = LoginPage({params: props.params, user: props.user, messages: props.messages});
+}
 
 if (typeof window !== 'undefined') {
     window.onload = function() {
         React.renderComponent(App(props), document);
-        React.renderComponent(ListPage(null), document.getElementById('body'));
+        React.renderComponent(page, document.getElementById('body'));
     };
 }
 
-},{"./App.jsx":160,"./components/ListPage.jsx":166,"jquery":2,"react":146}],162:[function(require,module,exports){
+},{"./App.jsx":160,"./components/ListPage.jsx":166,"./components/LoginPage.jsx":169,"jquery":2,"react":146}],162:[function(require,module,exports){
 var Reflux = require('reflux');
 
 var ListActions = Reflux.createActions([
@@ -28858,11 +28867,17 @@ var React = require('react');
 var Canvas = React.createClass({displayName: 'Canvas',
     render: function() {
         var img = this.props.img;
+        var canvasClass;
         var style = {
           backgroundImage: 'url(' + img.url + ')'
         };
+        if (img.display === 'Login') {
+          canvasClass = 'canvas-login';
+        } else {
+          canvasClass = 'canvas';
+        }
         return (
-            React.DOM.div({style: style, alt: img.display, className: "canvas"})
+            React.DOM.div({style: style, alt: img.display, className: canvasClass})
         )
     }
 });
@@ -28879,6 +28894,20 @@ module.exports = Canvas;
 var React = require('react');
 
 var Header = React.createClass({displayName: 'Header',
+    getDefaultProps: function() {
+        return {
+            nav: {
+                display: '',
+                url: ''
+            }
+        };
+    },
+    propagateLeftClick: function() {
+      this.props.onClick('left');
+    },
+    propagateRightClick: function() {
+      this.props.onClick('right');
+    },
     render: function() {
         var nav = this.props.nav;
         return (
@@ -28889,7 +28918,7 @@ var Header = React.createClass({displayName: 'Header',
                 React.DOM.span({className: "header-text"}, React.DOM.a({href: "/signup"}, "Sign Up"))
               ), 
               React.DOM.div({className: "globe"}, 
-                React.DOM.i({className: "sidebar-right-btn fa fa-globe"}), 
+                React.DOM.i({className: "sidebar-right-btn fa fa-globe", onClick: this.propagateRightClick}), 
                 React.DOM.span({className: "header-text"}, React.DOM.a({href: nav.url}, nav.display))
               )
             )
@@ -28941,6 +28970,7 @@ module.exports = List;
 var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
+var SidebarRight = require('./SidebarRight.jsx');
 var ListTable = require('./ListTable.jsx');
 var ListStore = require('../stores/ListStore');
 var ListActions = require('../actions/ListActions');
@@ -28965,28 +28995,24 @@ var ListPage = React.createClass({displayName: 'ListPage',
                 url: '/images/' + this.props.params.by + '.jpg'
             },
             by: this.props.params.by,
-            list: []
+            sidebarRight: false
         };
     },
-    componentDidMount: function() {
-        this.unsubscribe = ListStore.listen(this.listChanged);
-        ListActions.load();
-    },
-    componentWillUnmount: function() {
-        this.unsubscribe();
-    },
-    listChanged: function(list) {
-        this.setState({
-            list: list
-        });
+    showSidebar: function(sidebar) {
+        if (sidebar === 'right') {
+            this.setState({
+                sidebarRight: !this.state.sidebarRight
+            });
+        }
     },
     render: function() {
         return (
             React.DOM.div({className: "container-fluid"}, 
-                Header({nav: this.state.nav}), 
+                Header({nav: this.state.nav, onClick: this.showSidebar}), 
+                 this.state.sidebarRight ? SidebarRight({by: this.state.by}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    ListTable({by: this.state.by, list: this.state.list})
+                    ListTable({by: this.state.by, Store: ListStore, Actions: ListActions})
                 )
             )
         )
@@ -28995,7 +29021,7 @@ var ListPage = React.createClass({displayName: 'ListPage',
 
 module.exports = ListPage;
 
-},{"../actions/ListActions":162,"../stores/ListStore":168,"./Canvas.jsx":163,"./Header.jsx":164,"./ListTable.jsx":167,"react":146}],167:[function(require,module,exports){
+},{"../actions/ListActions":162,"../stores/ListStore":171,"./Canvas.jsx":163,"./Header.jsx":164,"./ListTable.jsx":167,"./SidebarRight.jsx":170,"react":146}],167:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29006,10 +29032,26 @@ var React = require('react');
 var List = require('./List.jsx');
 
 var ListTable = React.createClass({displayName: 'ListTable',
+    getInitialState: function() {
+        return {
+            list: []
+        };
+    },
+    componentDidMount: function() {
+        this.unsubscribe = this.props.Store.listen(this.listChanged);
+        this.props.Actions.load(this.props.by);
+    },
+    componentWillUnmount: function() {
+        this.unsubscribe();
+    },
+    listChanged: function(list) {
+        this.setState({
+            list: list
+        });
+    },
     render: function() {
       var by = this.props.by
       var header = by.charAt(0).toUpperCase() + by.slice(1);
-      var list = this.props.list;
         return (
           React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
             React.DOM.div({className: "table-responsive"}, 
@@ -29030,7 +29072,7 @@ var ListTable = React.createClass({displayName: 'ListTable',
                     )
                   )
                 ), 
-                List({list: list, by: by})
+                List({list: this.state.list, by: by})
               )
             )
           )
@@ -29041,6 +29083,151 @@ var ListTable = React.createClass({displayName: 'ListTable',
 module.exports = ListTable;
 
 },{"./List.jsx":165,"react":146}],168:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  Login Form displays the login form details.
+ */
+var React = require('react');
+
+var LoginForm = React.createClass({displayName: 'LoginForm',
+      render: function() {
+        var messages = this.props.messages.map(function(message, i) {
+          return (
+            React.DOM.div({key: i, className: "alert alert-danger", role: "alert"}, message)
+          );
+        });
+        return (
+            React.DOM.div({className: "row"}, 
+              React.DOM.div({className: "col-sm-offset-4 col-md-offset-4 col-md-4 col-sm-4 clear-form"}, 
+                messages, 
+                React.DOM.form({action: "/login", method: "post", role: "form"}, 
+                  React.DOM.div({className: "form-group"}, 
+                    React.DOM.label(null, "Email"), 
+                    React.DOM.input({type: "email", className: "form-control", name: "email", placeholder: "john@email.com"})
+                  ), 
+                  React.DOM.div({className: "form-group"}, 
+                    React.DOM.label(null, "Password"), 
+                    React.DOM.input({type: "password", className: "form-control", name: "password", placeholder: "********"})
+                  ), 
+                  React.DOM.button({type: "submit", className: "btn btn-success"}, "Log In")
+                )
+              )
+            )
+        )
+    }
+});
+
+module.exports = LoginForm;
+
+},{"react":146}],169:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  List Page displays Cities, States, Users, anything that can be tied to an Objective in a list view.
+ */
+var React = require('react');
+var Header = require('./Header.jsx');
+var Canvas = require('./Canvas.jsx');
+var SidebarRight = require('./SidebarRight.jsx');
+var LoginForm = require('./LoginForm.jsx');
+
+var ListPage = React.createClass({displayName: 'ListPage',
+    getDefaultProps: function() {
+        return {
+            params: {
+                by: 'cities'
+            }
+        };
+    },
+    getInitialState: function() {
+        return {
+            img : {
+                display: 'Login',
+                url: '/images/login.jpg'
+            },
+            by: this.props.params.by,
+            messages: this.props.messages,
+            sidebarRight: false
+        };
+    },
+    showSidebar: function(sidebar) {
+        if (sidebar === 'right') {
+            this.setState({
+                sidebarRight: !this.state.sidebarRight
+            });
+        }
+    },
+    render: function() {
+        return (
+            React.DOM.div({className: "container-fluid"}, 
+                Header({nav: this.state.nav, onClick: this.showSidebar}), 
+                 this.state.sidebarRight ? SidebarRight({by: this.state.by}) : null, 
+                React.DOM.div({className: "row"}, 
+                    Canvas({img: this.state.img}), 
+                    LoginForm({messages: this.state.messages})
+                )
+            )
+        )
+    }
+});
+
+module.exports = ListPage;
+
+},{"./Canvas.jsx":163,"./Header.jsx":164,"./LoginForm.jsx":168,"./SidebarRight.jsx":170,"react":146}],170:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  SidebarRight displays navigation and filters for page specific things.
+ */
+var React = require('react');
+
+var SidebarRight = React.createClass({displayName: 'SidebarRight',
+      render: function() {
+        var locations = [
+          {
+            display: 'All Cities',
+            url: '/list/cities'
+          },
+          {
+            display: 'All States',
+            url: '/list/states'
+          }
+        ];
+        if (this.props.by == 'cities') {
+          locations.shift();
+        } else if (this.props.by == 'states') {
+          locations.pop();
+        }
+        var list = locations.map(function(location, i) {
+          return (
+              React.DOM.li(null, 
+                React.DOM.a({href: location.url}, 
+                  React.DOM.i({className: "sidebar-btn fa fa-globe"}), 
+                  React.DOM.span({className: "header-text"}, location.display)
+                )
+              )
+          );
+        });
+        return (
+          React.DOM.div({className: "sidebar-right sidebar"}, 
+            React.DOM.ul(null, 
+              React.DOM.li({className: "sidebar-title"}, 
+                React.DOM.span(null, "List")
+              ), 
+              list
+            )
+          )
+        )
+    }
+});
+
+module.exports = SidebarRight;
+
+},{"react":146}],171:[function(require,module,exports){
 var Reflux = require('reflux');
 var ListActions = require('../actions/ListActions');
 var $ = require('jquery');
@@ -29050,10 +29237,16 @@ var ListStore = Reflux.createStore({
         this._list = [];
         this.listenTo(ListActions.load, this.loadList);
     },
-    loadList: function() {
-        $.getJSON( "/api/1/getList/city")
-        .done(this.onLoad)
-        .fail(this.onLoadError);
+    loadList: function(by) {
+        if (by === 'cities') {
+            $.getJSON( "/api/1/getList/city")
+            .done(this.onLoad)
+            .fail(this.onLoadError);
+        } else if (by === 'states') {
+            $.getJSON( "/api/1/getList/state")
+            .done(this.onLoad)
+            .fail(this.onLoadError);
+        }
     },
     onLoad: function(list) {
         this._list = list;
@@ -29070,4 +29263,4 @@ var ListStore = Reflux.createStore({
 
 module.exports = ListStore;
 
-},{"../actions/ListActions":162,"jquery":2,"reflux":155}]},{},[160,161,163,164,165,166,167]);
+},{"../actions/ListActions":162,"jquery":2,"reflux":155}]},{},[160,161,163,164,165,166,167,168,169,170]);

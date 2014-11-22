@@ -9,11 +9,17 @@ var React = require('react');
 var Canvas = React.createClass({
     render: function() {
         var img = this.props.img;
+        var canvasClass;
         var style = {
           backgroundImage: 'url(' + img.url + ')'
         };
+        if (img.display === 'Login') {
+          canvasClass = 'canvas-login';
+        } else {
+          canvasClass = 'canvas';
+        }
         return (
-            <div style={style} alt={img.display} className='canvas'></div>
+            <div style={style} alt={img.display} className={canvasClass}></div>
         )
     }
 });

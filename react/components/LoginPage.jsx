@@ -8,9 +8,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
-var ListTable = require('./ListTable.jsx');
-var ListStore = require('../stores/ListStore');
-var ListActions = require('../actions/ListActions');
+var LoginForm = require('./LoginForm.jsx');
 
 var ListPage = React.createClass({
     getDefaultProps: function() {
@@ -21,17 +19,13 @@ var ListPage = React.createClass({
         };
     },
     getInitialState: function() {
-        var display = "All " + this.props.params.by.charAt(0).toUpperCase() + this.props.params.by.slice(1);
         return {
-            nav: {
-                display: display,
-                url: '/list/' + this.props.params.by
-            },
             img : {
-                display: display,
-                url: '/images/' + this.props.params.by + '.jpg'
+                display: 'Login',
+                url: '/images/login.jpg'
             },
             by: this.props.params.by,
+            messages: this.props.messages,
             sidebarRight: false
         };
     },
@@ -49,7 +43,7 @@ var ListPage = React.createClass({
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} />
-                    <ListTable by={this.state.by} Store={ListStore} Actions={ListActions}/>
+                    <LoginForm messages={this.state.messages} />
                 </div>
             </div>
         )

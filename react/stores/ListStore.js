@@ -7,10 +7,16 @@ var ListStore = Reflux.createStore({
         this._list = [];
         this.listenTo(ListActions.load, this.loadList);
     },
-    loadList: function() {
-        $.getJSON( "/api/1/getList/city")
-        .done(this.onLoad)
-        .fail(this.onLoadError);
+    loadList: function(by) {
+        if (by === 'cities') {
+            $.getJSON( "/api/1/getList/city")
+            .done(this.onLoad)
+            .fail(this.onLoadError);
+        } else if (by === 'states') {
+            $.getJSON( "/api/1/getList/state")
+            .done(this.onLoad)
+            .fail(this.onLoadError);
+        }
     },
     onLoad: function(list) {
         this._list = list;

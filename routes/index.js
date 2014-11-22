@@ -35,17 +35,21 @@ exports.list = function(req, res) {
   var markup = React.renderComponentToString(App({
     page: 'ListPage',
     title: title,
-    params: req.params
+    params: req.params,
+    user: req.user
   }));
   res.send('<!DOCTYPE html>' + markup);
 };
 
 exports.login = function(req, res) {
-  res.render('login', {
+  var markup = React.renderComponentToString(App({
+    page: 'LoginPage',
+    title: 'Login',
+    params: req.params,
     user: req.user,
-    messages: req.flash('error'),
-    title: 'login'
-  });
+    messages: req.flash('error')
+  }));
+  res.send('<!DOCTYPE html>' + markup);
 };
 
 exports.signup = function(req, res) {

@@ -4,7 +4,7 @@ var $ = require('jquery');
 
 var LocationStore = Reflux.createStore({
     init: function() {
-        this._results = [];
+        this._results = {};
         this._display = '';
         this.listenTo(LocationActions.load, this.load);
     },
@@ -24,13 +24,17 @@ var LocationStore = Reflux.createStore({
             .fail(this.onLoadError);
         }
     },
-    onLoad: function(results) {
+    onLoad: function(list) {
+        var results = {
+            display: LocationStore._display,
+            list: list
+        };
         this._results = results;
-        LocationStore.trigger(this._results, this._display);
+        LocationStore.trigger(this._results);
     },
     onLoadError: function() {
-        this._objectives = [];
-        LocationStore.trigger(this._results, this._display);
+        this._results = {};
+        LocationStore.trigger(this._results);
     },
     getDefaultData: function() {
         return this._results;

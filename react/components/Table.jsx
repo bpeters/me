@@ -33,6 +33,7 @@ var Table = React.createClass({
       });
     },
     render: function() {
+      console.log(this.state.results);
       var list;
       if (this.state.display === 'List') {
         var header = this.state.by.charAt(0).toUpperCase() + this.state.by.slice(1);

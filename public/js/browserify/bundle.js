@@ -29032,9 +29032,9 @@ var JournalList = React.createClass({displayName: 'JournalList',
         if (this.props.by != 'city') {
           city = true;
         }
-        var list = this.props.list.map(function(journal) {
+        var list = this.props.list.map(function(journal, i) {
           return (
-            React.DOM.tr({key: journal.id}, 
+            React.DOM.tr({key: i}, 
               React.DOM.td(null, React.DOM.a({href: '/journal/' + journal.journal_id}, journal.journal)), 
               React.DOM.td(null, React.DOM.a({href: '/objective/' + journal.objective_id}, journal.objective)), 
               React.DOM.td(null, React.DOM.a({href: '/author/' + journal.author}, journal.author)), 
@@ -29043,17 +29043,21 @@ var JournalList = React.createClass({displayName: 'JournalList',
           );
         });
         return (
-          React.DOM.table({className: "table"}, 
-            React.DOM.thead(null, 
-              React.DOM.tr(null, 
-                React.DOM.th(null, React.DOM.span(null, "Journal")), 
-                React.DOM.th(null, React.DOM.span(null, "Objective")), 
-                React.DOM.th(null, React.DOM.span(null, "Author")), 
-                 city ? React.DOM.th(null, React.DOM.span(null, "City")) : null
+          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+            React.DOM.div({className: "table-responsive"}, 
+              React.DOM.table({className: "table"}, 
+                React.DOM.thead(null, 
+                  React.DOM.tr(null, 
+                    React.DOM.th(null, React.DOM.span(null, "Journal")), 
+                    React.DOM.th(null, React.DOM.span(null, "Objective")), 
+                    React.DOM.th(null, React.DOM.span(null, "Author")), 
+                     city ? React.DOM.th(null, React.DOM.span(null, "City")) : null
+                  )
+                ), 
+                React.DOM.tbody(null, 
+                  list
+                )
               )
-            ), 
-            React.DOM.tbody(null, 
-              list
             )
           )
         )
@@ -29090,27 +29094,31 @@ var List = React.createClass({displayName: 'List',
           );
         });
         return (
-          React.DOM.table({className: "table"}, 
-            React.DOM.thead(null, 
-              React.DOM.tr(null, 
-                React.DOM.th(null, 
-                  React.DOM.span(null, this.props.header)
+          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+            React.DOM.div({className: "table-responsive"}, 
+              React.DOM.table({className: "table"}, 
+                React.DOM.thead(null, 
+                  React.DOM.tr(null, 
+                    React.DOM.th(null, 
+                      React.DOM.span(null, this.props.header)
+                    ), 
+                    React.DOM.th(null, 
+                      React.DOM.span(null, "Objectives")
+                    ), 
+                    React.DOM.th(null, 
+                      React.DOM.span(null, "Journals")
+                    ), 
+                    React.DOM.th(null, 
+                      React.DOM.span(null, "Missions")
+                    )
+                  )
                 ), 
-                React.DOM.th(null, 
-                  React.DOM.span(null, "Objectives")
-                ), 
-                React.DOM.th(null, 
-                  React.DOM.span(null, "Journals")
-                ), 
-                React.DOM.th(null, 
-                  React.DOM.span(null, "Missions")
+                React.DOM.tbody(null, 
+                  listItem
                 )
               )
-            ), 
-            React.DOM.tbody(null, 
-              listItem
-            )
           )
+        )
         )
     }
 });
@@ -29128,7 +29136,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
-var Table = require('./Table.jsx');
+var List = require('./List.jsx');
 var ListStore = require('../stores/ListStore');
 var ListActions = require('../actions/ListActions');
 
@@ -29176,13 +29184,14 @@ var ListPage = React.createClass({displayName: 'ListPage',
         }
     },
     render: function() {
+        var header = this.state.by.charAt(0).toUpperCase() + this.state.by.slice(1);
         return (
             React.DOM.div({className: "container-fluid"}, 
                 Header({nav: this.state.nav, onClick: this.showSidebar}), 
                  this.state.sidebarRight ? SidebarRight({by: this.state.by}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    Table({by: this.state.by, results: this.state.list})
+                    List({list: this.state.list, by: this.state.by, header: header})
                 )
             )
         )
@@ -29191,7 +29200,7 @@ var ListPage = React.createClass({displayName: 'ListPage',
 
 module.exports = ListPage;
 
-},{"../actions/ListActions":162,"../stores/ListStore":179,"./Canvas.jsx":164,"./Header.jsx":166,"./SidebarRight.jsx":175,"./Table.jsx":178,"react":146}],170:[function(require,module,exports){
+},{"../actions/ListActions":162,"../stores/ListStore":179,"./Canvas.jsx":164,"./Header.jsx":166,"./List.jsx":168,"./SidebarRight.jsx":175,"react":146}],170:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29202,7 +29211,9 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
-var Table = require('./Table.jsx');
+var ObjectiveList = require('./ObjectiveList.jsx');
+var JournalList = require('./JournalList.jsx');
+var MissionList = require('./MissionList.jsx');
 var LocationStore = require('../stores/LocationStore');
 var LocationActions = require('../actions/LocationActions');
 
@@ -29251,10 +29262,10 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
     componentWillUnmount: function() {
         this.unsubscribe();
     },
-    displayChanged: function(results, display) {
+    displayChanged: function(results) {
         this.setState({
-            results: results,
-            display: display
+            results: results.list,
+            display: results.display
         });
     },
     showSidebar: function(sidebar) {
@@ -29265,13 +29276,23 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
         }
     },
     render: function() {
+        console.log(this.state.display);
+        console.log(this.state.results);
+        var list;
+        if (this.state.display === 'Objectives') {
+            list = ObjectiveList({list: this.state.results, by: this.state.by});
+        } else if (this.state.display === 'Journals') {
+            list = JournalList({list: this.state.results, by: this.state.by});
+        } else if (this.state.display === 'Missions') {
+            list = MissionList({list: this.state.results, by: this.state.by});
+        }
         return (
             React.DOM.div({className: "container-fluid"}, 
                 Header({nav: this.state.nav, onClick: this.showSidebar}), 
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: true}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    Table({results: this.state.results, display: this.state.display, by: this.state.by})
+                    list
                 )
             )
         )
@@ -29280,7 +29301,7 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
 
 module.exports = LocationPage;
 
-},{"../actions/LocationActions":163,"../stores/LocationStore":180,"./Canvas.jsx":164,"./Header.jsx":166,"./SidebarRight.jsx":175,"./Table.jsx":178,"react":146}],171:[function(require,module,exports){
+},{"../actions/LocationActions":163,"../stores/LocationStore":180,"./Canvas.jsx":164,"./Header.jsx":166,"./JournalList.jsx":167,"./MissionList.jsx":173,"./ObjectiveList.jsx":174,"./SidebarRight.jsx":175,"react":146}],171:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29382,9 +29403,9 @@ var MissionList = React.createClass({displayName: 'MissionList',
         if (this.props.by != 'city') {
           city = true;
         }
-        var list = this.props.list.map(function(mission) {
+        var list = this.props.list.map(function(mission, i) {
           return (
-            React.DOM.tr({key: mission.id}, 
+            React.DOM.tr({key: i}, 
               React.DOM.td(null, React.DOM.a({href: '/mission/' + mission.mission_id}, mission.mission)), 
               React.DOM.td(null, React.DOM.a({href: '/author/' + mission.author}, mission.author)), 
               React.DOM.td(null, React.DOM.a({href: '/objective/' + mission.objective_id}, mission.objective)), 
@@ -29394,16 +29415,20 @@ var MissionList = React.createClass({displayName: 'MissionList',
           );
         });
         return (
-          React.DOM.table({className: "table"}, 
-            React.DOM.thead(null, 
-              React.DOM.th(null, React.DOM.span(null, "Mission")), 
-              React.DOM.th(null, React.DOM.span(null, "Author")), 
-              React.DOM.th(null, React.DOM.span(null, "Objective")), 
-               city ? React.DOM.th(null, React.DOM.span(null, "City")) : null, 
-              React.DOM.th(null, React.DOM.span(null, "Journals"))
-            ), 
-            React.DOM.tbody(null, 
-              list
+          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+            React.DOM.div({className: "table-responsive"}, 
+              React.DOM.table({className: "table"}, 
+                React.DOM.thead(null, 
+                  React.DOM.th(null, React.DOM.span(null, "Mission")), 
+                  React.DOM.th(null, React.DOM.span(null, "Author")), 
+                  React.DOM.th(null, React.DOM.span(null, "Objective")), 
+                   city ? React.DOM.th(null, React.DOM.span(null, "City")) : null, 
+                  React.DOM.th(null, React.DOM.span(null, "Journals"))
+                ), 
+                React.DOM.tbody(null, 
+                  list
+                )
+              )
             )
           )
         )
@@ -29422,14 +29447,29 @@ module.exports = MissionList;
 var React = require('react');
 
 var ObjectiveList = React.createClass({displayName: 'ObjectiveList',
+      getDefaultProps: function() {
+        return {
+          list: []
+        };
+      },
+      getInitialState: function() {
+        return {
+          list: this.props.list
+        };
+      },
+      componentWillReceiveProps: function(nextProps) {
+        this.setState({
+          list: nextProps.list
+        });
+      },
       render: function() {
         var city;
         if (this.props.by != 'city') {
           city = true;
         }
-        var list = this.props.list.map(function(objective) {
+        var list = this.state.list.map(function(objective, i) {
           return (
-            React.DOM.tr({key: objective.id}, 
+            React.DOM.tr({key: i}, 
               React.DOM.td(null, React.DOM.a({href: '/objective/' + objective.objective_id}, objective.objective)), 
                city ? React.DOM.td(null, React.DOM.a({href: '/location/city/' + objective.city_id}, objective.city)) : null, 
               React.DOM.td(null, objective.objective_journal_cnt), 
@@ -29440,19 +29480,23 @@ var ObjectiveList = React.createClass({displayName: 'ObjectiveList',
           );
         });
         return (
-          React.DOM.table({className: "table"}, 
-            React.DOM.thead(null, 
-              React.DOM.tr(null, 
-                React.DOM.th(null, React.DOM.span(null, "Objective")), 
-                 city ? React.DOM.th(null, React.DOM.span(null, "City")) : null, 
-                React.DOM.th(null, React.DOM.span(null, "Journals")), 
-                React.DOM.th(null, React.DOM.span(null, "Missions")), 
-                React.DOM.th(null, React.DOM.span({className: "glyphicon glyphicon-ok"})), 
-                React.DOM.th(null, React.DOM.span({className: "glyphicon glyphicon-heart"}))
+          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+            React.DOM.div({className: "table-responsive"}, 
+              React.DOM.table({className: "table"}, 
+                React.DOM.thead(null, 
+                  React.DOM.tr(null, 
+                    React.DOM.th(null, React.DOM.span(null, "Objective")), 
+                     city ? React.DOM.th(null, React.DOM.span(null, "City")) : null, 
+                    React.DOM.th(null, React.DOM.span(null, "Journals")), 
+                    React.DOM.th(null, React.DOM.span(null, "Missions")), 
+                    React.DOM.th(null, React.DOM.span({className: "glyphicon glyphicon-ok"})), 
+                    React.DOM.th(null, React.DOM.span({className: "glyphicon glyphicon-heart"}))
+                  )
+                ), 
+                React.DOM.tbody(null, 
+                  list
+                )
               )
-            ), 
-            React.DOM.tbody(null, 
-              list
             )
           )
         )
@@ -29642,6 +29686,7 @@ var Table = React.createClass({displayName: 'Table',
       });
     },
     render: function() {
+      console.log(this.state.results);
       var list;
       if (this.state.display === 'List') {
         var header = this.state.by.charAt(0).toUpperCase() + this.state.by.slice(1);
@@ -29708,7 +29753,7 @@ var $ = require('jquery');
 
 var LocationStore = Reflux.createStore({
     init: function() {
-        this._results = [];
+        this._results = {};
         this._display = '';
         this.listenTo(LocationActions.load, this.load);
     },
@@ -29728,13 +29773,17 @@ var LocationStore = Reflux.createStore({
             .fail(this.onLoadError);
         }
     },
-    onLoad: function(results) {
+    onLoad: function(list) {
+        var results = {
+            display: LocationStore._display,
+            list: list
+        };
         this._results = results;
-        LocationStore.trigger(this._results, this._display);
+        LocationStore.trigger(this._results);
     },
     onLoadError: function() {
-        this._objectives = [];
-        LocationStore.trigger(this._results, this._display);
+        this._results = {};
+        LocationStore.trigger(this._results);
     },
     getDefaultData: function() {
         return this._results;

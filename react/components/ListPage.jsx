@@ -8,7 +8,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
-var Table = require('./Table.jsx');
+var List = require('./List.jsx');
 var ListStore = require('../stores/ListStore');
 var ListActions = require('../actions/ListActions');
 
@@ -56,13 +56,14 @@ var ListPage = React.createClass({
         }
     },
     render: function() {
+        var header = this.state.by.charAt(0).toUpperCase() + this.state.by.slice(1);
         return (
             <div className="container-fluid">
                 <Header nav={this.state.nav} onClick={this.showSidebar}/>
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} />
-                    <Table by={this.state.by} results={this.state.list} />
+                    <List list={this.state.list} by={this.state.by} header={header} />
                 </div>
             </div>
         )

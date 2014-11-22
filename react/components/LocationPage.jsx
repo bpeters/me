@@ -8,7 +8,9 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
-var Table = require('./Table.jsx');
+var ObjectiveList = require('./ObjectiveList.jsx');
+var JournalList = require('./JournalList.jsx');
+var MissionList = require('./MissionList.jsx');
 var LocationStore = require('../stores/LocationStore');
 var LocationActions = require('../actions/LocationActions');
 
@@ -57,10 +59,10 @@ var LocationPage = React.createClass({
     componentWillUnmount: function() {
         this.unsubscribe();
     },
-    displayChanged: function(results, display) {
+    displayChanged: function(results) {
         this.setState({
-            results: results,
-            display: display
+            results: results.list,
+            display: results.display
         });
     },
     showSidebar: function(sidebar) {
@@ -71,13 +73,23 @@ var LocationPage = React.createClass({
         }
     },
     render: function() {
+        console.log(this.state.display);
+        console.log(this.state.results);
+        var list;
+        if (this.state.display === 'Objectives') {
+            list = <ObjectiveList list={this.state.results} by={this.state.by} />;
+        } else if (this.state.display === 'Journals') {
+            list = <JournalList list={this.state.results} by={this.state.by} />;
+        } else if (this.state.display === 'Missions') {
+            list = <MissionList list={this.state.results} by={this.state.by} />;
+        }
         return (
             <div className="container-fluid">
                 <Header nav={this.state.nav} onClick={this.showSidebar}/>
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} id={this.state.id} filters={true} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} />
-                    <Table results={this.state.results} display={this.state.display} by={this.state.by}/>
+                    {list}
                 </div>
             </div>
         )

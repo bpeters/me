@@ -12,9 +12,9 @@ var JournalList = React.createClass({
         if (this.props.by != 'city') {
           city = true;
         }
-        var list = this.props.list.map(function(journal) {
+        var list = this.props.list.map(function(journal, i) {
           return (
-            <tr key={journal.id}>
+            <tr key={i}>
               <td><a href={'/journal/' + journal.journal_id}>{journal.journal}</a></td>
               <td><a href={'/objective/' + journal.objective_id}>{journal.objective}</a></td>
               <td><a href={'/author/' + journal.author}>{journal.author}</a></td>
@@ -23,19 +23,23 @@ var JournalList = React.createClass({
           );
         });
         return (
-          <table className='table'>
-            <thead>
-              <tr>
-                <th><span>Journal</span></th>
-                <th><span>Objective</span></th>
-                <th><span>Author</span></th>
-                { city ? <th><span>City</span></th> : null }
-              </tr>
-            </thead>
-            <tbody>
-              {list}
-            </tbody>
-          </table>
+          <div className='col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main'>
+            <div className='table-responsive'>
+              <table className='table'>
+                <thead>
+                  <tr>
+                    <th><span>Journal</span></th>
+                    <th><span>Objective</span></th>
+                    <th><span>Author</span></th>
+                    { city ? <th><span>City</span></th> : null }
+                  </tr>
+                </thead>
+                <tbody>
+                  {list}
+                </tbody>
+              </table>
+            </div>
+          </div>
         )
     }
 });

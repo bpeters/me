@@ -25,27 +25,31 @@ var List = React.createClass({
           );
         });
         return (
-          <table className='table'>
-            <thead>
-              <tr>
-                <th>
-                  <span>{this.props.header}</span>
-                </th>
-                <th>
-                  <span>Objectives</span>
-                </th>
-                <th>
-                  <span>Journals</span>
-                </th>
-                <th>
-                  <span>Missions</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {listItem}
-            </tbody>
-          </table>
+          <div className='col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main'>
+            <div className='table-responsive'>
+              <table className='table'>
+                <thead>
+                  <tr>
+                    <th>
+                      <span>{this.props.header}</span>
+                    </th>
+                    <th>
+                      <span>Objectives</span>
+                    </th>
+                    <th>
+                      <span>Journals</span>
+                    </th>
+                    <th>
+                      <span>Missions</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {listItem}
+                </tbody>
+              </table>
+          </div>
+        </div>
         )
     }
 });

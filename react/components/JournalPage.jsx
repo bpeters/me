@@ -2,7 +2,7 @@
  * @jsx React.DOM
  */
 /**
- *  Objective Page displays objective details
+ *  Journal Page displays journal details
  */
 var React = require('react');
 var Header = require('./Header.jsx');

@@ -13,6 +13,7 @@ var SignupPage = require('./components/SignupPage.jsx');
 var LocationPage = require('./components/LocationPage.jsx');
 var ObjectivePage = require('./components/ObjectivePage.jsx');
 var JournalPage = require('./components/JournalPage.jsx');
+var MissionPage = require('./components/MissionPage.jsx');
 var props = document.getElementById("props").innerHTML;
 props = JSON.parse(props);
 
@@ -30,7 +31,10 @@ if (props.page === 'ListPage') {
   page = <ObjectivePage params={props.params} user={props.user} objective={props.objective} />;
 } else if (props.page === 'JournalPage') {
   page = <JournalPage params={props.params} user={props.user} journal={props.journal} />;
+} else if (props.page === 'MissionPage') {
+  page = <MissionPage params={props.params} user={props.user} mission={props.mission} />;
 }
+
 
 if (typeof window !== 'undefined') {
     window.onload = function() {

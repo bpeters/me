@@ -8,9 +8,12 @@ var React = require('react');
 
 var JournalList = React.createClass({
       render: function() {
-        var state;
-        if (this.props.by === 'state') {
+        var state, mission;
+        if (this.props.by === 'state' || this.props.by === 'mission') {
           state = true;
+        }
+        if (this.props.by === 'mission') {
+          mission = true;
         }
         var list = this.props.list.map(function(journal, i) {
           return (
@@ -19,6 +22,7 @@ var JournalList = React.createClass({
               { state ? <td><a href={'/objective/' + journal.objective_id}>{journal.objective}</a></td> : null }
               <td><a href={'/author/' + journal.author}>{journal.author}</a></td>
               { state ? <td><a href={'/location/city/' + journal.city_id}>{journal.city}</a></td> : null }
+              { mission ? <td><a href={'/location/state/' + journal.state_id}>{journal.state}</a></td> : null }
             </tr>
           );
         });
@@ -32,6 +36,7 @@ var JournalList = React.createClass({
                     { state ? <th><span>Objective</span></th> : null }
                     <th><span>Author</span></th>
                     { state ? <th><span>City</span></th> : null }
+                    { mission ? <th><span>State</span></th> : null }
                   </tr>
                 </thead>
                 <tbody>

@@ -23,15 +23,19 @@ var ObjectiveList = React.createClass({
         });
       },
       render: function() {
-        var city;
-        if (this.props.by != 'city') {
-          city = true;
+        var state, mission;
+        if (this.props.by === 'state' || this.props.by === 'mission') {
+          state = true;
+        }
+        if (this.props.by === 'mission') {
+          mission = true;
         }
         var list = this.state.list.map(function(objective, i) {
           return (
             <tr key={i}>
               <td><a href={'/objective/' + objective.objective_id}>{objective.objective}</a></td>
-              { city ? <td><a href={'/location/city/' + objective.city_id}>{objective.city}</a></td> : null }
+              { state ? <td><a href={'/location/city/' + objective.city_id}>{objective.city}</a></td> : null }
+              { mission ? <td><a href={'/location/city/' + objective.city_id}>{objective.city}</a></td> : null }
               <td>{objective.objective_journal_cnt}</td>
               <td>{objective.objective_mission_cnt}</td>
               <td>0</td>
@@ -46,7 +50,8 @@ var ObjectiveList = React.createClass({
                 <thead>
                   <tr>
                     <th><span>Objective</span></th>
-                    { city ? <th><span>City</span></th> : null }
+                    { state ? <th><span>City</span></th> : null }
+                    { mission ? <th><span>State</span></th> : null }
                     <th><span>Journals</span></th>
                     <th><span>Missions</span></th>
                     <th><span className='glyphicon glyphicon-ok'></span></th>

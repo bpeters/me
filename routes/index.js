@@ -132,6 +132,27 @@ exports.journal = function(req, res) {
   });
 };
 
+exports.mission = function(req, res) {
+  Q.all([
+    Q.ninvoke(model, 'getMissionById', 'mission_id', req.params.id),
+  ])
+  .spread(function(mission) {
+    var title = mission[0].attributes.mission;
+    title = title.charAt(0).toUpperCase() + title.slice(1);
+    var markup = React.renderComponentToString(App({
+      page: 'MissionPage',
+      user: req.user,
+      mission: mission[0].attributes,
+      params: req.params,
+      title: title
+    }));
+    res.send('<!DOCTYPE html>' + markup);
+  })
+  .fail(function (err) {
+    return next(err);
+  });
+};
+
 exports.author = function(req, res) {
   Q.all([
     Q.ninvoke(model, 'getAuthorByUsername', req.params.username),
@@ -142,26 +163,6 @@ exports.author = function(req, res) {
     res.render('author', {
       user: req.user,
       author: author[0].attributes.username,
-      title: title
-    });
-  })
-  .fail(function (err) {
-    return next(err);
-  });
-};
-
-exports.mission = function(req, res) {
-  Q.all([
-    Q.ninvoke(model, 'getMissionById', 'mission_id', req.params.id),
-  ])
-  .spread(function(mission) {
-    var title = mission[0].attributes.mission;
-    title = title.charAt(0).toUpperCase() + title.slice(1);
-    res.render('mission', {
-      user: req.user,
-      mission: mission[0].attributes.mission,
-      id: req.params.id,
-      by: 'mission',
       title: title
     });
   })

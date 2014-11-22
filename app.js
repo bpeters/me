@@ -121,11 +121,11 @@ app.get('/list/:by', routes.list);
 app.get('/location/:by/:id', routes.location);
 app.get('/objective/:id', routes.objective);
 app.get('/journal/:id', routes.journal);
+app.get('/mission/:id', routes.mission);
 app.get('/author/:username', routes.author);
 app.get('/author/:username/stats', routes.author);
 app.get('/author/:username/journals', routes.author);
 app.get('/author/:username/missions', routes.author);
-app.get('/mission/:id', routes.mission);
 
 //private route
 app.get('/account', ensureAuthenticated, routes.account);

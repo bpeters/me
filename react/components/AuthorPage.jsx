@@ -2,37 +2,25 @@
  * @jsx React.DOM
  */
 /**
- *  Journal Page displays journal details
+ *  Author Page displays author details aka public user profiles
  */
 var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
 
-var JournalPage = React.createClass({
+var AuthorPage = React.createClass({
     getInitialState: function() {
         return {
             img : {
-                display: this.props.journal.journal,
-                url: 'images/journal/' + 1 + '.jpg',
+                display: this.props.author.author,
+                url: 'images/author/' + 1 + '.jpg',
                 half: true
             },
             nav: [
                 {
-                    display: this.props.journal.state,
-                    url: '/location/state/' + this.props.journal.state_id
-                },
-                {
-                    display: this.props.journal.city,
-                    url: '/location/city/' + this.props.journal.city_id
-                },
-                {
-                    display: this.props.journal.objective,
-                    url: '/objective/' + this.props.journal.objective_id
-                },
-                {
-                    display: this.props.journal.journal,
-                    url: '/journal/' + this.props.journal.journal_id
+                    display: this.props.author.username,
+                    url: '/author/' + this.props.author.username
                 }
             ],
             by: this.props.params.by,
@@ -56,13 +44,7 @@ var JournalPage = React.createClass({
                 <div className="row">
                     <Canvas img={this.state.img} />
                     <div className='main col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6'>
-                      <h3>{ this.props.journal.journal }</h3>
-                      <h5>by <a href={'/author/' + this.props.journal.author_id}>{ this.props.journal.author }</a></h5>
-                      <div>
-                        <span className='journal-highlight'>
-                          <span>{ this.props.journal.journal_entry }</span>
-                        </span>
-                      </div>
+                      
                     </div>
                 </div>
             </div>
@@ -70,4 +52,4 @@ var JournalPage = React.createClass({
     }
 });
 
-module.exports = JournalPage;
+module.exports = AuthorPage;

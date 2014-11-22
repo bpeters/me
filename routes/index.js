@@ -160,11 +160,14 @@ exports.author = function(req, res) {
   .spread(function(author) {
     var title = author[0].attributes.username;
     title = title.charAt(0).toUpperCase() + title.slice(1);
-    res.render('author', {
+    var markup = React.renderComponentToString(App({
+      page: 'AuthorPage',
       user: req.user,
-      author: author[0].attributes.username,
+      author: author[0].attributes,
+      params: req.params,
       title: title
-    });
+    }));
+    res.send('<!DOCTYPE html>' + markup);
   })
   .fail(function (err) {
     return next(err);

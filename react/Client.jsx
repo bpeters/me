@@ -14,6 +14,7 @@ var LocationPage = require('./components/LocationPage.jsx');
 var ObjectivePage = require('./components/ObjectivePage.jsx');
 var JournalPage = require('./components/JournalPage.jsx');
 var MissionPage = require('./components/MissionPage.jsx');
+var AuthorPage = require('./components/AuthorPage.jsx');
 var props = document.getElementById("props").innerHTML;
 props = JSON.parse(props);
 
@@ -33,6 +34,8 @@ if (props.page === 'ListPage') {
   page = <JournalPage params={props.params} user={props.user} journal={props.journal} />;
 } else if (props.page === 'MissionPage') {
   page = <MissionPage params={props.params} user={props.user} mission={props.mission} />;
+} else if (props.page === 'AuthorPage') {
+  page = <AuthorPage params={props.params} user={props.user} author={props.author} />;
 }
 
 

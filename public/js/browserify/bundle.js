@@ -28833,6 +28833,7 @@ var LocationPage = require('./components/LocationPage.jsx');
 var ObjectivePage = require('./components/ObjectivePage.jsx');
 var JournalPage = require('./components/JournalPage.jsx');
 var MissionPage = require('./components/MissionPage.jsx');
+var AuthorPage = require('./components/AuthorPage.jsx');
 var props = document.getElementById("props").innerHTML;
 props = JSON.parse(props);
 
@@ -28852,6 +28853,8 @@ if (props.page === 'ListPage') {
   page = JournalPage({params: props.params, user: props.user, journal: props.journal});
 } else if (props.page === 'MissionPage') {
   page = MissionPage({params: props.params, user: props.user, mission: props.mission});
+} else if (props.page === 'AuthorPage') {
+  page = AuthorPage({params: props.params, user: props.user, author: props.author});
 }
 
 
@@ -28862,7 +28865,7 @@ if (typeof window !== 'undefined') {
     };
 }
 
-},{"./App.jsx":160,"./components/JournalPage.jsx":170,"./components/ListPage.jsx":172,"./components/LocationPage.jsx":173,"./components/LoginPage.jsx":175,"./components/MissionPage.jsx":177,"./components/ObjectivePage.jsx":179,"./components/SignupPage.jsx":182,"jquery":2,"react":146}],162:[function(require,module,exports){
+},{"./App.jsx":160,"./components/AuthorPage.jsx":166,"./components/JournalPage.jsx":171,"./components/ListPage.jsx":173,"./components/LocationPage.jsx":174,"./components/LoginPage.jsx":176,"./components/MissionPage.jsx":178,"./components/ObjectivePage.jsx":180,"./components/SignupPage.jsx":183,"jquery":2,"react":146}],162:[function(require,module,exports){
 var Reflux = require('reflux');
 
 var ListActions = Reflux.createActions([
@@ -28903,6 +28906,63 @@ module.exports = ObjectiveActions;
  * @jsx React.DOM
  */
 /**
+ *  Author Page displays author details aka public user profiles
+ */
+var React = require('react');
+var Header = require('./Header.jsx');
+var Canvas = require('./Canvas.jsx');
+var SidebarRight = require('./SidebarRight.jsx');
+
+var AuthorPage = React.createClass({displayName: 'AuthorPage',
+    getInitialState: function() {
+        return {
+            img : {
+                display: this.props.author.author,
+                url: 'images/author/' + 1 + '.jpg',
+                half: true
+            },
+            nav: [
+                {
+                    display: this.props.author.username,
+                    url: '/author/' + this.props.author.username
+                }
+            ],
+            by: this.props.params.by,
+            id: this.props.params.id,
+            sidebarRight: false,
+            results: []
+        };
+    },
+    showSidebar: function(sidebar) {
+        if (sidebar === 'right') {
+            this.setState({
+                sidebarRight: !this.state.sidebarRight
+            });
+        }
+    },
+    render: function() {
+        return (
+            React.DOM.div({className: "container-fluid"}, 
+                Header({nav: this.state.nav, onClick: this.showSidebar}), 
+                 this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id}) : null, 
+                React.DOM.div({className: "row"}, 
+                    Canvas({img: this.state.img}), 
+                    React.DOM.div({className: "main col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6"}
+                      
+                    )
+                )
+            )
+        )
+    }
+});
+
+module.exports = AuthorPage;
+
+},{"./Canvas.jsx":167,"./Header.jsx":169,"./SidebarRight.jsx":181,"react":146}],167:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
  *  Canvas displays the wide img for the page.
  */
 var React = require('react');
@@ -28929,7 +28989,7 @@ var Canvas = React.createClass({displayName: 'Canvas',
 
 module.exports = Canvas;
 
-},{"react":146}],167:[function(require,module,exports){
+},{"react":146}],168:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -28983,7 +29043,7 @@ var Filters = React.createClass({displayName: 'Filters',
 
 module.exports = Filters;
 
-},{"react":146}],168:[function(require,module,exports){
+},{"react":146}],169:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29034,7 +29094,7 @@ var Header = React.createClass({displayName: 'Header',
 
 module.exports = Header;
 
-},{"react":146}],169:[function(require,module,exports){
+},{"react":146}],170:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29088,7 +29148,7 @@ var JournalList = React.createClass({displayName: 'JournalList',
 
 module.exports = JournalList;
 
-},{"react":146}],170:[function(require,module,exports){
+},{"react":146}],171:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29129,8 +29189,7 @@ var JournalPage = React.createClass({displayName: 'JournalPage',
             by: this.props.params.by,
             id: this.props.params.id,
             sidebarRight: false,
-            results: [],
-            display: 'Journals',
+            results: []
         };
     },
     showSidebar: function(sidebar) {
@@ -29164,7 +29223,7 @@ var JournalPage = React.createClass({displayName: 'JournalPage',
 
 module.exports = JournalPage;
 
-},{"./Canvas.jsx":166,"./Header.jsx":168,"./SidebarRight.jsx":180,"react":146}],171:[function(require,module,exports){
+},{"./Canvas.jsx":167,"./Header.jsx":169,"./SidebarRight.jsx":181,"react":146}],172:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29223,7 +29282,7 @@ var List = React.createClass({displayName: 'List',
 
 module.exports = List;
 
-},{"react":146}],172:[function(require,module,exports){
+},{"react":146}],173:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29298,7 +29357,7 @@ var ListPage = React.createClass({displayName: 'ListPage',
 
 module.exports = ListPage;
 
-},{"../actions/ListActions":162,"../stores/ListStore":184,"./Canvas.jsx":166,"./Header.jsx":168,"./List.jsx":171,"./SidebarRight.jsx":180,"react":146}],173:[function(require,module,exports){
+},{"../actions/ListActions":162,"../stores/ListStore":185,"./Canvas.jsx":167,"./Header.jsx":169,"./List.jsx":172,"./SidebarRight.jsx":181,"react":146}],174:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29415,7 +29474,7 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
 
 module.exports = LocationPage;
 
-},{"../actions/LocationActions":163,"../stores/LocationStore":185,"./Canvas.jsx":166,"./Header.jsx":168,"./JournalList.jsx":169,"./MissionList.jsx":176,"./ObjectiveList.jsx":178,"./SidebarRight.jsx":180,"react":146}],174:[function(require,module,exports){
+},{"../actions/LocationActions":163,"../stores/LocationStore":186,"./Canvas.jsx":167,"./Header.jsx":169,"./JournalList.jsx":170,"./MissionList.jsx":177,"./ObjectiveList.jsx":179,"./SidebarRight.jsx":181,"react":146}],175:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29454,7 +29513,7 @@ var LoginForm = React.createClass({displayName: 'LoginForm',
 
 module.exports = LoginForm;
 
-},{"react":146}],175:[function(require,module,exports){
+},{"react":146}],176:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29502,7 +29561,7 @@ var LoginPage = React.createClass({displayName: 'LoginPage',
 
 module.exports = LoginPage;
 
-},{"./Canvas.jsx":166,"./Header.jsx":168,"./LoginForm.jsx":174,"./SidebarRight.jsx":180,"react":146}],176:[function(require,module,exports){
+},{"./Canvas.jsx":167,"./Header.jsx":169,"./LoginForm.jsx":175,"./SidebarRight.jsx":181,"react":146}],177:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29551,7 +29610,7 @@ var MissionList = React.createClass({displayName: 'MissionList',
 
 module.exports = MissionList;
 
-},{"react":146}],177:[function(require,module,exports){
+},{"react":146}],178:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29643,7 +29702,7 @@ var MissionPage = React.createClass({displayName: 'MissionPage',
 
 module.exports = MissionPage;
 
-},{"../actions/MissionActions":164,"../stores/MissionStore":186,"./Canvas.jsx":166,"./Header.jsx":168,"./JournalList.jsx":169,"./ObjectiveList.jsx":178,"./SidebarRight.jsx":180,"react":146}],178:[function(require,module,exports){
+},{"../actions/MissionActions":164,"../stores/MissionStore":187,"./Canvas.jsx":167,"./Header.jsx":169,"./JournalList.jsx":170,"./ObjectiveList.jsx":179,"./SidebarRight.jsx":181,"react":146}],179:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29716,7 +29775,7 @@ var ObjectiveList = React.createClass({displayName: 'ObjectiveList',
 
 module.exports = ObjectiveList;
 
-},{"react":146}],179:[function(require,module,exports){
+},{"react":146}],180:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29816,7 +29875,7 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
 
 module.exports = ObjectivePage;
 
-},{"../actions/ObjectiveActions":165,"../stores/ObjectiveStore":187,"./Canvas.jsx":166,"./Header.jsx":168,"./JournalList.jsx":169,"./MissionList.jsx":176,"./SidebarRight.jsx":180,"react":146}],180:[function(require,module,exports){
+},{"../actions/ObjectiveActions":165,"../stores/ObjectiveStore":188,"./Canvas.jsx":167,"./Header.jsx":169,"./JournalList.jsx":170,"./MissionList.jsx":177,"./SidebarRight.jsx":181,"react":146}],181:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29870,7 +29929,7 @@ var SidebarRight = React.createClass({displayName: 'SidebarRight',
 
 module.exports = SidebarRight;
 
-},{"./Filters.jsx":167,"react":146}],181:[function(require,module,exports){
+},{"./Filters.jsx":168,"react":146}],182:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29913,7 +29972,7 @@ var SignupForm = React.createClass({displayName: 'SignupForm',
 
 module.exports = SignupForm;
 
-},{"react":146}],182:[function(require,module,exports){
+},{"react":146}],183:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29961,7 +30020,7 @@ var ListPage = React.createClass({displayName: 'ListPage',
 
 module.exports = ListPage;
 
-},{"./Canvas.jsx":166,"./Header.jsx":168,"./SidebarRight.jsx":180,"./SignupForm.jsx":181,"react":146}],183:[function(require,module,exports){
+},{"./Canvas.jsx":167,"./Header.jsx":169,"./SidebarRight.jsx":181,"./SignupForm.jsx":182,"react":146}],184:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -30021,7 +30080,7 @@ var Table = React.createClass({displayName: 'Table',
 
 module.exports = Table;
 
-},{"./JournalList.jsx":169,"./List.jsx":171,"./MissionList.jsx":176,"./ObjectiveList.jsx":178,"react":146}],184:[function(require,module,exports){
+},{"./JournalList.jsx":170,"./List.jsx":172,"./MissionList.jsx":177,"./ObjectiveList.jsx":179,"react":146}],185:[function(require,module,exports){
 var Reflux = require('reflux');
 var ListActions = require('../actions/ListActions');
 var $ = require('jquery');
@@ -30057,7 +30116,7 @@ var ListStore = Reflux.createStore({
 
 module.exports = ListStore;
 
-},{"../actions/ListActions":162,"jquery":2,"reflux":155}],185:[function(require,module,exports){
+},{"../actions/ListActions":162,"jquery":2,"reflux":155}],186:[function(require,module,exports){
 var Reflux = require('reflux');
 var LocationActions = require('../actions/LocationActions');
 var $ = require('jquery');
@@ -30103,7 +30162,7 @@ var LocationStore = Reflux.createStore({
 
 module.exports = LocationStore;
 
-},{"../actions/LocationActions":163,"jquery":2,"reflux":155}],186:[function(require,module,exports){
+},{"../actions/LocationActions":163,"jquery":2,"reflux":155}],187:[function(require,module,exports){
 var Reflux = require('reflux');
 var MissionActions = require('../actions/MissionActions');
 var $ = require('jquery');
@@ -30145,7 +30204,7 @@ var MissionStore = Reflux.createStore({
 
 module.exports = MissionStore;
 
-},{"../actions/MissionActions":164,"jquery":2,"reflux":155}],187:[function(require,module,exports){
+},{"../actions/MissionActions":164,"jquery":2,"reflux":155}],188:[function(require,module,exports){
 var Reflux = require('reflux');
 var ObjectiveActions = require('../actions/ObjectiveActions');
 var $ = require('jquery');
@@ -30187,4 +30246,4 @@ var ObjectiveStore = Reflux.createStore({
 
 module.exports = ObjectiveStore;
 
-},{"../actions/ObjectiveActions":165,"jquery":2,"reflux":155}]},{},[160,161,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183]);
+},{"../actions/ObjectiveActions":165,"jquery":2,"reflux":155}]},{},[160,161,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184]);

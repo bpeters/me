@@ -5,33 +5,20 @@
  *  Filters displays filter criteria for the right sidebar.
  */
 var React = require('react');
-var LocationActions = require('../actions/LocationActions');
 
 var Filters = React.createClass({
       getInitialState: function() {
         return {
-            display: [
-              {
-                class: 'fa-dot-circle-o',
-                name: 'Objectives'
-              },
-              {
-                class: 'fa-book',
-                name: 'Journals'
-              },
-              {
-                class: 'fa-rocket',
-                name: 'Missions'
-              }
-            ],
-            current: 'Objectives'
+            display: this.props.filters.display,
+            current: this.props.filters.current,
+            action: this.props.filters.action
         };
       },
       handleClick: function(i) {
         this.setState({
           current: this.state.display[i].name
         })
-        LocationActions.load(this.state.display[i].name, this.props.by, this.props.id);
+        this.state.action(this.state.display[i].name, this.props.by, this.props.id);
       },
       render: function() {
         var self = this;

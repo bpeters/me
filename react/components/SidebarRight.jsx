@@ -43,7 +43,7 @@ var SidebarRight = React.createClass({
               </li>
               {list}
             </ul>
-            { filters ? <Filters by={this.props.by} id={this.props.id} /> : null }
+            { filters ? <Filters filters={this.props.filters} by={this.props.by} id={this.props.id} /> : null }
           </div>
         )
     }

@@ -82,7 +82,7 @@ exports.location = function(req, res) {
       params: req.params,
       title: title
     }));
-  res.send('<!DOCTYPE html>' + markup);
+    res.send('<!DOCTYPE html>' + markup);
   })
   .fail(function (err) {
     return next(err);
@@ -97,17 +97,14 @@ exports.objective = function(req, res) {
   .spread(function(objective) {
     var title = objective[0].attributes.objective;
     title = title.charAt(0).toUpperCase() + title.slice(1);
-    res.render('objective', {
+    var markup = React.renderComponentToString(App({
+      page: 'ObjectivePage',
       user: req.user,
-      city: objective[0].attributes.city,
-      city_id: objective[0].attributes.city_id,
-      state: objective[0].attributes.state,
-      state_id: objective[0].attributes.state_id,
-      objective: objective[0].attributes.objective,
-      id: req.params.id,
-      by: 'objective',
+      objective: objective[0].attributes,
+      params: req.params,
       title: title
-    });
+    }));
+    res.send('<!DOCTYPE html>' + markup);
   })
   .fail(function (err) {
     return next(err);

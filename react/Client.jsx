@@ -11,6 +11,7 @@ var ListPage = require('./components/ListPage.jsx');
 var LoginPage = require('./components/LoginPage.jsx');
 var SignupPage = require('./components/SignupPage.jsx');
 var LocationPage = require('./components/LocationPage.jsx');
+var ObjectivePage = require('./components/ObjectivePage.jsx');
 var props = document.getElementById("props").innerHTML;
 props = JSON.parse(props);
 
@@ -24,6 +25,8 @@ if (props.page === 'ListPage') {
   page = <SignupPage params={props.params} user={props.user} messages={props.messages} />;
 } else if (props.page === 'LocationPage') {
   page = <LocationPage params={props.params} user={props.user} location={props.location} />;
+} else if (props.page === 'ObjectivePage') {
+  page = <ObjectivePage params={props.params} user={props.user} objective={props.objective} />;
 }
 
 if (typeof window !== 'undefined') {

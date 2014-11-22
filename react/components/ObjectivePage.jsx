@@ -11,24 +11,17 @@ var SidebarRight = require('./SidebarRight.jsx');
 var ObjectiveList = require('./ObjectiveList.jsx');
 var JournalList = require('./JournalList.jsx');
 var MissionList = require('./MissionList.jsx');
-var LocationStore = require('../stores/LocationStore');
-var LocationActions = require('../actions/LocationActions');
+var ObjectiveStore = require('../stores/ObjectiveStore');
+var ObjectiveActions = require('../actions/ObjectiveActions');
 
-var LocationPage = React.createClass({
+var ObjectivePage = React.createClass({
     getInitialState: function() {
-        var url;
-        var nav = [];
-        if (this.props.params.by === 'state') {
-            url = '/images/state/' + 1 + '.jpg';
-            nav = [
-                {
-                    display: this.props.location.state,
-                    url: '/location/state/' + this.props.location.state_id
-                }
-            ];
-        } else if (this.props.params.by === 'city') {
-            url = '/images/city/' + 1 + '.jpg';
-            nav = [
+        return {
+            img : {
+                display: this.props.objective.objective,
+                url: 'images/objective/' + 1 + '.jpg'
+            },
+            nav: [
                 {
                     display: this.props.objective.state,
                     url: '/location/state/' + this.props.objective.state_id
@@ -37,25 +30,18 @@ var LocationPage = React.createClass({
                     display: this.props.objective.city,
                     url: '/location/city/' + this.props.objective.city_id
                 },
-            ];
-        }
-        return {
-            img : {
-                display: this.props.location.name,
-                url: url
-            },
-            nav: nav,
+                {
+                    display: this.props.objective.objective,
+                    url: '/objective/' + this.props.objective.objective_id
+                }
+            ],
             by: this.props.params.by,
             id: this.props.params.id,
             sidebarRight: false,
             results: [],
-            display: 'Objectives',
+            display: 'Journals',
             filters: {
                 display: [
-                  {
-                    class: 'fa-dot-circle-o',
-                    name: 'Objectives'
-                  },
                   {
                     class: 'fa-book',
                     name: 'Journals'
@@ -65,14 +51,14 @@ var LocationPage = React.createClass({
                     name: 'Missions'
                   }
                 ],
-                current: 'Objectives',
-                action: LocationActions.load
+                current: 'Journals',
+                action: ObjectiveActions.load
             }
         };
     },
     componentDidMount: function() {
-        this.unsubscribe = LocationStore.listen(this.displayChanged);
-        LocationActions.load(this.state.display, this.state.by, this.state.id);
+        this.unsubscribe = ObjectiveStore.listen(this.displayChanged);
+        ObjectiveActions.load(this.state.display, this.state.by, this.state.id);
     },
     componentWillUnmount: function() {
         this.unsubscribe();
@@ -92,9 +78,7 @@ var LocationPage = React.createClass({
     },
     render: function() {
         var list;
-        if (this.state.display === 'Objectives') {
-            list = <ObjectiveList list={this.state.results} by={this.state.by} />;
-        } else if (this.state.display === 'Journals') {
+        if (this.state.display === 'Journals') {
             list = <JournalList list={this.state.results} by={this.state.by} />;
         } else if (this.state.display === 'Missions') {
             list = <MissionList list={this.state.results} by={this.state.by} />;
@@ -112,4 +96,4 @@ var LocationPage = React.createClass({
     }
 });
 
-module.exports = LocationPage;
+module.exports = ObjectivePage;

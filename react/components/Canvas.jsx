@@ -15,6 +15,8 @@ var Canvas = React.createClass({
         };
         if (img.display === 'Login' || img.display === 'Signup') {
           canvasClass = 'canvas-login';
+        } else if (img.half) {
+            canvasClass = 'canvas-half col-md-6 col-sm-6';
         } else {
           canvasClass = 'canvas';
         }

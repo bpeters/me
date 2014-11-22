@@ -12,6 +12,7 @@ var LoginPage = require('./components/LoginPage.jsx');
 var SignupPage = require('./components/SignupPage.jsx');
 var LocationPage = require('./components/LocationPage.jsx');
 var ObjectivePage = require('./components/ObjectivePage.jsx');
+var JournalPage = require('./components/JournalPage.jsx');
 var props = document.getElementById("props").innerHTML;
 props = JSON.parse(props);
 
@@ -27,6 +28,8 @@ if (props.page === 'ListPage') {
   page = <LocationPage params={props.params} user={props.user} location={props.location} />;
 } else if (props.page === 'ObjectivePage') {
   page = <ObjectivePage params={props.params} user={props.user} objective={props.objective} />;
+} else if (props.page === 'JournalPage') {
+  page = <JournalPage params={props.params} user={props.user} journal={props.journal} />;
 }
 
 if (typeof window !== 'undefined') {

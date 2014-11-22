@@ -2,13 +2,12 @@
  * @jsx React.DOM
  */
 /**
- *  Location Page displays objectives by location (City, State, Etc.)
+ *  Objective Page displays objective details
  */
 var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
-var ObjectiveList = require('./ObjectiveList.jsx');
 var JournalList = require('./JournalList.jsx');
 var MissionList = require('./MissionList.jsx');
 var ObjectiveStore = require('../stores/ObjectiveStore');

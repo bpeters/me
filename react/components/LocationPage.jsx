@@ -30,12 +30,12 @@ var LocationPage = React.createClass({
             url = '/images/city/' + 1 + '.jpg';
             nav = [
                 {
-                    display: this.props.objective.state,
-                    url: '/location/state/' + this.props.objective.state_id
+                    display: this.props.location.state,
+                    url: '/location/state/' + this.props.location.state_id
                 },
                 {
-                    display: this.props.objective.city,
-                    url: '/location/city/' + this.props.objective.city_id
+                    display: this.props.location.city,
+                    url: '/location/city/' + this.props.location.city_id
                 },
             ];
         }

@@ -118,22 +118,14 @@ exports.journal = function(req, res) {
   .spread(function(journal) {
     var title = journal[0].attributes.journal;
     title = title.charAt(0).toUpperCase() + title.slice(1);
-    res.render('journal', {
+    var markup = React.renderComponentToString(App({
+      page: 'JournalPage',
       user: req.user,
-      city: journal[0].attributes.city,
-      city_id: journal[0].attributes.city_id,
-      state: journal[0].attributes.state,
-      state_id: journal[0].attributes.state_id,
-      objective: journal[0].attributes.objective,
-      objective_id: journal[0].attributes.objective_id,
-      journal: journal[0].attributes.journal,
-      journal_entry: journal[0].attributes.journal_entry,
-      author: journal[0].attributes.author,
-      author_id: journal[0].attributes.author_id,
-      id: req.params.id,
-      by: 'journal',
+      journal: journal[0].attributes,
+      params: req.params,
       title: title
-    });
+    }));
+    res.send('<!DOCTYPE html>' + markup);
   })
   .fail(function (err) {
     return next(err);

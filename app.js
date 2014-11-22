@@ -36,7 +36,7 @@ passport.use('local-login', new LocalStrategy({
           return done(null, false, { message: 'Invalid email: ' + username });
         }
         model.logIn(user.username, password, function(err, user) {
-          if (err) { return done(err); }
+          if (err) { return done(null, false, { message: 'Invalid password for ' + username }); }
           return done(null, user);
         });
       });

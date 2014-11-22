@@ -28865,7 +28865,7 @@ if (typeof window !== 'undefined') {
     };
 }
 
-},{"./App.jsx":160,"./components/AuthorPage.jsx":166,"./components/JournalPage.jsx":171,"./components/ListPage.jsx":173,"./components/LocationPage.jsx":174,"./components/LoginPage.jsx":176,"./components/MissionPage.jsx":178,"./components/ObjectivePage.jsx":180,"./components/SignupPage.jsx":183,"jquery":2,"react":146}],162:[function(require,module,exports){
+},{"./App.jsx":160,"./components/AuthorPage.jsx":166,"./components/JournalPage.jsx":171,"./components/ListPage.jsx":173,"./components/LocationPage.jsx":174,"./components/LoginPage.jsx":176,"./components/MissionPage.jsx":178,"./components/ObjectivePage.jsx":180,"./components/SignupPage.jsx":184,"jquery":2,"react":146}],162:[function(require,module,exports){
 var Reflux = require('reflux');
 
 var ListActions = Reflux.createActions([
@@ -28930,6 +28930,7 @@ var AuthorPage = React.createClass({displayName: 'AuthorPage',
             by: this.props.params.by,
             id: this.props.params.id,
             sidebarRight: false,
+            sidebarLeft: false,
             results: []
         };
     },
@@ -28938,12 +28939,16 @@ var AuthorPage = React.createClass({displayName: 'AuthorPage',
             this.setState({
                 sidebarRight: !this.state.sidebarRight
             });
+        } else if (sidebar === 'left') {
+            this.setState({
+                sidebarLeft: !this.state.sidebarLeft
+            });
         }
     },
     render: function() {
         return (
             React.DOM.div({className: "container-fluid"}, 
-                Header({nav: this.state.nav, onClick: this.showSidebar}), 
+                Header({nav: this.state.nav, user: this.props.user, onClick: this.showSidebar}), 
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
@@ -28958,7 +28963,7 @@ var AuthorPage = React.createClass({displayName: 'AuthorPage',
 
 module.exports = AuthorPage;
 
-},{"./Canvas.jsx":167,"./Header.jsx":169,"./SidebarRight.jsx":181,"react":146}],167:[function(require,module,exports){
+},{"./Canvas.jsx":167,"./Header.jsx":169,"./SidebarRight.jsx":182,"react":146}],167:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29076,12 +29081,17 @@ var Header = React.createClass({displayName: 'Header',
             )
           );
         });
+        var avatar;
+        if (this.props.user) {
+          avatar = true;
+        }
         return (
             React.DOM.div({className: "row header"}, 
               React.DOM.div({className: "user"}, 
-                React.DOM.i({className: "fa fa-user"}), 
-                React.DOM.span({className: "header-text"}, React.DOM.a({href: "/login"}, "Log In")), 
-                React.DOM.span({className: "header-text"}, React.DOM.a({href: "/signup"}, "Sign Up"))
+                 avatar ? React.DOM.i({className: "sidebar-left-btn fa fa-user", onClick: this.propagateLeftClick}) : React.DOM.i({className: "fa fa-user"}), 
+                 avatar ? React.DOM.span({className: "header-text"},  this.props.user.username) : null, 
+                 !avatar ? React.DOM.span({className: "header-text"}, React.DOM.a({href: "/login"}, "Log In")) : null, 
+                 !avatar ? React.DOM.span({className: "header-text"}, React.DOM.a({href: "/signup"}, "Sign Up")) : null
               ), 
               React.DOM.div({className: "globe"}, 
                 React.DOM.i({className: "sidebar-right-btn fa fa-globe", onClick: this.propagateRightClick}), 
@@ -29189,6 +29199,7 @@ var JournalPage = React.createClass({displayName: 'JournalPage',
             by: this.props.params.by,
             id: this.props.params.id,
             sidebarRight: false,
+            sidebarLeft: false,
             results: []
         };
     },
@@ -29197,12 +29208,16 @@ var JournalPage = React.createClass({displayName: 'JournalPage',
             this.setState({
                 sidebarRight: !this.state.sidebarRight
             });
+        } else if (sidebar === 'left') {
+            this.setState({
+                sidebarLeft: !this.state.sidebarLeft
+            });
         }
     },
     render: function() {
         return (
             React.DOM.div({className: "container-fluid"}, 
-                Header({nav: this.state.nav, onClick: this.showSidebar}), 
+                Header({nav: this.state.nav, user: this.props.user, onClick: this.showSidebar}), 
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
@@ -29223,7 +29238,7 @@ var JournalPage = React.createClass({displayName: 'JournalPage',
 
 module.exports = JournalPage;
 
-},{"./Canvas.jsx":167,"./Header.jsx":169,"./SidebarRight.jsx":181,"react":146}],172:[function(require,module,exports){
+},{"./Canvas.jsx":167,"./Header.jsx":169,"./SidebarRight.jsx":182,"react":146}],172:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29293,6 +29308,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
+var SidebarLeft = require('./SidebarLeft.jsx');
 var List = require('./List.jsx');
 var ListStore = require('../stores/ListStore');
 var ListActions = require('../actions/ListActions');
@@ -29318,6 +29334,7 @@ var ListPage = React.createClass({displayName: 'ListPage',
             },
             by: this.props.params.by,
             sidebarRight: false,
+            sidebarLeft: false,
             list: []
         };
     },
@@ -29334,9 +29351,14 @@ var ListPage = React.createClass({displayName: 'ListPage',
         });
     },
     showSidebar: function(sidebar) {
+        console.log(sidebar);
         if (sidebar === 'right') {
             this.setState({
                 sidebarRight: !this.state.sidebarRight
+            });
+        } else if (sidebar === 'left') {
+            this.setState({
+                sidebarLeft: !this.state.sidebarLeft
             });
         }
     },
@@ -29344,7 +29366,8 @@ var ListPage = React.createClass({displayName: 'ListPage',
         var header = this.state.by.charAt(0).toUpperCase() + this.state.by.slice(1);
         return (
             React.DOM.div({className: "container-fluid"}, 
-                Header({nav: this.state.nav, onClick: this.showSidebar}), 
+                Header({nav: this.state.nav, user: this.props.user, onClick: this.showSidebar}), 
+                 this.state.sidebarLeft ? SidebarLeft({user: this.props.user}) : null, 
                  this.state.sidebarRight ? SidebarRight({by: this.state.by}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
@@ -29357,7 +29380,7 @@ var ListPage = React.createClass({displayName: 'ListPage',
 
 module.exports = ListPage;
 
-},{"../actions/ListActions":162,"../stores/ListStore":185,"./Canvas.jsx":167,"./Header.jsx":169,"./List.jsx":172,"./SidebarRight.jsx":181,"react":146}],174:[function(require,module,exports){
+},{"../actions/ListActions":162,"../stores/ListStore":186,"./Canvas.jsx":167,"./Header.jsx":169,"./List.jsx":172,"./SidebarLeft.jsx":181,"./SidebarRight.jsx":182,"react":146}],174:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29408,6 +29431,7 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
             by: this.props.params.by,
             id: this.props.params.id,
             sidebarRight: false,
+            sidebarLeft: false,
             results: [],
             display: 'Objectives',
             filters: {
@@ -29448,6 +29472,10 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
             this.setState({
                 sidebarRight: !this.state.sidebarRight
             });
+        } else if (sidebar === 'left') {
+            this.setState({
+                sidebarLeft: !this.state.sidebarLeft
+            });
         }
     },
     render: function() {
@@ -29461,7 +29489,7 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
         }
         return (
             React.DOM.div({className: "container-fluid"}, 
-                Header({nav: this.state.nav, onClick: this.showSidebar}), 
+                Header({nav: this.state.nav, user: this.props.user, onClick: this.showSidebar}), 
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
@@ -29474,7 +29502,7 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
 
 module.exports = LocationPage;
 
-},{"../actions/LocationActions":163,"../stores/LocationStore":186,"./Canvas.jsx":167,"./Header.jsx":169,"./JournalList.jsx":170,"./MissionList.jsx":177,"./ObjectiveList.jsx":179,"./SidebarRight.jsx":181,"react":146}],175:[function(require,module,exports){
+},{"../actions/LocationActions":163,"../stores/LocationStore":187,"./Canvas.jsx":167,"./Header.jsx":169,"./JournalList.jsx":170,"./MissionList.jsx":177,"./ObjectiveList.jsx":179,"./SidebarRight.jsx":182,"react":146}],175:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29561,7 +29589,7 @@ var LoginPage = React.createClass({displayName: 'LoginPage',
 
 module.exports = LoginPage;
 
-},{"./Canvas.jsx":167,"./Header.jsx":169,"./LoginForm.jsx":175,"./SidebarRight.jsx":181,"react":146}],177:[function(require,module,exports){
+},{"./Canvas.jsx":167,"./Header.jsx":169,"./LoginForm.jsx":175,"./SidebarRight.jsx":182,"react":146}],177:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29642,6 +29670,7 @@ var MissionPage = React.createClass({displayName: 'MissionPage',
             by: 'mission',
             id: this.props.params.id,
             sidebarRight: false,
+            sidebarLeft: false,
             results: [],
             display: 'Objectives',
             filters: {
@@ -29678,6 +29707,10 @@ var MissionPage = React.createClass({displayName: 'MissionPage',
             this.setState({
                 sidebarRight: !this.state.sidebarRight
             });
+        } else if (sidebar === 'left') {
+            this.setState({
+                sidebarLeft: !this.state.sidebarLeft
+            });
         }
     },
     render: function() {
@@ -29689,7 +29722,7 @@ var MissionPage = React.createClass({displayName: 'MissionPage',
         }
         return (
             React.DOM.div({className: "container-fluid"}, 
-                Header({nav: this.state.nav, onClick: this.showSidebar}), 
+                Header({nav: this.state.nav, user: this.props.user, onClick: this.showSidebar}), 
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
@@ -29702,7 +29735,7 @@ var MissionPage = React.createClass({displayName: 'MissionPage',
 
 module.exports = MissionPage;
 
-},{"../actions/MissionActions":164,"../stores/MissionStore":187,"./Canvas.jsx":167,"./Header.jsx":169,"./JournalList.jsx":170,"./ObjectiveList.jsx":179,"./SidebarRight.jsx":181,"react":146}],179:[function(require,module,exports){
+},{"../actions/MissionActions":164,"../stores/MissionStore":188,"./Canvas.jsx":167,"./Header.jsx":169,"./JournalList.jsx":170,"./ObjectiveList.jsx":179,"./SidebarRight.jsx":182,"react":146}],179:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29815,6 +29848,7 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
             by: this.props.params.by,
             id: this.props.params.id,
             sidebarRight: false,
+            sidebarLeft: false,
             results: [],
             display: 'Journals',
             filters: {
@@ -29851,6 +29885,10 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
             this.setState({
                 sidebarRight: !this.state.sidebarRight
             });
+        } else if (sidebar === 'left') {
+            this.setState({
+                sidebarLeft: !this.state.sidebarLeft
+            });
         }
     },
     render: function() {
@@ -29862,7 +29900,7 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
         }
         return (
             React.DOM.div({className: "container-fluid"}, 
-                Header({nav: this.state.nav, onClick: this.showSidebar}), 
+                Header({nav: this.state.nav, user: this.props.user, onClick: this.showSidebar}), 
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
@@ -29875,7 +29913,67 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
 
 module.exports = ObjectivePage;
 
-},{"../actions/ObjectiveActions":165,"../stores/ObjectiveStore":188,"./Canvas.jsx":167,"./Header.jsx":169,"./JournalList.jsx":170,"./MissionList.jsx":177,"./SidebarRight.jsx":181,"react":146}],181:[function(require,module,exports){
+},{"../actions/ObjectiveActions":165,"../stores/ObjectiveStore":189,"./Canvas.jsx":167,"./Header.jsx":169,"./JournalList.jsx":170,"./MissionList.jsx":177,"./SidebarRight.jsx":182,"react":146}],181:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  SidebarLeft displays navigation and user specific things.
+ */
+var React = require('react');
+
+var SidebarRight = React.createClass({displayName: 'SidebarRight',
+      render: function() {
+        return (
+          React.DOM.div({className: "sidebar-left sidebar"}, 
+            React.DOM.ul(null, 
+              React.DOM.li({className: "sidebar-title"}, 
+                React.DOM.span(null, "Profile")
+              ), 
+              React.DOM.li(null, 
+                React.DOM.a({href: '/author/' + this.props.user.username + '/stats'}, 
+                  React.DOM.i({className: "sidebar-btn fa fa-bar-chart"}), 
+                  React.DOM.span({className: "header-text"}, "Stats")
+                )
+              ), 
+              React.DOM.li(null, 
+                React.DOM.a({href: '/author/' + this.props.user.username + '/journals'}, 
+                  React.DOM.i({className: "sidebar-btn fa fa-book"}), 
+                  React.DOM.span({className: "header-text"}, "Journals")
+                )
+              ), 
+              React.DOM.li(null, 
+                React.DOM.a({href: '/author/' + this.props.user.username + '/missions'}, 
+                  React.DOM.i({className: "sidebar-btn fa fa-rocket"}), 
+                  React.DOM.span({className: "header-text"}, "Missions")
+                )
+              )
+            ), 
+            React.DOM.ul(null, 
+              React.DOM.li({className: "sidebar-title"}, 
+                React.DOM.span(null, "Account")
+              ), 
+              React.DOM.li(null, 
+                React.DOM.a({href: "/account"}, 
+                  React.DOM.i({className: "sidebar-btn fa fa-cog"}), 
+                  React.DOM.span({className: "header-text"}, "Settings")
+                )
+              ), 
+              React.DOM.li(null, 
+                React.DOM.a({href: "/logout"}, 
+                  React.DOM.i({className: "sidebar-btn fa fa-sign-out"}), 
+                  React.DOM.span({className: "header-text"}, "Log Out")
+                )
+              )
+            )
+          )
+        )
+    }
+});
+
+module.exports = SidebarRight;
+
+},{"react":146}],182:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29929,7 +30027,7 @@ var SidebarRight = React.createClass({displayName: 'SidebarRight',
 
 module.exports = SidebarRight;
 
-},{"./Filters.jsx":168,"react":146}],182:[function(require,module,exports){
+},{"./Filters.jsx":168,"react":146}],183:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29972,7 +30070,7 @@ var SignupForm = React.createClass({displayName: 'SignupForm',
 
 module.exports = SignupForm;
 
-},{"react":146}],183:[function(require,module,exports){
+},{"react":146}],184:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -30020,7 +30118,7 @@ var ListPage = React.createClass({displayName: 'ListPage',
 
 module.exports = ListPage;
 
-},{"./Canvas.jsx":167,"./Header.jsx":169,"./SidebarRight.jsx":181,"./SignupForm.jsx":182,"react":146}],184:[function(require,module,exports){
+},{"./Canvas.jsx":167,"./Header.jsx":169,"./SidebarRight.jsx":182,"./SignupForm.jsx":183,"react":146}],185:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -30080,7 +30178,7 @@ var Table = React.createClass({displayName: 'Table',
 
 module.exports = Table;
 
-},{"./JournalList.jsx":170,"./List.jsx":172,"./MissionList.jsx":177,"./ObjectiveList.jsx":179,"react":146}],185:[function(require,module,exports){
+},{"./JournalList.jsx":170,"./List.jsx":172,"./MissionList.jsx":177,"./ObjectiveList.jsx":179,"react":146}],186:[function(require,module,exports){
 var Reflux = require('reflux');
 var ListActions = require('../actions/ListActions');
 var $ = require('jquery');
@@ -30116,7 +30214,7 @@ var ListStore = Reflux.createStore({
 
 module.exports = ListStore;
 
-},{"../actions/ListActions":162,"jquery":2,"reflux":155}],186:[function(require,module,exports){
+},{"../actions/ListActions":162,"jquery":2,"reflux":155}],187:[function(require,module,exports){
 var Reflux = require('reflux');
 var LocationActions = require('../actions/LocationActions');
 var $ = require('jquery');
@@ -30162,7 +30260,7 @@ var LocationStore = Reflux.createStore({
 
 module.exports = LocationStore;
 
-},{"../actions/LocationActions":163,"jquery":2,"reflux":155}],187:[function(require,module,exports){
+},{"../actions/LocationActions":163,"jquery":2,"reflux":155}],188:[function(require,module,exports){
 var Reflux = require('reflux');
 var MissionActions = require('../actions/MissionActions');
 var $ = require('jquery');
@@ -30204,7 +30302,7 @@ var MissionStore = Reflux.createStore({
 
 module.exports = MissionStore;
 
-},{"../actions/MissionActions":164,"jquery":2,"reflux":155}],188:[function(require,module,exports){
+},{"../actions/MissionActions":164,"jquery":2,"reflux":155}],189:[function(require,module,exports){
 var Reflux = require('reflux');
 var ObjectiveActions = require('../actions/ObjectiveActions');
 var $ = require('jquery');
@@ -30246,4 +30344,4 @@ var ObjectiveStore = Reflux.createStore({
 
 module.exports = ObjectiveStore;
 
-},{"../actions/ObjectiveActions":165,"jquery":2,"reflux":155}]},{},[160,161,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184]);
+},{"../actions/ObjectiveActions":165,"jquery":2,"reflux":155}]},{},[160,161,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185]);

@@ -8,6 +8,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
+var SidebarLeft = require('./SidebarLeft.jsx');
 var List = require('./List.jsx');
 var ListStore = require('../stores/ListStore');
 var ListActions = require('../actions/ListActions');
@@ -33,6 +34,7 @@ var ListPage = React.createClass({
             },
             by: this.props.params.by,
             sidebarRight: false,
+            sidebarLeft: false,
             list: []
         };
     },
@@ -49,9 +51,14 @@ var ListPage = React.createClass({
         });
     },
     showSidebar: function(sidebar) {
+        console.log(sidebar);
         if (sidebar === 'right') {
             this.setState({
                 sidebarRight: !this.state.sidebarRight
+            });
+        } else if (sidebar === 'left') {
+            this.setState({
+                sidebarLeft: !this.state.sidebarLeft
             });
         }
     },
@@ -59,7 +66,8 @@ var ListPage = React.createClass({
         var header = this.state.by.charAt(0).toUpperCase() + this.state.by.slice(1);
         return (
             <div className="container-fluid">
-                <Header nav={this.state.nav} onClick={this.showSidebar}/>
+                <Header nav={this.state.nav} user={this.props.user} onClick={this.showSidebar}/>
+                { this.state.sidebarLeft ? <SidebarLeft user={this.props.user} /> : null }
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} />

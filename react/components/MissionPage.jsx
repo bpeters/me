@@ -29,6 +29,7 @@ var MissionPage = React.createClass({
             by: 'mission',
             id: this.props.params.id,
             sidebarRight: false,
+            sidebarLeft: false,
             results: [],
             display: 'Objectives',
             filters: {
@@ -65,6 +66,10 @@ var MissionPage = React.createClass({
             this.setState({
                 sidebarRight: !this.state.sidebarRight
             });
+        } else if (sidebar === 'left') {
+            this.setState({
+                sidebarLeft: !this.state.sidebarLeft
+            });
         }
     },
     render: function() {
@@ -76,7 +81,8 @@ var MissionPage = React.createClass({
         }
         return (
             <div className="container-fluid">
-                <Header nav={this.state.nav} onClick={this.showSidebar}/>
+                <Header nav={this.state.nav} user={this.props.user} onClick={this.showSidebar}/>
+                { this.state.sidebarLeft ? <SidebarLeft user={this.props.user} /> : null }
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} id={this.state.id} filters={this.state.filters} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} />

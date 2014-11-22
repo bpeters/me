@@ -37,6 +37,7 @@ var ObjectivePage = React.createClass({
             by: this.props.params.by,
             id: this.props.params.id,
             sidebarRight: false,
+            sidebarLeft: false,
             results: [],
             display: 'Journals',
             filters: {
@@ -73,6 +74,10 @@ var ObjectivePage = React.createClass({
             this.setState({
                 sidebarRight: !this.state.sidebarRight
             });
+        } else if (sidebar === 'left') {
+            this.setState({
+                sidebarLeft: !this.state.sidebarLeft
+            });
         }
     },
     render: function() {
@@ -84,7 +89,8 @@ var ObjectivePage = React.createClass({
         }
         return (
             <div className="container-fluid">
-                <Header nav={this.state.nav} onClick={this.showSidebar}/>
+                <Header nav={this.state.nav} user={this.props.user} onClick={this.showSidebar}/>
+                { this.state.sidebarLeft ? <SidebarLeft user={this.props.user} /> : null }
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} id={this.state.id} filters={this.state.filters} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} />

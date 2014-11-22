@@ -25,7 +25,8 @@ var getById = function(by) {
 exports.index = function(req, res) {
   var markup = React.renderComponentToString(App({
     page: 'ListPage',
-    title: 'List - Cities'
+    title: 'List - Cities',
+    user: req.user
   }));
   res.send('<!DOCTYPE html>' + markup);
 };

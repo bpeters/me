@@ -53,11 +53,14 @@ exports.login = function(req, res) {
 };
 
 exports.signup = function(req, res) {
-  res.render('signup', {
+  var markup = React.renderComponentToString(App({
+    page: 'SignupPage',
+    title: 'Signup',
+    params: req.params,
     user: req.user,
-    messages: req.flash('error'),
-    title: 'signup'
-  });
+    messages: req.flash('error')
+  }));
+  res.send('<!DOCTYPE html>' + markup);
 };
 
 exports.account = function(req, res) {
@@ -69,23 +72,22 @@ exports.location = function(req, res) {
   Q.all([
     Q.ninvoke(model, 'getNameById', req.params.by, by_id, req.params.id),
   ])
-  .spread(function(name) {
-    var title = req.params.by + " Of " + name.name;
+  .spread(function(location) {
+    var title = req.params.by + " Of " + location.name;
     title = title.charAt(0).toUpperCase() + title.slice(1);
-    res.render('location', {
+    var markup = React.renderComponentToString(App({
+      page: 'LocationPage',
       user: req.user,
-      city: name.city,
-      city_id: name.city_id,
-      state: name.state,
-      state_id: name.state_id,
-      id: req.params.id,
-      by: req.params.by,
+      location: location,
+      params: req.params,
       title: title
-    });
+    }));
+  res.send('<!DOCTYPE html>' + markup);
   })
   .fail(function (err) {
     return next(err);
   });
+
 };
 
 exports.objective = function(req, res) {

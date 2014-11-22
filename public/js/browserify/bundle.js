@@ -28828,6 +28828,8 @@ var $ = require('jquery');
 var App = require('./App.jsx');
 var ListPage = require('./components/ListPage.jsx');
 var LoginPage = require('./components/LoginPage.jsx');
+var SignupPage = require('./components/SignupPage.jsx');
+var LocationPage = require('./components/LocationPage.jsx');
 var props = document.getElementById("props").innerHTML;
 props = JSON.parse(props);
 
@@ -28837,6 +28839,10 @@ if (props.page === 'ListPage') {
   page = ListPage({params: props.params, user: props.user});
 } else if (props.page === 'LoginPage') {
   page = LoginPage({params: props.params, user: props.user, messages: props.messages});
+} else if (props.page === 'SignupPage') {
+  page = SignupPage({params: props.params, user: props.user, messages: props.messages});
+} else if (props.page === 'LocationPage') {
+  page = LocationPage({params: props.params, user: props.user, location: props.location});
 }
 
 if (typeof window !== 'undefined') {
@@ -28846,7 +28852,7 @@ if (typeof window !== 'undefined') {
     };
 }
 
-},{"./App.jsx":160,"./components/ListPage.jsx":166,"./components/LoginPage.jsx":169,"jquery":2,"react":146}],162:[function(require,module,exports){
+},{"./App.jsx":160,"./components/ListPage.jsx":169,"./components/LocationPage.jsx":170,"./components/LoginPage.jsx":172,"./components/SignupPage.jsx":177,"jquery":2,"react":146}],162:[function(require,module,exports){
 var Reflux = require('reflux');
 
 var ListActions = Reflux.createActions([
@@ -28856,6 +28862,15 @@ var ListActions = Reflux.createActions([
 module.exports = ListActions;
 
 },{"reflux":155}],163:[function(require,module,exports){
+var Reflux = require('reflux');
+
+var LocationActions = Reflux.createActions([
+   "load"
+]);
+
+module.exports = LocationActions;
+
+},{"reflux":155}],164:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -28871,7 +28886,7 @@ var Canvas = React.createClass({displayName: 'Canvas',
         var style = {
           backgroundImage: 'url(' + img.url + ')'
         };
-        if (img.display === 'Login') {
+        if (img.display === 'Login' || img.display === 'Signup') {
           canvasClass = 'canvas-login';
         } else {
           canvasClass = 'canvas';
@@ -28884,7 +28899,74 @@ var Canvas = React.createClass({displayName: 'Canvas',
 
 module.exports = Canvas;
 
-},{"react":146}],164:[function(require,module,exports){
+},{"react":146}],165:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  Filters displays filter criteria for the right sidebar.
+ */
+var React = require('react');
+var LocationActions = require('../actions/LocationActions');
+
+var Filters = React.createClass({displayName: 'Filters',
+      getInitialState: function() {
+        return {
+            display: [
+              {
+                class: 'fa-dot-circle-o',
+                name: 'Objectives'
+              },
+              {
+                class: 'fa-book',
+                name: 'Journals'
+              },
+              {
+                class: 'fa-rocket',
+                name: 'Missions'
+              }
+            ],
+            current: 'Objectives'
+        };
+      },
+      handleClick: function(i) {
+        this.setState({
+          current: this.state.display[i].name
+        })
+        LocationActions.load(this.state.display[i].name, this.props.by, this.props.id);
+      },
+      render: function() {
+        var self = this;
+        var display = this.state.display.map(function(item, i) {
+          var currentClass;
+          if (item.name === self.state.current) {
+            currentClass = 'display-current';
+          }
+          return (
+            React.DOM.li({key: i}, 
+              React.DOM.a({onClick: self.handleClick.bind(null, i), className: currentClass}, 
+                React.DOM.i({className: 'sidebar-btn fa' + item.class}), 
+                React.DOM.span({className: "header-text"}, 
+                  item.name
+                )
+              )
+            )
+          );
+        });
+        return (
+          React.DOM.ul({className: "display-list"}, 
+            React.DOM.li({className: "sidebar-title"}, 
+              React.DOM.span(null, "Display"), 
+              display
+            )
+          )
+        )
+    }
+});
+
+module.exports = Filters;
+
+},{"../actions/LocationActions":163,"react":146}],166:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -28896,10 +28978,10 @@ var React = require('react');
 var Header = React.createClass({displayName: 'Header',
     getDefaultProps: function() {
         return {
-            nav: {
+            nav: [{
                 display: '',
                 url: ''
-            }
+            }]
         };
     },
     propagateLeftClick: function() {
@@ -28909,7 +28991,14 @@ var Header = React.createClass({displayName: 'Header',
       this.props.onClick('right');
     },
     render: function() {
-        var nav = this.props.nav;
+        var nav = this.props.nav.map(function(navItem, i) {
+          return (
+            React.DOM.div({key: i}, 
+                React.DOM.span({className: "header-text"}, "/"), 
+                React.DOM.span({className: "header-text"}, React.DOM.a({href: navItem.url},  navItem.display))
+            )
+          );
+        });
         return (
             React.DOM.div({className: "row header"}, 
               React.DOM.div({className: "user"}, 
@@ -28919,7 +29008,7 @@ var Header = React.createClass({displayName: 'Header',
               ), 
               React.DOM.div({className: "globe"}, 
                 React.DOM.i({className: "sidebar-right-btn fa fa-globe", onClick: this.propagateRightClick}), 
-                React.DOM.span({className: "header-text"}, React.DOM.a({href: nav.url}, nav.display))
+                nav
               )
             )
         )
@@ -28928,7 +29017,52 @@ var Header = React.createClass({displayName: 'Header',
 
 module.exports = Header;
 
-},{"react":146}],165:[function(require,module,exports){
+},{"react":146}],167:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  Journal List displays journals detail
+ */
+var React = require('react');
+
+var JournalList = React.createClass({displayName: 'JournalList',
+      render: function() {
+        var city;
+        if (this.props.by != 'city') {
+          city = true;
+        }
+        var list = this.props.list.map(function(journal) {
+          return (
+            React.DOM.tr({key: journal.id}, 
+              React.DOM.td(null, React.DOM.a({href: '/journal/' + journal.journal_id}, journal.journal)), 
+              React.DOM.td(null, React.DOM.a({href: '/objective/' + journal.objective_id}, journal.objective)), 
+              React.DOM.td(null, React.DOM.a({href: '/author/' + journal.author}, journal.author)), 
+               city ? React.DOM.td(null, React.DOM.a({href: '/location/city/' + journal.city_id}, journal.city)) : null
+            )
+          );
+        });
+        return (
+          React.DOM.table({className: "table"}, 
+            React.DOM.thead(null, 
+              React.DOM.tr(null, 
+                React.DOM.th(null, React.DOM.span(null, "Journal")), 
+                React.DOM.th(null, React.DOM.span(null, "Objective")), 
+                React.DOM.th(null, React.DOM.span(null, "Author")), 
+                 city ? React.DOM.th(null, React.DOM.span(null, "City")) : null
+              )
+            ), 
+            React.DOM.tbody(null, 
+              list
+            )
+          )
+        )
+    }
+});
+
+module.exports = JournalList;
+
+},{"react":146}],168:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -28939,7 +29073,12 @@ var React = require('react');
 
 var List = React.createClass({displayName: 'List',
       render: function() {
-        var by = this.props.by;
+        var by;
+        if (this.props.by == 'cities') {
+          by = 'city';
+        } else if (this.props.by == 'states') {
+          by = 'state';
+        }
         var listItem = this.props.list.map(function(listitem) {
           return (
             React.DOM.tr({key: listitem.id}, 
@@ -28951,8 +29090,26 @@ var List = React.createClass({displayName: 'List',
           );
         });
         return (
-          React.DOM.tbody(null, 
-            listItem
+          React.DOM.table({className: "table"}, 
+            React.DOM.thead(null, 
+              React.DOM.tr(null, 
+                React.DOM.th(null, 
+                  React.DOM.span(null, this.props.header)
+                ), 
+                React.DOM.th(null, 
+                  React.DOM.span(null, "Objectives")
+                ), 
+                React.DOM.th(null, 
+                  React.DOM.span(null, "Journals")
+                ), 
+                React.DOM.th(null, 
+                  React.DOM.span(null, "Missions")
+                )
+              )
+            ), 
+            React.DOM.tbody(null, 
+              listItem
+            )
           )
         )
     }
@@ -28960,7 +29117,7 @@ var List = React.createClass({displayName: 'List',
 
 module.exports = List;
 
-},{"react":146}],166:[function(require,module,exports){
+},{"react":146}],169:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -28971,7 +29128,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
-var ListTable = require('./ListTable.jsx');
+var Table = require('./Table.jsx');
 var ListStore = require('../stores/ListStore');
 var ListActions = require('../actions/ListActions');
 
@@ -28986,17 +29143,30 @@ var ListPage = React.createClass({displayName: 'ListPage',
     getInitialState: function() {
         var display = "All " + this.props.params.by.charAt(0).toUpperCase() + this.props.params.by.slice(1);
         return {
-            nav: {
+            nav: [{
                 display: display,
                 url: '/list/' + this.props.params.by
-            },
+            }],
             img : {
                 display: display,
                 url: '/images/' + this.props.params.by + '.jpg'
             },
             by: this.props.params.by,
-            sidebarRight: false
+            sidebarRight: false,
+            list: []
         };
+    },
+    componentDidMount: function() {
+        this.unsubscribe = ListStore.listen(this.listChanged);
+        ListActions.load(this.state.by);
+    },
+    componentWillUnmount: function() {
+        this.unsubscribe();
+    },
+    listChanged: function(list) {
+        this.setState({
+            list: list
+        });
     },
     showSidebar: function(sidebar) {
         if (sidebar === 'right') {
@@ -29012,7 +29182,7 @@ var ListPage = React.createClass({displayName: 'ListPage',
                  this.state.sidebarRight ? SidebarRight({by: this.state.by}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    ListTable({by: this.state.by, Store: ListStore, Actions: ListActions})
+                    Table({by: this.state.by, results: this.state.list})
                 )
             )
         )
@@ -29021,68 +29191,96 @@ var ListPage = React.createClass({displayName: 'ListPage',
 
 module.exports = ListPage;
 
-},{"../actions/ListActions":162,"../stores/ListStore":171,"./Canvas.jsx":163,"./Header.jsx":164,"./ListTable.jsx":167,"./SidebarRight.jsx":170,"react":146}],167:[function(require,module,exports){
+},{"../actions/ListActions":162,"../stores/ListStore":179,"./Canvas.jsx":164,"./Header.jsx":166,"./SidebarRight.jsx":175,"./Table.jsx":178,"react":146}],170:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
 /**
- *  List Table displays a list in a table.
+ *  Location Page displays objectives by location (City, State, Etc.)
  */
 var React = require('react');
-var List = require('./List.jsx');
+var Header = require('./Header.jsx');
+var Canvas = require('./Canvas.jsx');
+var SidebarRight = require('./SidebarRight.jsx');
+var Table = require('./Table.jsx');
+var LocationStore = require('../stores/LocationStore');
+var LocationActions = require('../actions/LocationActions');
 
-var ListTable = React.createClass({displayName: 'ListTable',
+var LocationPage = React.createClass({displayName: 'LocationPage',
     getInitialState: function() {
+        var url;
+        var nav = [];
+        if (this.props.params.by === 'state') {
+            url = '/images/state/' + 1 + '.jpg';
+            nav = [
+                {
+                    display: this.props.location.state,
+                    url: '/location/state/' + this.props.location.state_id
+                }
+            ];
+        } else if (this.props.params.by === 'city') {
+            url = '/images/city/' + 1 + '.jpg';
+            nav = [
+                {
+                    display: this.props.location.city,
+                    url: '/location/city/' + this.props.location.city_id
+                },
+                {
+                    display: this.props.location.state,
+                    url: '/location/state/' + this.props.location.state_id
+                }
+            ];
+        }
         return {
-            list: []
+            img : {
+                display: this.props.location.name,
+                url: url
+            },
+            nav: nav,
+            by: this.props.params.by,
+            id: this.props.params.id,
+            sidebarRight: false,
+            results: [],
+            display: 'Objectives'
         };
     },
     componentDidMount: function() {
-        this.unsubscribe = this.props.Store.listen(this.listChanged);
-        this.props.Actions.load(this.props.by);
+        this.unsubscribe = LocationStore.listen(this.displayChanged);
+        LocationActions.load(this.state.display, this.state.by, this.state.id);
     },
     componentWillUnmount: function() {
         this.unsubscribe();
     },
-    listChanged: function(list) {
+    displayChanged: function(results, display) {
         this.setState({
-            list: list
+            results: results,
+            display: display
         });
     },
+    showSidebar: function(sidebar) {
+        if (sidebar === 'right') {
+            this.setState({
+                sidebarRight: !this.state.sidebarRight
+            });
+        }
+    },
     render: function() {
-      var by = this.props.by
-      var header = by.charAt(0).toUpperCase() + by.slice(1);
         return (
-          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
-            React.DOM.div({className: "table-responsive"}, 
-              React.DOM.table({className: "table"}, 
-                React.DOM.thead(null, 
-                  React.DOM.tr(null, 
-                    React.DOM.th(null, 
-                      React.DOM.span(null, header)
-                    ), 
-                    React.DOM.th(null, 
-                      React.DOM.span(null, "Objectives")
-                    ), 
-                    React.DOM.th(null, 
-                      React.DOM.span(null, "Journals")
-                    ), 
-                    React.DOM.th(null, 
-                      React.DOM.span(null, "Missions")
-                    )
-                  )
-                ), 
-                List({list: this.state.list, by: by})
-              )
+            React.DOM.div({className: "container-fluid"}, 
+                Header({nav: this.state.nav, onClick: this.showSidebar}), 
+                 this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: true}) : null, 
+                React.DOM.div({className: "row"}, 
+                    Canvas({img: this.state.img}), 
+                    Table({results: this.state.results, display: this.state.display, by: this.state.by})
+                )
             )
-          )
         )
     }
 });
 
-module.exports = ListTable;
+module.exports = LocationPage;
 
-},{"./List.jsx":165,"react":146}],168:[function(require,module,exports){
+},{"../actions/LocationActions":163,"../stores/LocationStore":180,"./Canvas.jsx":164,"./Header.jsx":166,"./SidebarRight.jsx":175,"./Table.jsx":178,"react":146}],171:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29121,12 +29319,12 @@ var LoginForm = React.createClass({displayName: 'LoginForm',
 
 module.exports = LoginForm;
 
-},{"react":146}],169:[function(require,module,exports){
+},{"react":146}],172:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
 /**
- *  List Page displays Cities, States, Users, anything that can be tied to an Objective in a list view.
+ *  Login Page displays login information
  */
 var React = require('react');
 var Header = require('./Header.jsx');
@@ -29134,14 +29332,7 @@ var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
 var LoginForm = require('./LoginForm.jsx');
 
-var ListPage = React.createClass({displayName: 'ListPage',
-    getDefaultProps: function() {
-        return {
-            params: {
-                by: 'cities'
-            }
-        };
-    },
+var LoginPage = React.createClass({displayName: 'LoginPage',
     getInitialState: function() {
         return {
             img : {
@@ -29174,9 +29365,103 @@ var ListPage = React.createClass({displayName: 'ListPage',
     }
 });
 
-module.exports = ListPage;
+module.exports = LoginPage;
 
-},{"./Canvas.jsx":163,"./Header.jsx":164,"./LoginForm.jsx":168,"./SidebarRight.jsx":170,"react":146}],170:[function(require,module,exports){
+},{"./Canvas.jsx":164,"./Header.jsx":166,"./LoginForm.jsx":171,"./SidebarRight.jsx":175,"react":146}],173:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  Mission List displays missions detail
+ */
+var React = require('react');
+
+var MissionList = React.createClass({displayName: 'MissionList',
+      render: function() {
+        var city;
+        if (this.props.by != 'city') {
+          city = true;
+        }
+        var list = this.props.list.map(function(mission) {
+          return (
+            React.DOM.tr({key: mission.id}, 
+              React.DOM.td(null, React.DOM.a({href: '/mission/' + mission.mission_id}, mission.mission)), 
+              React.DOM.td(null, React.DOM.a({href: '/author/' + mission.author}, mission.author)), 
+              React.DOM.td(null, React.DOM.a({href: '/objective/' + mission.objective_id}, mission.objective)), 
+               city ? React.DOM.td(null, React.DOM.a({href: '/location/city/' + mission.city_id}, mission.city)) : null, 
+              React.DOM.td(null, mission.missionobjective_journal_cnt)
+            )
+          );
+        });
+        return (
+          React.DOM.table({className: "table"}, 
+            React.DOM.thead(null, 
+              React.DOM.th(null, React.DOM.span(null, "Mission")), 
+              React.DOM.th(null, React.DOM.span(null, "Author")), 
+              React.DOM.th(null, React.DOM.span(null, "Objective")), 
+               city ? React.DOM.th(null, React.DOM.span(null, "City")) : null, 
+              React.DOM.th(null, React.DOM.span(null, "Journals"))
+            ), 
+            React.DOM.tbody(null, 
+              list
+            )
+          )
+        )
+    }
+});
+
+module.exports = MissionList;
+
+},{"react":146}],174:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  Objective List displays objectives detail
+ */
+var React = require('react');
+
+var ObjectiveList = React.createClass({displayName: 'ObjectiveList',
+      render: function() {
+        var city;
+        if (this.props.by != 'city') {
+          city = true;
+        }
+        var list = this.props.list.map(function(objective) {
+          return (
+            React.DOM.tr({key: objective.id}, 
+              React.DOM.td(null, React.DOM.a({href: '/objective/' + objective.objective_id}, objective.objective)), 
+               city ? React.DOM.td(null, React.DOM.a({href: '/location/city/' + objective.city_id}, objective.city)) : null, 
+              React.DOM.td(null, objective.objective_journal_cnt), 
+              React.DOM.td(null, objective.objective_mission_cnt), 
+              React.DOM.td(null, "0"), 
+              React.DOM.td(null, "0")
+            )
+          );
+        });
+        return (
+          React.DOM.table({className: "table"}, 
+            React.DOM.thead(null, 
+              React.DOM.tr(null, 
+                React.DOM.th(null, React.DOM.span(null, "Objective")), 
+                 city ? React.DOM.th(null, React.DOM.span(null, "City")) : null, 
+                React.DOM.th(null, React.DOM.span(null, "Journals")), 
+                React.DOM.th(null, React.DOM.span(null, "Missions")), 
+                React.DOM.th(null, React.DOM.span({className: "glyphicon glyphicon-ok"})), 
+                React.DOM.th(null, React.DOM.span({className: "glyphicon glyphicon-heart"}))
+              )
+            ), 
+            React.DOM.tbody(null, 
+              list
+            )
+          )
+        )
+    }
+});
+
+module.exports = ObjectiveList;
+
+},{"react":146}],175:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29184,6 +29469,7 @@ module.exports = ListPage;
  *  SidebarRight displays navigation and filters for page specific things.
  */
 var React = require('react');
+var Filters = require('./Filters.jsx');
 
 var SidebarRight = React.createClass({displayName: 'SidebarRight',
       render: function() {
@@ -29204,7 +29490,7 @@ var SidebarRight = React.createClass({displayName: 'SidebarRight',
         }
         var list = locations.map(function(location, i) {
           return (
-              React.DOM.li(null, 
+              React.DOM.li({key: i}, 
                 React.DOM.a({href: location.url}, 
                   React.DOM.i({className: "sidebar-btn fa fa-globe"}), 
                   React.DOM.span({className: "header-text"}, location.display)
@@ -29212,6 +29498,7 @@ var SidebarRight = React.createClass({displayName: 'SidebarRight',
               )
           );
         });
+        var filters = this.props.filters;
         return (
           React.DOM.div({className: "sidebar-right sidebar"}, 
             React.DOM.ul(null, 
@@ -29219,7 +29506,8 @@ var SidebarRight = React.createClass({displayName: 'SidebarRight',
                 React.DOM.span(null, "List")
               ), 
               list
-            )
+            ), 
+             filters ? Filters({by: this.props.by, id: this.props.id}) : null
           )
         )
     }
@@ -29227,7 +29515,157 @@ var SidebarRight = React.createClass({displayName: 'SidebarRight',
 
 module.exports = SidebarRight;
 
-},{"react":146}],171:[function(require,module,exports){
+},{"./Filters.jsx":165,"react":146}],176:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  Signup Form displays the signup form details.
+ */
+var React = require('react');
+
+var SignupForm = React.createClass({displayName: 'SignupForm',
+      render: function() {
+        var messages = this.props.messages.map(function(message, i) {
+          return (
+            React.DOM.div({key: i, className: "alert alert-danger", role: "alert"}, message)
+          );
+        });
+        return (
+          React.DOM.div({className: "row"}, 
+            React.DOM.div({className: "col-sm-offset-4 col-md-offset-4 col-md-4 col-sm-4 clear-form"}, 
+              messages, 
+              React.DOM.form({action: "/signup", method: "post", role: "form"}, 
+                React.DOM.div({className: "form-group"}, 
+                  React.DOM.label(null, "Username"), 
+                  React.DOM.input({type: "text", className: "form-control", name: "username", placeholder: "john"})
+                ), 
+                React.DOM.div({className: "form-group"}, 
+                  React.DOM.label(null, "Email"), 
+                  React.DOM.input({type: "email", className: "form-control", name: "email", placeholder: "john@email.com"})
+                ), 
+                React.DOM.div({className: "form-group"}, 
+                  React.DOM.label(null, "Password"), 
+                  React.DOM.input({type: "password", className: "form-control", name: "password", placeholder: "********"})
+                ), 
+                React.DOM.button({type: "submit", className: "btn btn-success"}, "Sign Up")
+              )
+            )
+          )
+        )
+    }
+});
+
+module.exports = SignupForm;
+
+},{"react":146}],177:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  Signup Page displays signup information
+ */
+var React = require('react');
+var Header = require('./Header.jsx');
+var Canvas = require('./Canvas.jsx');
+var SidebarRight = require('./SidebarRight.jsx');
+var SignupForm = require('./SignupForm.jsx');
+
+var ListPage = React.createClass({displayName: 'ListPage',
+    getInitialState: function() {
+        return {
+            img : {
+                display: 'Signup',
+                url: '/images/signup.jpg'
+            },
+            by: this.props.params.by,
+            messages: this.props.messages,
+            sidebarRight: false
+        };
+    },
+    showSidebar: function(sidebar) {
+        if (sidebar === 'right') {
+            this.setState({
+                sidebarRight: !this.state.sidebarRight
+            });
+        }
+    },
+    render: function() {
+        return (
+            React.DOM.div({className: "container-fluid"}, 
+                Header({nav: this.state.nav, onClick: this.showSidebar}), 
+                 this.state.sidebarRight ? SidebarRight({by: this.state.by}) : null, 
+                React.DOM.div({className: "row"}, 
+                    Canvas({img: this.state.img}), 
+                    SignupForm({messages: this.state.messages})
+                )
+            )
+        )
+    }
+});
+
+module.exports = ListPage;
+
+},{"./Canvas.jsx":164,"./Header.jsx":166,"./SidebarRight.jsx":175,"./SignupForm.jsx":176,"react":146}],178:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  List Table displays a list in a table.
+ */
+var React = require('react');
+var List = require('./List.jsx');
+var ObjectiveList = require('./ObjectiveList.jsx');
+var JournalList = require('./JournalList.jsx');
+var MissionList = require('./MissionList.jsx');
+
+var Table = React.createClass({displayName: 'Table',
+    getDefaultProps: function() {
+      return {
+        results: [],
+        display: 'List',
+        by: ''
+      };
+    },
+    getInitialState: function() {
+      return {
+        results: this.props.results,
+        display: this.props.display,
+        by: this.props.by
+      };
+    },
+    componentWillReceiveProps: function(nextProps) {
+      this.setState({
+        results: nextProps.results,
+        display: nextProps.display,
+        by: nextProps.by
+      });
+    },
+    render: function() {
+      var list;
+      if (this.state.display === 'List') {
+        var header = this.state.by.charAt(0).toUpperCase() + this.state.by.slice(1);
+        list = List({list: this.state.results, by: this.state.by, header: header});
+      } else if (this.state.display === 'Objectives') {
+        list = ObjectiveList({list: this.state.results, by: this.state.by});
+      } else if (this.state.display === 'Journals') {
+        list = JournalList({list: this.state.results, by: this.state.by});
+      } else if (this.state.display === 'Missions') {
+        list = MissionList({list: this.state.results, by: this.state.by});
+      }
+      return (
+        React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+          React.DOM.div({className: "table-responsive"}, 
+            list
+          )
+        )
+      )
+    }
+});
+
+module.exports = Table;
+
+},{"./JournalList.jsx":167,"./List.jsx":168,"./MissionList.jsx":173,"./ObjectiveList.jsx":174,"react":146}],179:[function(require,module,exports){
 var Reflux = require('reflux');
 var ListActions = require('../actions/ListActions');
 var $ = require('jquery');
@@ -29263,4 +29701,46 @@ var ListStore = Reflux.createStore({
 
 module.exports = ListStore;
 
-},{"../actions/ListActions":162,"jquery":2,"reflux":155}]},{},[160,161,163,164,165,166,167,168,169,170]);
+},{"../actions/ListActions":162,"jquery":2,"reflux":155}],180:[function(require,module,exports){
+var Reflux = require('reflux');
+var LocationActions = require('../actions/LocationActions');
+var $ = require('jquery');
+
+var LocationStore = Reflux.createStore({
+    init: function() {
+        this._results = [];
+        this._display = '';
+        this.listenTo(LocationActions.load, this.load);
+    },
+    load: function(display, by, id) {
+        this._display = display;
+        if (display === 'Objectives') {
+            $.getJSON( "/api/1/getObjective/" + by + "/" + id)
+            .done(this.onLoad)
+            .fail(this.onLoadError);
+        } else if (display === 'Journals') {
+            $.getJSON( "/api/1/getJournal/" + by + "/" + id)
+            .done(this.onLoad)
+            .fail(this.onLoadError);
+        } else if (display === 'Missions') {
+            $.getJSON( "/api/1/getMissionObjectives/" + by + "/" + id)
+            .done(this.onLoad)
+            .fail(this.onLoadError);
+        }
+    },
+    onLoad: function(results) {
+        this._results = results;
+        LocationStore.trigger(this._results, this._display);
+    },
+    onLoadError: function() {
+        this._objectives = [];
+        LocationStore.trigger(this._results, this._display);
+    },
+    getDefaultData: function() {
+        return this._results;
+    }
+});
+
+module.exports = LocationStore;
+
+},{"../actions/LocationActions":163,"jquery":2,"reflux":155}]},{},[160,161,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178]);

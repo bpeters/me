@@ -5,6 +5,7 @@
  *  SidebarRight displays navigation and filters for page specific things.
  */
 var React = require('react');
+var Filters = require('./Filters.jsx');
 
 var SidebarRight = React.createClass({
       render: function() {
@@ -25,7 +26,7 @@ var SidebarRight = React.createClass({
         }
         var list = locations.map(function(location, i) {
           return (
-              <li>
+              <li key={i}>
                 <a href={location.url}>
                   <i className='sidebar-btn fa fa-globe'></i>
                   <span className='header-text'>{location.display}</span>
@@ -33,6 +34,7 @@ var SidebarRight = React.createClass({
               </li>
           );
         });
+        var filters = this.props.filters;
         return (
           <div className='sidebar-right sidebar'>
             <ul>
@@ -41,6 +43,7 @@ var SidebarRight = React.createClass({
               </li>
               {list}
             </ul>
+            { filters ? <Filters by={this.props.by} id={this.props.id} /> : null }
           </div>
         )
     }

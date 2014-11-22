@@ -8,7 +8,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
-var ListTable = require('./ListTable.jsx');
+var Table = require('./Table.jsx');
 var ListStore = require('../stores/ListStore');
 var ListActions = require('../actions/ListActions');
 
@@ -23,17 +23,30 @@ var ListPage = React.createClass({
     getInitialState: function() {
         var display = "All " + this.props.params.by.charAt(0).toUpperCase() + this.props.params.by.slice(1);
         return {
-            nav: {
+            nav: [{
                 display: display,
                 url: '/list/' + this.props.params.by
-            },
+            }],
             img : {
                 display: display,
                 url: '/images/' + this.props.params.by + '.jpg'
             },
             by: this.props.params.by,
-            sidebarRight: false
+            sidebarRight: false,
+            list: []
         };
+    },
+    componentDidMount: function() {
+        this.unsubscribe = ListStore.listen(this.listChanged);
+        ListActions.load(this.state.by);
+    },
+    componentWillUnmount: function() {
+        this.unsubscribe();
+    },
+    listChanged: function(list) {
+        this.setState({
+            list: list
+        });
     },
     showSidebar: function(sidebar) {
         if (sidebar === 'right') {
@@ -49,7 +62,7 @@ var ListPage = React.createClass({
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} />
-                    <ListTable by={this.state.by} Store={ListStore} Actions={ListActions}/>
+                    <Table by={this.state.by} results={this.state.list} />
                 </div>
             </div>
         )

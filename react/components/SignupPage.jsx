@@ -2,20 +2,20 @@
  * @jsx React.DOM
  */
 /**
- *  Login Page displays login information
+ *  Signup Page displays signup information
  */
 var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
-var LoginForm = require('./LoginForm.jsx');
+var SignupForm = require('./SignupForm.jsx');
 
-var LoginPage = React.createClass({
+var ListPage = React.createClass({
     getInitialState: function() {
         return {
             img : {
-                display: 'Login',
-                url: '/images/login.jpg'
+                display: 'Signup',
+                url: '/images/signup.jpg'
             },
             by: this.props.params.by,
             messages: this.props.messages,
@@ -36,11 +36,11 @@ var LoginPage = React.createClass({
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} />
-                    <LoginForm messages={this.state.messages} />
+                    <SignupForm messages={this.state.messages} />
                 </div>
             </div>
         )
     }
 });
 
-module.exports = LoginPage;
+module.exports = ListPage;

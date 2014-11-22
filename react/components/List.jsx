@@ -8,7 +8,12 @@ var React = require('react');
 
 var List = React.createClass({
       render: function() {
-        var by = this.props.by;
+        var by;
+        if (this.props.by == 'cities') {
+          by = 'city';
+        } else if (this.props.by == 'states') {
+          by = 'state';
+        }
         var listItem = this.props.list.map(function(listitem) {
           return (
             <tr key={listitem.id}>
@@ -20,9 +25,27 @@ var List = React.createClass({
           );
         });
         return (
-          <tbody>
-            {listItem}
-          </tbody>
+          <table className='table'>
+            <thead>
+              <tr>
+                <th>
+                  <span>{this.props.header}</span>
+                </th>
+                <th>
+                  <span>Objectives</span>
+                </th>
+                <th>
+                  <span>Journals</span>
+                </th>
+                <th>
+                  <span>Missions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {listItem}
+            </tbody>
+          </table>
         )
     }
 });

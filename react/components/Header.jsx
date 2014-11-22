@@ -9,10 +9,10 @@ var React = require('react');
 var Header = React.createClass({
     getDefaultProps: function() {
         return {
-            nav: {
+            nav: [{
                 display: '',
                 url: ''
-            }
+            }]
         };
     },
     propagateLeftClick: function() {
@@ -22,7 +22,14 @@ var Header = React.createClass({
       this.props.onClick('right');
     },
     render: function() {
-        var nav = this.props.nav;
+        var nav = this.props.nav.map(function(navItem, i) {
+          return (
+            <div key={i}>
+                <span className='header-text'>/</span>
+                <span className='header-text'><a href={navItem.url}>{ navItem.display }</a></span>
+            </div>
+          );
+        });
         return (
             <div className='row header'>
               <div className='user'>
@@ -32,7 +39,7 @@ var Header = React.createClass({
               </div>
               <div className='globe'>
                 <i className='sidebar-right-btn fa fa-globe' onClick={this.propagateRightClick}></i>
-                <span className='header-text'><a href={nav.url}>{nav.display}</a></span>
+                {nav}
               </div>
             </div>
         )

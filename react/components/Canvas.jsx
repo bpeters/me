@@ -13,7 +13,7 @@ var Canvas = React.createClass({
         var style = {
           backgroundImage: 'url(' + img.url + ')'
         };
-        if (img.display === 'Login') {
+        if (img.display === 'Login' || img.display === 'Signup') {
           canvasClass = 'canvas-login';
         } else {
           canvasClass = 'canvas';

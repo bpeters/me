@@ -10,7 +10,7 @@ var Filters = require('./Filters.jsx');
 var SidebarRight = React.createClass({
       getDefaultProps: function() {
         return {
-          filters: {}
+          filters: 0
         };
       },
       getInitialState: function() {

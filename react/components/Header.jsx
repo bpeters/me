@@ -38,7 +38,7 @@ var Header = React.createClass({
             <div className='row header'>
               <div className='user'>
                 { avatar ? <i className="sidebar-left-btn fa fa-user" onClick={this.propagateLeftClick}></i> : <i className="fa fa-user"></i> }
-                { avatar ? <span className='header-text'>{ this.props.user.username }</span> : null }
+                { avatar ? <span className='header-text'><a href={'/author/' + this.props.user.username }>{ this.props.user.username }</a></span> : null }
                 { !avatar ? <span className='header-text'><a href='/login'>Log In</a></span> : null }
                 { !avatar ? <span className='header-text'><a href='/signup'>Sign Up</a></span> : null }
               </div>

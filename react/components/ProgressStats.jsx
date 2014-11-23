@@ -47,9 +47,8 @@ var ProgressStats = React.createClass({
             ]
         };
         var list = this.state.progress.map(function(item, i) {
-            console.log(item);
           return (
-            <h4>
+            <h4 key={i}>
                 {item[type]} : {item.precentage}<sup>%</sup>
             </h4>
           );

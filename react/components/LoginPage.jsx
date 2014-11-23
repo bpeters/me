@@ -13,11 +13,15 @@ var LoginForm = require('./LoginForm.jsx');
 var LoginPage = React.createClass({
     getInitialState: function() {
         return {
+            nav: [{
+                display: 'Log In',
+                url: '/login'
+            }],
             img : {
                 display: 'Login',
                 url: '/images/login.jpg'
             },
-            by: this.props.params.by,
+            by: '',
             messages: this.props.messages,
             sidebarRight: false
         };

@@ -98,7 +98,9 @@ var ObjectivePage = React.createClass({
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} id={this.state.id} filters={this.state.filters} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} />
-                    {list}
+                    <div className='main'>
+                        {list}
+                    </div>
                 </div>
             </div>
         )

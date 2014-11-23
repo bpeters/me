@@ -61,7 +61,7 @@ var JournalPage = React.createClass({
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} id={this.state.id} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} />
-                    <div className='main col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6'>
+                    <div className='main-side col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6'>
                       <h3>{ this.props.journal.journal }</h3>
                       <h5>by <a href={'/author/' + this.props.journal.author_id}>{ this.props.journal.author }</a></h5>
                       <div>

@@ -116,7 +116,7 @@ var AuthorPage = React.createClass({
                 { this.state.sidebarRight ? <SidebarRight id={this.state.username} filters={this.state.filters} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} userProgress={this.state.userProgress} user={true}/>
-                    <div className='main col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6'>
+                    <div className='main-side col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6'>
                       {list}
                     </div>
                 </div>

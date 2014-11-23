@@ -2,7 +2,12 @@
   display: none;
 }
 .main {
-  margin-top: 40px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #222;
+}
+.main-side {
+  margin-top: 80px;
   margin-bottom: 20px;
   color: #222;
 }

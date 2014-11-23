@@ -35828,7 +35828,7 @@ var AuthorPage = React.createClass({displayName: 'AuthorPage',
                  this.state.sidebarRight ? SidebarRight({id: this.state.username, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img, userProgress: this.state.userProgress, user: true}), 
-                    React.DOM.div({className: "main col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6"}, 
+                    React.DOM.div({className: "main-side col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6"}, 
                       list
                     )
                 )
@@ -36178,7 +36178,7 @@ var JournalList = React.createClass({displayName: 'JournalList',
           );
         });
         return (
-          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10"}, 
             React.DOM.div({className: "table-responsive"}, 
               React.DOM.table({className: "table"}, 
                 React.DOM.thead(null, 
@@ -36266,7 +36266,7 @@ var JournalPage = React.createClass({displayName: 'JournalPage',
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    React.DOM.div({className: "main col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6"}, 
+                    React.DOM.div({className: "main-side col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6"}, 
                       React.DOM.h3(null,  this.props.journal.journal), 
                       React.DOM.h5(null, "by ", React.DOM.a({href: '/author/' + this.props.journal.author_id},  this.props.journal.author)), 
                       React.DOM.div(null, 
@@ -36311,7 +36311,7 @@ var List = React.createClass({displayName: 'List',
           );
         });
         return (
-          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10"}, 
             React.DOM.div({className: "table-responsive"}, 
               React.DOM.table({className: "table"}, 
                 React.DOM.thead(null, 
@@ -36415,7 +36415,9 @@ var ListPage = React.createClass({displayName: 'ListPage',
                  this.state.sidebarRight ? SidebarRight({by: this.state.by}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    List({list: this.state.list, by: this.state.by, header: header})
+                    React.DOM.div({className: "main"}, 
+                        List({list: this.state.list, by: this.state.by, header: header})
+                    )
                 )
             )
         )
@@ -36542,7 +36544,9 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    list
+                    React.DOM.div({className: "main"}, 
+                        list
+                    )
                 )
             )
         )
@@ -36685,7 +36689,7 @@ var MissionList = React.createClass({displayName: 'MissionList',
           );
         });
         return (
-          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10"}, 
             React.DOM.div({className: "table-responsive"}, 
               React.DOM.table({className: "table"}, 
                 React.DOM.thead(null, 
@@ -36802,7 +36806,9 @@ var MissionPage = React.createClass({displayName: 'MissionPage',
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    list
+                    React.DOM.div({className: "main"}, 
+                        list
+                    )
                 )
             )
         )
@@ -36854,7 +36860,7 @@ var ObjectiveList = React.createClass({displayName: 'ObjectiveList',
           );
         });
         return (
-          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10"}, 
             React.DOM.div({className: "table-responsive"}, 
               React.DOM.table({className: "table"}, 
                 React.DOM.thead(null, 
@@ -36981,7 +36987,9 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    list
+                    React.DOM.div({className: "main"}, 
+                        list
+                    )
                 )
             )
         )
@@ -37152,7 +37160,6 @@ var SidebarRight = React.createClass({displayName: 'SidebarRight',
           );
         });
         var filters = this.props.filters;
-        console.log(filters);
         return (
           React.DOM.div({className: "sidebar-right sidebar"}, 
             React.DOM.ul(null, 

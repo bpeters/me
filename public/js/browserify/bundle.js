@@ -28996,7 +28996,6 @@ var AuthorPage = React.createClass({displayName: 'AuthorPage',
         }
     },
     render: function() {
-        console.log(this.state.results);
         var list;
         if (this.state.display === 'Objectives') {
             list = ObjectiveList({list: this.state.results, by: this.state.by});
@@ -29023,7 +29022,7 @@ var AuthorPage = React.createClass({displayName: 'AuthorPage',
 
 module.exports = AuthorPage;
 
-},{"../actions/AuthorActions":162,"../stores/AuthorStore":187,"./Canvas.jsx":168,"./Header.jsx":170,"./JournalList.jsx":171,"./MissionList.jsx":178,"./ObjectiveList.jsx":180,"./SidebarRight.jsx":183,"react":146}],168:[function(require,module,exports){
+},{"../actions/AuthorActions":162,"../stores/AuthorStore":186,"./Canvas.jsx":168,"./Header.jsx":170,"./JournalList.jsx":171,"./MissionList.jsx":178,"./ObjectiveList.jsx":180,"./SidebarRight.jsx":183,"react":146}],168:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29047,7 +29046,18 @@ var Canvas = React.createClass({displayName: 'Canvas',
           canvasClass = 'canvas';
         }
         return (
-            React.DOM.div({style: style, alt: img.display, className: canvasClass})
+            React.DOM.div({style: style, alt: img.display, className: canvasClass}, 
+                React.DOM.div({className: "canvas-stats row"}, 
+                    React.DOM.div({className: "col-md-12"}, 
+                        React.DOM.div({className: "avatar"}), 
+                        React.DOM.div({className: "user-info"}, 
+                            React.DOM.h3(null, "brennen"), 
+                            React.DOM.div({className: "info-block"}), 
+                            React.DOM.div({className: "info-block2"})
+                        )
+                    )
+                )
+            )
         )
     }
 });
@@ -29098,7 +29108,7 @@ var Filters = React.createClass({displayName: 'Filters',
           return (
             React.DOM.li({key: i}, 
               React.DOM.a({onClick: self.handleClick.bind(null, i), className: currentClass}, 
-                React.DOM.i({className: 'sidebar-btn fa' + item.class}), 
+                React.DOM.i({className: 'sidebar-btn fa ' + item.class}), 
                 React.DOM.span({className: "header-text"}, 
                   item.name
                 )
@@ -29463,7 +29473,7 @@ var ListPage = React.createClass({displayName: 'ListPage',
 
 module.exports = ListPage;
 
-},{"../actions/ListActions":163,"../stores/ListStore":188,"./Canvas.jsx":168,"./Header.jsx":170,"./List.jsx":173,"./SidebarLeft.jsx":182,"./SidebarRight.jsx":183,"react":146}],175:[function(require,module,exports){
+},{"../actions/ListActions":163,"../stores/ListStore":187,"./Canvas.jsx":168,"./Header.jsx":170,"./List.jsx":173,"./SidebarLeft.jsx":182,"./SidebarRight.jsx":183,"react":146}],175:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29590,7 +29600,7 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
 
 module.exports = LocationPage;
 
-},{"../actions/LocationActions":164,"../stores/LocationStore":189,"./Canvas.jsx":168,"./Header.jsx":170,"./JournalList.jsx":171,"./MissionList.jsx":178,"./ObjectiveList.jsx":180,"./SidebarRight.jsx":183,"react":146}],176:[function(require,module,exports){
+},{"../actions/LocationActions":164,"../stores/LocationStore":188,"./Canvas.jsx":168,"./Header.jsx":170,"./JournalList.jsx":171,"./MissionList.jsx":178,"./ObjectiveList.jsx":180,"./SidebarRight.jsx":183,"react":146}],176:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -29846,7 +29856,7 @@ var MissionPage = React.createClass({displayName: 'MissionPage',
 
 module.exports = MissionPage;
 
-},{"../actions/MissionActions":165,"../stores/MissionStore":190,"./Canvas.jsx":168,"./Header.jsx":170,"./JournalList.jsx":171,"./ObjectiveList.jsx":180,"./SidebarRight.jsx":183,"react":146}],180:[function(require,module,exports){
+},{"../actions/MissionActions":165,"../stores/MissionStore":189,"./Canvas.jsx":168,"./Header.jsx":170,"./JournalList.jsx":171,"./ObjectiveList.jsx":180,"./SidebarRight.jsx":183,"react":146}],180:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -30025,7 +30035,7 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
 
 module.exports = ObjectivePage;
 
-},{"../actions/ObjectiveActions":166,"../stores/ObjectiveStore":191,"./Canvas.jsx":168,"./Header.jsx":170,"./JournalList.jsx":171,"./MissionList.jsx":178,"./SidebarRight.jsx":183,"react":146}],182:[function(require,module,exports){
+},{"../actions/ObjectiveActions":166,"../stores/ObjectiveStore":190,"./Canvas.jsx":168,"./Header.jsx":170,"./JournalList.jsx":171,"./MissionList.jsx":178,"./SidebarRight.jsx":183,"react":146}],182:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -30246,66 +30256,6 @@ var ListPage = React.createClass({displayName: 'ListPage',
 module.exports = ListPage;
 
 },{"./Canvas.jsx":168,"./Header.jsx":170,"./SidebarRight.jsx":183,"./SignupForm.jsx":184,"react":146}],186:[function(require,module,exports){
-/**
- * @jsx React.DOM
- */
-/**
- *  List Table displays a list in a table.
- */
-var React = require('react');
-var List = require('./List.jsx');
-var ObjectiveList = require('./ObjectiveList.jsx');
-var JournalList = require('./JournalList.jsx');
-var MissionList = require('./MissionList.jsx');
-
-var Table = React.createClass({displayName: 'Table',
-    getDefaultProps: function() {
-      return {
-        results: [],
-        display: 'List',
-        by: ''
-      };
-    },
-    getInitialState: function() {
-      return {
-        results: this.props.results,
-        display: this.props.display,
-        by: this.props.by
-      };
-    },
-    componentWillReceiveProps: function(nextProps) {
-      this.setState({
-        results: nextProps.results,
-        display: nextProps.display,
-        by: nextProps.by
-      });
-    },
-    render: function() {
-      console.log(this.state.results);
-      var list;
-      if (this.state.display === 'List') {
-        var header = this.state.by.charAt(0).toUpperCase() + this.state.by.slice(1);
-        list = List({list: this.state.results, by: this.state.by, header: header});
-      } else if (this.state.display === 'Objectives') {
-        list = ObjectiveList({list: this.state.results, by: this.state.by});
-      } else if (this.state.display === 'Journals') {
-        list = JournalList({list: this.state.results, by: this.state.by});
-      } else if (this.state.display === 'Missions') {
-        list = MissionList({list: this.state.results, by: this.state.by});
-      }
-      return (
-        React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
-          React.DOM.div({className: "table-responsive"}, 
-            list
-          )
-        )
-      )
-    }
-});
-
-module.exports = Table;
-
-},{"./JournalList.jsx":171,"./List.jsx":173,"./MissionList.jsx":178,"./ObjectiveList.jsx":180,"react":146}],187:[function(require,module,exports){
 var Reflux = require('reflux');
 var AuthorActions = require('../actions/AuthorActions');
 var $ = require('jquery');
@@ -30351,7 +30301,7 @@ var AuthorStore = Reflux.createStore({
 
 module.exports = AuthorStore;
 
-},{"../actions/AuthorActions":162,"jquery":2,"reflux":155}],188:[function(require,module,exports){
+},{"../actions/AuthorActions":162,"jquery":2,"reflux":155}],187:[function(require,module,exports){
 var Reflux = require('reflux');
 var ListActions = require('../actions/ListActions');
 var $ = require('jquery');
@@ -30387,7 +30337,7 @@ var ListStore = Reflux.createStore({
 
 module.exports = ListStore;
 
-},{"../actions/ListActions":163,"jquery":2,"reflux":155}],189:[function(require,module,exports){
+},{"../actions/ListActions":163,"jquery":2,"reflux":155}],188:[function(require,module,exports){
 var Reflux = require('reflux');
 var LocationActions = require('../actions/LocationActions');
 var $ = require('jquery');
@@ -30433,7 +30383,7 @@ var LocationStore = Reflux.createStore({
 
 module.exports = LocationStore;
 
-},{"../actions/LocationActions":164,"jquery":2,"reflux":155}],190:[function(require,module,exports){
+},{"../actions/LocationActions":164,"jquery":2,"reflux":155}],189:[function(require,module,exports){
 var Reflux = require('reflux');
 var MissionActions = require('../actions/MissionActions');
 var $ = require('jquery');
@@ -30475,7 +30425,7 @@ var MissionStore = Reflux.createStore({
 
 module.exports = MissionStore;
 
-},{"../actions/MissionActions":165,"jquery":2,"reflux":155}],191:[function(require,module,exports){
+},{"../actions/MissionActions":165,"jquery":2,"reflux":155}],190:[function(require,module,exports){
 var Reflux = require('reflux');
 var ObjectiveActions = require('../actions/ObjectiveActions');
 var $ = require('jquery');
@@ -30517,4 +30467,4 @@ var ObjectiveStore = Reflux.createStore({
 
 module.exports = ObjectiveStore;
 
-},{"../actions/ObjectiveActions":166,"jquery":2,"reflux":155}]},{},[160,161,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186]);
+},{"../actions/ObjectiveActions":166,"jquery":2,"reflux":155}]},{},[160,161,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185]);

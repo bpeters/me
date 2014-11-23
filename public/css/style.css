@@ -2,7 +2,7 @@
   display: none;
 }
 .main {
-  margin-top: 60px;
+  margin-top: 40px;
   margin-bottom: 20px;
   color: #222;
 }
@@ -176,6 +176,35 @@
   height: 800px;
   background-position: center;
   background-size: cover;
+}
+.canvas-profile {
+  margin-top: 80px;
+}
+.canvas-profile .avatar {
+  width: 100px;
+  height: 100px; 
+  background-color: rgba(0,0,0,0.1);
+  margin-left: 20px;
+  float: left;
+}
+.canvas-profile .user-info {
+  float: left;
+}
+.canvas-profile .user-info h3 {
+  margin: 10px;
+  text-transform: uppercase;
+}
+.canvas-profile .user-info .info-block {
+  margin: 10px;
+  width: 420px;
+  height: 20px;
+  background-color: rgba(0,0,0,0.3);
+}
+.canvas-profile .user-info .info-block2 {
+  margin: 10px;
+  width: 280px;
+  height: 20px;
+  background-color: rgba(0,0,0,0.2);
 }
 .clear-form {
   margin-top: 100px;

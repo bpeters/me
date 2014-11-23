@@ -9,6 +9,8 @@ var MissionObjectives = Parse.Object.extend("MissionObjectives");
 var MissionJournals = Parse.Object.extend("MissionJournals");
 var User = Parse.Object.extend("User");
 var UserObjectives = Parse.Object.extend("UserObjectives");
+var UserStateProgress = Parse.Object.extend("UserStateProgress");
+var UserCityProgress = Parse.Object.extend("UserCityProgress");
 var City = Parse.Object.extend("City");
 var State = Parse.Object.extend("State");
 
@@ -191,6 +193,59 @@ exports.getUserObjectivesById = function (username, callback) {
   query.find({
     success: function(results) {
       console.log("Successfully retrieved " + results.length + " user objectives.");
+      return callback(null, results);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.getUserProgressById = function (username, callback) {
+  var query = new Parse.Query(User);
+  query.equalTo('username', username);
+  query.find({
+    success: function(results) {
+      console.log("Successfully retrieved " + results[0].get("username")  + ".");
+      var complete = results[0].get('objective_complete_cnt');
+      var total = results[0].get('objective_total_cnt');
+      var progress = {
+        precentage: Math.round(complete / total * 100) / 100,
+        complete: complete,
+        total: total
+      };
+      console.log(progress);
+      return callback(null, progress);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.getUserStateProgressById = function (username, callback) {
+  var query = new Parse.Query(UserStateProgress);
+  query.equalTo('username', username);
+  query.find({
+    success: function(results) {
+      console.log("Successfully retrieved " + results.length  + " states.");
+      return callback(null, results);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.getUserCityProgressById = function (username, callback) {
+  var query = new Parse.Query(UserCityProgress);
+  query.equalTo('username', username);
+  query.find({
+    success: function(results) {
+      console.log("Successfully retrieved " + results.length  + " cities.");
       return callback(null, results);
     },
     error: function(error) {

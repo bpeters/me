@@ -138,6 +138,7 @@ app.get('/api/1/getMission/:by/:id', routes.getMissionById);
 app.get('/api/1/getMissionObjectives/:by/:id', routes.getMissionObjectivesById);
 app.get('/api/1/getMissionJournals/:by/:id', routes.getMissionJournalsById);
 app.get('/api/1/getUserObjectives/:username', routes.getUserObjectivesById);
+app.get('/api/1/getUserProgress/:username', routes.getUserProgressById);
 app.get('/api/1/getList/:by', routes.getList);
 app.get('/api/1/getName/:by/:id', routes.getNameById);
 

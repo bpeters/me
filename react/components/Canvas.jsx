@@ -5,6 +5,7 @@
  *  Canvas displays the wide img for the page.
  */
 var React = require('react');
+var CanvasStats = require('./CanvasStats.jsx');
 
 var Canvas = React.createClass({
     render: function() {
@@ -20,8 +21,25 @@ var Canvas = React.createClass({
         } else {
           canvasClass = 'canvas';
         }
+        var stats = this.props.stats.map(function(stat, i) {
+          return (
+            <CanvasStats key={i} stat={stat} />
+          );
+        });
         return (
-            <div style={style} alt={img.display} className={canvasClass}></div>
+            <div style={style} alt={img.display} className={canvasClass}>
+                <div className="canvas-profile row">
+                    <div className="col-md-12">
+                        <div className="avatar"></div>
+                        <div className="user-info">
+                            <h3>brennen</h3>
+                            <div className="info-block"></div>
+                            <div className="info-block2"></div>
+                        </div>
+                    </div>
+                </div>
+                {stats}
+            </div>
         )
     }
 });

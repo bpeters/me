@@ -41,7 +41,7 @@ var Filters = React.createClass({
           return (
             <li key={i}>
               <a onClick={self.handleClick.bind(null, i)} className={currentClass}>
-                <i className={'sidebar-btn fa' + item.class}></i>
+                <i className={'sidebar-btn fa ' + item.class}></i>
                 <span className='header-text'>
                   {item.name}
                 </span>

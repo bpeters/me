@@ -13,6 +13,8 @@ var JournalList = require('./JournalList.jsx');
 var MissionList = require('./MissionList.jsx');
 var AuthorStore = require('../stores/AuthorStore');
 var AuthorActions = require('../actions/AuthorActions');
+var UserStore = require('../stores/UserStore');
+var UserActions = require('../actions/UserActions');
 
 var AuthorPage = React.createClass({
     getInitialState: function() {
@@ -51,15 +53,26 @@ var AuthorPage = React.createClass({
                 ],
                 current: 'Objectives',
                 action: AuthorActions.load
+            },
+            userProgress: {
+                progress: {
+                    complete: '',
+                    total: '',
+                    precentage: ''
+                  }
             }
         };
     },
     componentDidMount: function() {
-        this.unsubscribe = AuthorStore.listen(this.displayChanged);
+        this.unsubscribeAuthor = AuthorStore.listen(this.displayChanged);
         AuthorActions.load(this.state.display, this.state.username);
+
+        this.unsubscribeUser = UserStore.listen(this.loadUser);
+        UserActions.load(this.props.params.username);
     },
     componentWillUnmount: function() {
-        this.unsubscribe();
+        this.unsubscribeAuthor();
+        this.unsubscribeUser();
     },
     displayChanged: function(results) {
         var filters = this.state.filters;
@@ -70,6 +83,11 @@ var AuthorPage = React.createClass({
             display: results.display,
             filters: filters
         });
+    },
+    loadUser: function(user) {
+        this.setState({
+            userProgress: user
+        }); 
     },
     showSidebar: function(sidebar) {
         if (sidebar === 'right') {
@@ -97,7 +115,7 @@ var AuthorPage = React.createClass({
                 { this.state.sidebarLeft ? <SidebarLeft user={this.props.user} /> : null }
                 { this.state.sidebarRight ? <SidebarRight id={this.state.username} filters={this.state.filters} /> : null }
                 <div className="row">
-                    <Canvas img={this.state.img} />
+                    <Canvas img={this.state.img} userProgress={this.state.userProgress} />
                     <div className='main col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6'>
                       {list}
                     </div>

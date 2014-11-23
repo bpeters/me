@@ -8,6 +8,16 @@ var React = require('react');
 var CanvasStats = require('./CanvasStats.jsx');
 
 var Canvas = React.createClass({
+      getInitialState: function() {
+        return {
+          progress: this.props.userProgress.progress
+        };
+      },
+      componentWillReceiveProps: function(nextProps) {
+        this.setState({
+          progress: nextProps.userProgress.progress
+        });
+      },
     render: function() {
         var img = this.props.img;
         var canvasClass;
@@ -21,11 +31,6 @@ var Canvas = React.createClass({
         } else {
           canvasClass = 'canvas';
         }
-        var stats = this.props.stats.map(function(stat, i) {
-          return (
-            <CanvasStats key={i} stat={stat} />
-          );
-        });
         return (
             <div style={style} alt={img.display} className={canvasClass}>
                 <div className="canvas-profile row">
@@ -38,7 +43,7 @@ var Canvas = React.createClass({
                         </div>
                     </div>
                 </div>
-                {stats}
+                <CanvasStats progress={this.state.progress} />
             </div>
         )
     }

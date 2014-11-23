@@ -211,11 +211,10 @@ exports.getUserProgressById = function (username, callback) {
       var complete = results[0].get('objective_complete_cnt');
       var total = results[0].get('objective_total_cnt');
       var progress = {
-        precentage: Math.round(complete / total * 100) / 100,
+        precentage: Math.round(complete / total * 100),
         complete: complete,
         total: total
       };
-      console.log(progress);
       return callback(null, progress);
     },
     error: function(error) {

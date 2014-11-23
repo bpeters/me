@@ -180,6 +180,19 @@
 .canvas-profile {
   margin-top: 80px;
 }
+.canvas-stats {
+  margin-top: 20px;
+}
+.canvas-stats canvas {
+  float: left;
+}
+.canvas-stats .user-info {
+  margin-top: 30px;
+  margin-left: 20px;
+}
+.user-progress {
+  margin-left: 20px;
+}
 .canvas-profile .avatar {
   width: 100px;
   height: 100px; 
@@ -187,20 +200,21 @@
   margin-left: 20px;
   float: left;
 }
-.canvas-profile .user-info {
+.user-info {
   float: left;
 }
-.canvas-profile .user-info h3 {
+.user-info h3 {
   margin: 10px;
   text-transform: uppercase;
+  color: rgba(255,255,255,0.8);
 }
-.canvas-profile .user-info .info-block {
+.user-info .info-block {
   margin: 10px;
   width: 420px;
   height: 20px;
   background-color: rgba(0,0,0,0.3);
 }
-.canvas-profile .user-info .info-block2 {
+.user-info .info-block2 {
   margin: 10px;
   width: 280px;
   height: 20px;

@@ -26,8 +26,8 @@ var CanvasStats = React.createClass({
         var data = [
             {
                 value: this.state.complete,
-                color:"rgba(0,0,0,0.8)",
-                highlight: "rgba(0,0,0,1)",
+                color:"rgba(0,0,0,0.5)",
+                highlight: "rgba(0,0,0,.8)",
                 label: "Completed"
             },
             {
@@ -40,10 +40,10 @@ var CanvasStats = React.createClass({
         return (
             <div className="canvas-stats row">
                 <div className="col-md-12">
-                    <DonutChart data={data} chartId={'user-progress'} />
+                    <DonutChart data={data} chartId={this.props.chartId} />
                     <div className="user-info">
-                        <h3>{this.state.complete}<sup> / {this.state.total}</sup> - {this.state.precentage}<sup>%</sup></h3>
-                        <h3>MISSION EVERYTHING</h3>
+                        <h3>{this.props.title}</h3>
+                        <h4>Total : {this.state.precentage}<sup>%</sup></h4>
                     </div>
                 </div>
             </div>

@@ -250,11 +250,13 @@ exports.getUserProgressById = function(req, res) {
     var _cities = [];
     for (var i = 0; i < states.length; i++) {
       _states.push(states[i].attributes);
+      _states[i]['remaining'] = states[i].attributes.objective_total_cnt - states[i].attributes.objective_complete_cnt;
       _states[i]['precentage'] = Math.round( states[i].attributes.objective_complete_cnt / states[i].attributes.objective_total_cnt * 100);
       delete _states[i]['username'];
     }
     for (var c = 0; c < cities.length; c++) {
       _cities.push(cities[c].attributes);
+      _cities[c]['remaining'] = cities[c].attributes.objective_total_cnt - cities[c].attributes.objective_complete_cnt;
       _cities[c]['precentage'] = Math.round( cities[c].attributes.objective_complete_cnt / cities[c].attributes.objective_total_cnt * 100);
       delete _cities[c]['username'];
     }

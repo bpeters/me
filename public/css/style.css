@@ -183,12 +183,16 @@
 .canvas-stats {
   margin-top: 20px;
 }
+.state-progress, .city-progress {
+  margin-left: 20px;
+}
 .canvas-stats canvas {
   float: left;
 }
 .canvas-stats .user-info {
-  margin-top: 30px;
+  margin-top: 20px;
   margin-left: 20px;
+  padding: 10px;
 }
 .user-progress {
   margin-left: 20px;
@@ -204,9 +208,15 @@
   float: left;
 }
 .user-info h3 {
+  font-size: 15px;
   margin: 10px;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.8);
+  color: rgba(0,0,0,.8);
+}
+.user-info h4 {
+  font-size: 12px;
+  margin: 10px;
+  color: rgba(0,0,0,.5);
 }
 .user-info .info-block {
   margin: 10px;

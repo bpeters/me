@@ -6,23 +6,28 @@
  */
 var React = require('react');
 var CanvasStats = require('./CanvasStats.jsx');
+var ProgressStats = require('./ProgressStats.jsx');
 
 var Canvas = React.createClass({
       getInitialState: function() {
         return {
-          progress: this.props.userProgress.progress
+          progress: this.props.userProgress.progress,
+          stateProgress: this.props.userProgress.states,
+          cityProgress: this.props.userProgress.cities
         };
       },
       componentWillReceiveProps: function(nextProps) {
         this.setState({
-          progress: nextProps.userProgress.progress
+          progress: nextProps.userProgress.progress,
+          stateProgress: nextProps.userProgress.states,
+          cityProgress: nextProps.userProgress.cities
         });
       },
     render: function() {
         var img = this.props.img;
         var canvasClass;
         var style = {
-          backgroundImage: 'url(' + img.url + ')'
+          backgroundColor: '#f4f4f4'
         };
         if (img.display === 'Login' || img.display === 'Signup') {
           canvasClass = 'canvas-login';
@@ -43,7 +48,9 @@ var Canvas = React.createClass({
                         </div>
                     </div>
                 </div>
-                <CanvasStats progress={this.state.progress} />
+                <CanvasStats progress={this.state.progress} title={'Mission Everything'} chartId={'user-progress'} />
+                <ProgressStats progress={this.state.stateProgress} type={'state'} title={'State Progress'} chartId={'state-progress'}/>
+                <ProgressStats progress={this.state.cityProgress} type={'city'} title={'City Progress'} chartId={'city-progress'}/>
             </div>
         )
     }

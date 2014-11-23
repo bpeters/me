@@ -219,8 +219,54 @@ exports.getMissionObjectivesById = function(req, res) {
   Q.all([
     Q.ninvoke(model, 'getMissionObjectivesById', by_id, req.params.id),
   ])
-  .spread(function(mission) {
-    res.json(mission);
+  .spread(function(objectives) {
+    res.json(objectives);
+  })
+  .fail(function (err) {
+    return next(err);
+  });
+};
+
+exports.getUserObjectivesById = function(req, res) {
+  Q.all([
+    Q.ninvoke(model, 'getUserObjectivesById', req.params.username),
+  ])
+  .spread(function(objectives) {
+    res.json(objectives);
+  })
+  .fail(function (err) {
+    return next(err);
+  });
+};
+
+exports.getUserProgressById = function(req, res) {
+  Q.all([
+    Q.ninvoke(model, 'getUserProgressById', req.params.username),
+    Q.ninvoke(model, 'getUserStateProgressById', req.params.username),
+    Q.ninvoke(model, 'getUserCityProgressById', req.params.username),
+  ])
+  .spread(function(progress, states, cities) {
+    var _states = [];
+    var _cities = [];
+    for (var i = 0; i < states.length; i++) {
+      _states.push(states[i].attributes);
+      _states[i]['remaining'] = states[i].attributes.objective_total_cnt - states[i].attributes.objective_complete_cnt;
+      _states[i]['precentage'] = Math.round( states[i].attributes.objective_complete_cnt / states[i].attributes.objective_total_cnt * 100);
+      delete _states[i]['username'];
+    }
+    for (var c = 0; c < cities.length; c++) {
+      _cities.push(cities[c].attributes);
+      _cities[c]['remaining'] = cities[c].attributes.objective_total_cnt - cities[c].attributes.objective_complete_cnt;
+      _cities[c]['precentage'] = Math.round( cities[c].attributes.objective_complete_cnt / cities[c].attributes.objective_total_cnt * 100);
+      delete _cities[c]['username'];
+    }
+    var user_progress = {
+      username: req.params.username,
+      progress: progress,
+      states: _states,
+      cities: _cities
+    };
+    res.json(user_progress);
   })
   .fail(function (err) {
     return next(err);
@@ -232,8 +278,8 @@ exports.getMissionJournalsById = function(req, res) {
   Q.all([
     Q.ninvoke(model, 'getMissionJournalsById', by_id, req.params.id),
   ])
-  .spread(function(mission) {
-    res.json(mission);
+  .spread(function(journals) {
+    res.json(journals);
   })
   .fail(function (err) {
     return next(err);

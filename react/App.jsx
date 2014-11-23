@@ -35,6 +35,7 @@ var App = React.createClass({
                 <body>
                     <div id="body"></div>
                     <span id="props" dangerouslySetInnerHTML={{__html: json}}></span>
+                    <script src="/js/Chart.js"></script>
                     <script type="text/javascript" src="/js/browserify/bundle.js"></script>
                 </body>
             </html>

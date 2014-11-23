@@ -5,13 +5,14 @@
  *  Canvas displays the wide img for the page.
  */
 var React = require('react');
+var UserCanvas = require('./UserCanvas.jsx');
 
 var Canvas = React.createClass({
     render: function() {
         var img = this.props.img;
         var canvasClass;
         var style = {
-          backgroundImage: 'url(' + img.url + ')'
+          backgroundColor: '#f4f4f4'
         };
         if (img.display === 'Login' || img.display === 'Signup') {
           canvasClass = 'canvas-login';
@@ -21,7 +22,9 @@ var Canvas = React.createClass({
           canvasClass = 'canvas';
         }
         return (
-            <div style={style} alt={img.display} className={canvasClass}></div>
+            <div style={style} alt={img.display} className={canvasClass}>
+                { this.props.user ? <UserCanvas userProgress={this.props.userProgress} /> : null }
+            </div>
         )
     }
 });

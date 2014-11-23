@@ -7,19 +7,35 @@
 var React = require('react');
 
 var MissionList = React.createClass({
+      getDefaultProps: function() {
+        return {
+          list: []
+        };
+      },
+      getInitialState: function() {
+        return {
+          list: this.props.list
+        };
+      },
+      componentWillReceiveProps: function(nextProps) {
+        this.setState({
+          list: nextProps.list
+        });
+      },
       render: function() {
-        var state;
-        if (this.props.by === 'state') {
-          state = true;
+        if (this.props.by === 'author') {
+          var author = true;
         }
         var list = this.props.list.map(function(mission, i) {
           return (
             <tr key={i}>
               <td><a href={'/mission/' + mission.mission_id}>{mission.mission}</a></td>
-              <td><a href={'/author/' + mission.author}>{mission.author}</a></td>
-              { state ? <td><a href={'/objective/' + mission.objective_id}>{mission.objective}</a></td> : null }
-              { state ? <td><a href={'/location/city/' + mission.city_id}>{mission.city}</a></td> : null }
-              <td>{mission.missionobjective_journal_cnt}</td>
+              { !author ? <td><a href={'/author/' + mission.author}>{mission.author}</a></td> : null }
+              { !author ? <td><a href={'/objective/' + mission.objective_id}>{mission.objective}</a></td> : null }
+              { !author ? <td><a href={'/location/city/' + mission.city_id}>{mission.city}</a></td> : null }
+              { !author ? <td><a href={'/location/state/' + mission.state_id}>{mission.state}</a></td> : null }
+              { !author ? <td>{mission.objective_journal_cnt}</td> : null }
+              { !author ? <td>{mission.objective_mission_cnt}</td> : null }
             </tr>
           );
         });
@@ -29,10 +45,12 @@ var MissionList = React.createClass({
               <table className='table'>
                 <thead>
                   <th><span>Mission</span></th>
-                  <th><span>Author</span></th>
-                  { state ? <th><span>Objective</span></th> : null }
-                  { state ? <th><span>City</span></th> : null }
-                  <th><span>Journals</span></th>
+                  { !author ? <th><span>Author</span></th> : null }
+                  { !author ? <th><span>Objective</span></th> : null }
+                  { !author ? <th><span>City</span></th> : null }
+                  { !author ? <th><span>State</span></th> : null }
+                  { !author ? <th><span>Journals</span></th> : null }
+                  { !author ? <th><span>Missions</span></th> : null }
                 </thead>
                 <tbody>
                   {list}

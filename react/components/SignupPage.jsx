@@ -13,11 +13,15 @@ var SignupForm = require('./SignupForm.jsx');
 var ListPage = React.createClass({
     getInitialState: function() {
         return {
+            nav: [{
+                display: 'Signup',
+                url: '/signup'
+            }],
             img : {
                 display: 'Signup',
                 url: '/images/signup.jpg'
             },
-            by: this.props.params.by,
+            by: '',
             messages: this.props.messages,
             sidebarRight: false
         };

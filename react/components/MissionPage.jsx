@@ -56,9 +56,13 @@ var MissionPage = React.createClass({
         this.unsubscribe();
     },
     displayChanged: function(results) {
+        var filters = this.state.filters;
+        filters.current = results.display;
+
         this.setState({
             results: results.list,
-            display: results.display
+            display: results.display,
+            filters: filters
         });
     },
     showSidebar: function(sidebar) {

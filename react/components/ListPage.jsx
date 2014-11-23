@@ -51,7 +51,6 @@ var ListPage = React.createClass({
         });
     },
     showSidebar: function(sidebar) {
-        console.log(sidebar);
         if (sidebar === 'right') {
             this.setState({
                 sidebarRight: !this.state.sidebarRight

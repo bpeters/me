@@ -219,8 +219,20 @@ exports.getMissionObjectivesById = function(req, res) {
   Q.all([
     Q.ninvoke(model, 'getMissionObjectivesById', by_id, req.params.id),
   ])
-  .spread(function(mission) {
-    res.json(mission);
+  .spread(function(objectives) {
+    res.json(objectives);
+  })
+  .fail(function (err) {
+    return next(err);
+  });
+};
+
+exports.getUserObjectivesById = function(req, res) {
+  Q.all([
+    Q.ninvoke(model, 'getUserObjectivesById', req.params.username),
+  ])
+  .spread(function(objectives) {
+    res.json(objectives);
   })
   .fail(function (err) {
     return next(err);
@@ -232,8 +244,8 @@ exports.getMissionJournalsById = function(req, res) {
   Q.all([
     Q.ninvoke(model, 'getMissionJournalsById', by_id, req.params.id),
   ])
-  .spread(function(mission) {
-    res.json(mission);
+  .spread(function(journals) {
+    res.json(journals);
   })
   .fail(function (err) {
     return next(err);

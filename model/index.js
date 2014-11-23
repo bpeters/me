@@ -8,6 +8,7 @@ var Mission = Parse.Object.extend("Mission");
 var MissionObjectives = Parse.Object.extend("MissionObjectives");
 var MissionJournals = Parse.Object.extend("MissionJournals");
 var User = Parse.Object.extend("User");
+var UserObjectives = Parse.Object.extend("UserObjectives");
 var City = Parse.Object.extend("City");
 var State = Parse.Object.extend("State");
 
@@ -135,7 +136,10 @@ exports.getObjectiveById = function (by_id, id, callback) {
 
 exports.getJournalById = function (by_id, id, callback) {
   var query = new Parse.Query(Journal);
-  query.equalTo(by_id, parseInt(id,0));
+  if (by_id != 'author') {
+    id = parseInt(id,0);
+  }
+  query.equalTo(by_id, id);
   query.find({
     success: function(results) {
       console.log("Successfully retrieved " + results.length + " journals.");
@@ -150,7 +154,10 @@ exports.getJournalById = function (by_id, id, callback) {
 
 exports.getMissionById = function (by_id, id, callback) {
   var query = new Parse.Query(Mission);
-  query.equalTo(by_id, parseInt(id,0));
+  if (by_id != 'author') {
+    id = parseInt(id,0);
+  }
+  query.equalTo(by_id, id);
   query.find({
     success: function(results) {
       console.log("Successfully retrieved " + results.length + " missions.");
@@ -169,6 +176,21 @@ exports.getMissionObjectivesById = function (by_id, id, callback) {
   query.find({
     success: function(results) {
       console.log("Successfully retrieved " + results.length + " mission objectives.");
+      return callback(null, results);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.getUserObjectivesById = function (username, callback) {
+  var query = new Parse.Query(UserObjectives);
+  query.equalTo('username', username);
+  query.find({
+    success: function(results) {
+      console.log("Successfully retrieved " + results.length + " user objectives.");
       return callback(null, results);
     },
     error: function(error) {

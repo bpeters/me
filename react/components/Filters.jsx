@@ -14,11 +14,22 @@ var Filters = React.createClass({
             action: this.props.filters.action
         };
       },
+      componentWillReceiveProps: function(nextProps) {
+        this.setState({
+          display: nextProps.filters.display,
+          current: nextProps.filters.current,
+          action: nextProps.filters.action
+        });
+      },
       handleClick: function(i) {
         this.setState({
           current: this.state.display[i].name
-        })
-        this.state.action(this.state.display[i].name, this.props.by, this.props.id);
+        });
+        if (this.props.by) {
+          this.state.action(this.state.display[i].name, this.props.by, this.props.id);
+        } else {
+          this.state.action(this.state.display[i].name, this.props.id);
+        }
       },
       render: function() {
         var self = this;

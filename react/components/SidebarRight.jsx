@@ -8,6 +8,21 @@ var React = require('react');
 var Filters = require('./Filters.jsx');
 
 var SidebarRight = React.createClass({
+      getDefaultProps: function() {
+        return {
+          filters: {}
+        };
+      },
+      getInitialState: function() {
+        return {
+          filters: this.props.filters
+        };
+      },
+      componentWillReceiveProps: function(nextProps) {
+        this.setState({
+          filters: nextProps.filters
+        });
+      },
       render: function() {
         var locations = [
           {
@@ -43,7 +58,7 @@ var SidebarRight = React.createClass({
               </li>
               {list}
             </ul>
-            { filters ? <Filters filters={this.props.filters} by={this.props.by} id={this.props.id} /> : null }
+            { filters ? <Filters filters={this.state.filters} by={this.props.by} id={this.props.id} /> : null }
           </div>
         )
     }

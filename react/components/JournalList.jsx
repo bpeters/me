@@ -7,22 +7,33 @@
 var React = require('react');
 
 var JournalList = React.createClass({
+      getDefaultProps: function() {
+        return {
+          list: []
+        };
+      },
+      getInitialState: function() {
+        return {
+          list: this.props.list
+        };
+      },
+      componentWillReceiveProps: function(nextProps) {
+        this.setState({
+          list: nextProps.list
+        });
+      },
       render: function() {
-        var state, mission;
-        if (this.props.by === 'state' || this.props.by === 'mission') {
-          state = true;
-        }
-        if (this.props.by === 'mission') {
-          mission = true;
+        if (this.props.by === 'author') {
+          var author = true;
         }
         var list = this.props.list.map(function(journal, i) {
           return (
             <tr key={i}>
               <td><a href={'/journal/' + journal.journal_id}>{journal.journal}</a></td>
-              { state ? <td><a href={'/objective/' + journal.objective_id}>{journal.objective}</a></td> : null }
-              <td><a href={'/author/' + journal.author}>{journal.author}</a></td>
-              { state ? <td><a href={'/location/city/' + journal.city_id}>{journal.city}</a></td> : null }
-              { mission ? <td><a href={'/location/state/' + journal.state_id}>{journal.state}</a></td> : null }
+              { !author ? <td><a href={'/objective/' + journal.objective_id}>{journal.objective}</a></td> : null }
+              { !author  ? <td><a href={'/author/' + journal.author}>{journal.author}</a></td> : null }
+              { !author  ? <td><a href={'/location/city/' + journal.city_id}>{journal.city}</a></td> : null }
+              { !author  ? <td><a href={'/location/state/' + journal.state_id}>{journal.state}</a></td> : null }
             </tr>
           );
         });
@@ -33,10 +44,10 @@ var JournalList = React.createClass({
                 <thead>
                   <tr>
                     <th><span>Journal</span></th>
-                    { state ? <th><span>Objective</span></th> : null }
-                    <th><span>Author</span></th>
-                    { state ? <th><span>City</span></th> : null }
-                    { mission ? <th><span>State</span></th> : null }
+                    { !author  ? <th><span>Objective</span></th> : null }
+                    { !author  ? <th><span>Author</span></th> : null }
+                    { !author  ? <th><span>City</span></th> : null }
+                    { !author  ? <th><span>State</span></th> : null }
                   </tr>
                 </thead>
                 <tbody>

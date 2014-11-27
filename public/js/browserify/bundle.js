@@ -36890,7 +36890,7 @@ var ObjectiveList = React.createClass({displayName: 'ObjectiveList',
                !author ? React.DOM.td(null, React.DOM.a({href: '/location/State/' + objective.state_id}, objective.state)) : null, 
                !author ? React.DOM.td(null, objective.objective_journal_cnt) : null, 
                !author ? React.DOM.td(null, objective.objective_mission_cnt) : null, 
-               !author ?  React.DOM.td(null, "0") : null, 
+               !author ?  React.DOM.td(null, objective.objective_complete_cnt) : null, 
                !author ?  React.DOM.td(null, "0") : null
             )
           );

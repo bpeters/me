@@ -408,14 +408,25 @@ exports.updateUserStateProgress = function (objective, username, callback) {
         user.save();
         return callback(null, user.attributes);
       } else {
-        var userStateProgress = new UserStateProgress();
-        userStateProgress.set("username", username);
-        userStateProgress.set("state_id", objective.state_id);
-        userStateProgress.set("state", objective.state);
-        userStateProgress.set("objective_complete_cnt", 1);
-        userStateProgress.save(null,{
-          success:function(userObjective) { 
-            return callback(null, userStateProgress.attributes);
+        var stateQuery = new Parse.Query(State);
+        stateQuery.equalTo('state_id', parseInt(objective.state_id,0));
+        stateQuery.first({
+          success:function(state) {
+            var userStateProgress = new UserStateProgress();
+            userStateProgress.set("username", username);
+            userStateProgress.set("state_id", objective.state_id);
+            userStateProgress.set("state", objective.state);
+            userStateProgress.set("objective_complete_cnt", 1);
+            userStateProgress.set("objective_total_cnt", state.get('state_objective_cnt'));
+            userStateProgress.save(null,{
+              success:function(userStateProgress) { 
+                return callback(null, userStateProgress.attributes);
+              },
+              error:function(error) {
+                console.log("Error: " + error.code + " " + error.message);
+                return callback(error, null);
+              }
+            });
           },
           error:function(error) {
             console.log("Error: " + error.code + " " + error.message);
@@ -443,14 +454,25 @@ exports.updateUserCityProgress = function (objective, username, callback) {
         user.save();
         return callback(null, user.attributes);
       } else {
-        var userCityProgress = new UserCityProgress();
-        userCityProgress.set("username", username);
-        userCityProgress.set("city_id", objective.city_id);
-        userCityProgress.set("city", objective.city);
-        userCityProgress.set("objective_complete_cnt", 1);
-        userCityProgress.save(null,{
-          success:function(userObjective) { 
-            return callback(null, userCityProgress.attributes);
+        var cityQuery = new Parse.Query(City);
+        cityQuery.equalTo('city_id', parseInt(objective.city_id,0));
+        cityQuery.first({
+          success:function(city) {
+            var userCityProgress = new UserCityProgress();
+            userCityProgress.set("username", username);
+            userCityProgress.set("city_id", objective.city_id);
+            userCityProgress.set("city", objective.city);
+            userCityProgress.set("objective_complete_cnt", 1);
+            userCityProgress.set("objective_total_cnt", city.get('city_objective_cnt'));
+            userCityProgress.save(null,{
+              success:function(userCityProgress) { 
+                return callback(null, userCityProgress.attributes);
+              },
+              error:function(error) {
+                console.log("Error: " + error.code + " " + error.message);
+                return callback(error, null);
+              }
+            });
           },
           error:function(error) {
             console.log("Error: " + error.code + " " + error.message);

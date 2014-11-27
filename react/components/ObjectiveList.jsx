@@ -34,7 +34,7 @@ var ObjectiveList = React.createClass({
               { !author ? <td><a href={'/location/State/' + objective.state_id}>{objective.state}</a></td> : null }
               { !author ? <td>{objective.objective_journal_cnt}</td> : null }
               { !author ? <td>{objective.objective_mission_cnt}</td> : null }
-              { !author ?  <td>0</td> : null }
+              { !author ?  <td>{objective.objective_complete_cnt}</td> : null }
               { !author ?  <td>0</td> : null }
             </tr>
           );

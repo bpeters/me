@@ -1,7 +1,8 @@
 var Reflux = require('reflux');
 
 var ObjectiveActions = Reflux.createActions([
-   "load"
+   "load",
+   "complete"
 ]);
 
 module.exports = ObjectiveActions;

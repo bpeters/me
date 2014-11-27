@@ -323,3 +323,31 @@ exports.getNameById = function(req, res) {
     return next(err);
   });
 };
+
+exports.completeObjective = function(req, res) {
+  Q.all([
+    Q.ninvoke(model, 'updateObjectiveCompleteCount', req.params.id),
+    Q.ninvoke(model, 'updateUserProgress', req.params.username)
+  ])
+  .spread(function(objective, userProgress) {
+    console.log(objective);
+    console.log(userProgress);
+    Q.all([
+      Q.ninvoke(model, 'AddObjectiveToUser', objective, req.params.username),
+      Q.ninvoke(model, 'updateUserStateProgress', objective, req.params.username),
+      Q.ninvoke(model, 'updateUserCityProgress', objective, req.params.username)
+    ])
+    .spread(function(userObjective, stateProgress, cityProgress) {
+      console.log(userObjective);
+      console.log(stateProgress);
+      console.log(cityProgress);
+      res.json(userObjective);
+    })
+    .fail(function (err) {
+      return next(err);
+    });
+  })
+  .fail(function (err) {
+    return next(err);
+  });
+};

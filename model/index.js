@@ -9,6 +9,7 @@ var MissionObjectives = Parse.Object.extend("MissionObjectives");
 var MissionJournals = Parse.Object.extend("MissionJournals");
 var User = Parse.Object.extend("User");
 var UserObjectives = Parse.Object.extend("UserObjectives");
+var UserProgress = Parse.Object.extend("UserProgress");
 var UserStateProgress = Parse.Object.extend("UserStateProgress");
 var UserCityProgress = Parse.Object.extend("UserCityProgress");
 var City = Parse.Object.extend("City");
@@ -203,7 +204,7 @@ exports.getUserObjectivesById = function (username, callback) {
 };
 
 exports.getUserProgressById = function (username, callback) {
-  var query = new Parse.Query(User);
+  var query = new Parse.Query(UserProgress);
   query.equalTo('username', username);
   query.find({
     success: function(results) {
@@ -328,6 +329,135 @@ exports.getNameById = function (by, by_id, id, callback) {
         state_id : results[0].get('state_id')
       };
       return callback(null, object);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.updateObjectiveCompleteCount = function (id, callback) {
+  var query = new Parse.Query(Objective);
+  query.equalTo('objective_id', parseInt(id,0));
+  query.first({
+    success: function(objective) {
+      console.log("Successfully retrieved " + objective.get('objective') + ".");
+      if (objective.get('objective_complete_cnt')) {
+        objective.set("objective_complete_cnt",  objective.get('objective_complete_cnt') + 1);
+      } else {
+        objective.set("objective_complete_cnt",  1);
+      }
+      objective.save();
+      return callback(null, objective.attributes);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.updateUserProgress = function (username, callback) {
+  var query = new Parse.Query(UserProgress);
+  query.equalTo('username', username);
+  query.first({
+    success: function(user) {
+      console.log("Successfully retrieved " + user.get('username') + ".");
+      user.set("objective_complete_cnt",  user.get('objective_complete_cnt') + 1);
+      user.save();
+      return callback(null, user.attributes);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.AddObjectiveToUser = function (objective, username, callback) {
+  var userObjective = new UserObjectives();
+  userObjective.set("username", username);
+  userObjective.set("objective_id", objective.objective_id);
+  userObjective.set("objective", objective.objective);
+  userObjective.set("state_id", objective.state_id);
+  userObjective.set("state", objective.state);
+  userObjective.set("city_id", objective.city_id);
+  userObjective.set("city", objective.city);
+
+  userObjective.save(null,{
+    success:function(userObjective) { 
+      return callback(null, userObjective.attributes);
+    },
+    error:function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.updateUserStateProgress = function (objective, username, callback) {
+  var query = new Parse.Query(UserStateProgress);
+  query.equalTo('username', username);
+  query.equalTo('state_id', parseInt(objective.state_id,0));
+  query.first({
+    success: function(user) {
+      if (user) {
+        console.log("Successfully retrieved " + user.get('username') + ".");
+        user.set("objective_complete_cnt",  user.get('objective_complete_cnt') + 1);
+        user.save();
+        return callback(null, user.attributes);
+      } else {
+        var userStateProgress = new UserStateProgress();
+        userStateProgress.set("username", username);
+        userStateProgress.set("state_id", objective.state_id);
+        userStateProgress.set("state", objective.state);
+        userStateProgress.set("objective_complete_cnt", 1);
+        userStateProgress.save(null,{
+          success:function(userObjective) { 
+            return callback(null, userStateProgress.attributes);
+          },
+          error:function(error) {
+            console.log("Error: " + error.code + " " + error.message);
+            return callback(error, null);
+          }
+        });
+      }
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.updateUserCityProgress = function (objective, username, callback) {
+  var query = new Parse.Query(UserCityProgress);
+  query.equalTo('username', username);
+  query.equalTo('city_id', parseInt(objective.city_id,0));
+  query.first({
+    success: function(user) {
+      if (user) {
+        console.log("Successfully retrieved " + user.get('username') + ".");
+        user.set("objective_complete_cnt",  user.get('objective_complete_cnt') + 1);
+        user.save();
+        return callback(null, user.attributes);
+      } else {
+        var userCityProgress = new UserCityProgress();
+        userCityProgress.set("username", username);
+        userCityProgress.set("city_id", objective.city_id);
+        userCityProgress.set("city", objective.city);
+        userCityProgress.set("objective_complete_cnt", 1);
+        userCityProgress.save(null,{
+          success:function(userObjective) { 
+            return callback(null, userCityProgress.attributes);
+          },
+          error:function(error) {
+            console.log("Error: " + error.code + " " + error.message);
+            return callback(error, null);
+          }
+        });
+      }
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);

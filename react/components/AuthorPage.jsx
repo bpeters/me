@@ -30,6 +30,7 @@ var AuthorPage = React.createClass({
                     url: '/author/' + this.props.author.username
                 }
             ],
+            author: this.props.author,
             by: 'author',
             username: this.props.params.username,
             sidebarRight: false,
@@ -112,10 +113,10 @@ var AuthorPage = React.createClass({
         return (
             <div className="container-fluid">
                 <Header nav={this.state.nav} user={this.props.user} onClick={this.showSidebar}/>
-                { this.state.sidebarLeft ? <SidebarLeft user={this.props.user} /> : null }
+                { this.state.sidebarLeft ? <SidebarLeft user={this.state.author} /> : null }
                 { this.state.sidebarRight ? <SidebarRight id={this.state.username} filters={this.state.filters} /> : null }
                 <div className="row">
-                    <Canvas img={this.state.img} userProgress={this.state.userProgress} user={true}/>
+                    <Canvas img={this.state.img} userProgress={this.state.userProgress} author={this.state.author}/>
                     <div className='main-side col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6'>
                       {list}
                     </div>

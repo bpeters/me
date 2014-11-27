@@ -7,6 +7,7 @@ var ObjectiveStore = Reflux.createStore({
         this._results = {};
         this._display = '';
         this.listenTo(ObjectiveActions.load, this.load);
+        this.listenTo(ObjectiveActions.complete, this.complete);
     },
     load: function(display, by, id) {
         this._display = display;
@@ -31,6 +32,9 @@ var ObjectiveStore = Reflux.createStore({
     onLoadError: function() {
         this._results = {};
         ObjectiveStore.trigger(this._results);
+    },
+    complete: function(id, username) {
+        $.post("/api/1/completeObjective/" + id + "/" + username);
     },
     getDefaultData: function() {
         return this._results;

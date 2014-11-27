@@ -35655,7 +35655,7 @@ if (typeof window !== 'undefined') {
     };
 }
 
-},{"./App.jsx":161,"./components/AuthorPage.jsx":169,"./components/JournalPage.jsx":177,"./components/ListPage.jsx":179,"./components/LocationPage.jsx":180,"./components/LoginPage.jsx":182,"./components/MissionPage.jsx":184,"./components/ObjectivePage.jsx":186,"./components/SignupPage.jsx":191,"jquery":2,"react":147}],163:[function(require,module,exports){
+},{"./App.jsx":161,"./components/AuthorPage.jsx":169,"./components/JournalPage.jsx":178,"./components/ListPage.jsx":180,"./components/LocationPage.jsx":181,"./components/LoginPage.jsx":183,"./components/MissionPage.jsx":185,"./components/ObjectivePage.jsx":188,"./components/SignupPage.jsx":193,"jquery":2,"react":147}],163:[function(require,module,exports){
 var Reflux = require('reflux');
 
 var AuthorActions = Reflux.createActions([
@@ -35695,7 +35695,9 @@ module.exports = MissionActions;
 var Reflux = require('reflux');
 
 var ObjectiveActions = Reflux.createActions([
-   "load"
+   "load",
+   "complete",
+   "notComplete"
 ]);
 
 module.exports = ObjectiveActions;
@@ -35720,6 +35722,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
+var SidebarLeft = require('./SidebarLeft.jsx');
 var ObjectiveList = require('./ObjectiveList.jsx');
 var JournalList = require('./JournalList.jsx');
 var MissionList = require('./MissionList.jsx');
@@ -35742,6 +35745,7 @@ var AuthorPage = React.createClass({displayName: 'AuthorPage',
                     url: '/author/' + this.props.author.username
                 }
             ],
+            author: this.props.author,
             by: 'author',
             username: this.props.params.username,
             sidebarRight: false,
@@ -35824,11 +35828,11 @@ var AuthorPage = React.createClass({displayName: 'AuthorPage',
         return (
             React.DOM.div({className: "container-fluid"}, 
                 Header({nav: this.state.nav, user: this.props.user, onClick: this.showSidebar}), 
-                 this.state.sidebarLeft ? SidebarLeft({user: this.props.user}) : null, 
+                 this.state.sidebarLeft ? SidebarLeft({user: this.state.author}) : null, 
                  this.state.sidebarRight ? SidebarRight({id: this.state.username, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
-                    Canvas({img: this.state.img, userProgress: this.state.userProgress, user: true}), 
-                    React.DOM.div({className: "main col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6"}, 
+                    Canvas({img: this.state.img, userProgress: this.state.userProgress, author: this.state.author}), 
+                    React.DOM.div({className: "main-side col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6"}, 
                       list
                     )
                 )
@@ -35839,7 +35843,7 @@ var AuthorPage = React.createClass({displayName: 'AuthorPage',
 
 module.exports = AuthorPage;
 
-},{"../actions/AuthorActions":163,"../actions/UserActions":168,"../stores/AuthorStore":193,"../stores/UserStore":198,"./Canvas.jsx":171,"./Header.jsx":175,"./JournalList.jsx":176,"./MissionList.jsx":183,"./ObjectiveList.jsx":185,"./SidebarRight.jsx":189,"react":147}],170:[function(require,module,exports){
+},{"../actions/AuthorActions":163,"../actions/UserActions":168,"../stores/AuthorStore":195,"../stores/UserStore":200,"./Canvas.jsx":171,"./Header.jsx":176,"./JournalList.jsx":177,"./MissionList.jsx":184,"./ObjectiveList.jsx":187,"./SidebarLeft.jsx":190,"./SidebarRight.jsx":191,"react":147}],170:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -35892,6 +35896,7 @@ module.exports = BarChart;
  */
 var React = require('react');
 var UserCanvas = require('./UserCanvas.jsx');
+var ObjectiveCanvas = require('./ObjectiveCanvas.jsx');
 
 var Canvas = React.createClass({displayName: 'Canvas',
     render: function() {
@@ -35909,7 +35914,8 @@ var Canvas = React.createClass({displayName: 'Canvas',
         }
         return (
             React.DOM.div({style: style, alt: img.display, className: canvasClass}, 
-                 this.props.user ? UserCanvas({userProgress: this.props.userProgress}) : null
+                 this.props.author ? UserCanvas({userProgress: this.props.userProgress}) : null, 
+                 this.props.objective ? ObjectiveCanvas({objective: this.props.objective, user: this.props.user, userObjective: this.props.userObjective}) : null
             )
         )
     }
@@ -35917,7 +35923,61 @@ var Canvas = React.createClass({displayName: 'Canvas',
 
 module.exports = Canvas;
 
-},{"./UserCanvas.jsx":192,"react":147}],172:[function(require,module,exports){
+},{"./ObjectiveCanvas.jsx":186,"./UserCanvas.jsx":194,"react":147}],172:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  Objective Canvas displays the objective buttons, stats and charts.
+ */
+var React = require('react');
+var ObjectiveActions = require('../actions/ObjectiveActions');
+
+var CanvasActions = React.createClass({displayName: 'CanvasActions',
+    getInitialState: function() {
+        return {
+          showJournalEntry: false,
+          userObjective: this.props.userObjective
+        };
+    },
+    componentWillReceiveProps: function(nextProps) {
+        this.setState({
+            userObjective: nextProps.userObjective
+        });
+    },
+    completeObjective: function() {
+      ObjectiveActions.complete(this.props.objective.objective_id, this.props.user.username);
+      this.setState({
+        userObjective: true
+      });
+    },
+    notCompleteObjective: function() {
+      ObjectiveActions.notComplete(this.props.objective.objective_id, this.props.user.username);
+      this.setState({
+        userObjective: false
+      });
+    },
+    showJournal: function() {
+      
+    },
+    render: function() {
+        console.log(this.state.userObjective);
+        return (
+          React.DOM.div({className: "row canvas-actions"}, 
+              React.DOM.div({className: "col-md-12"}, 
+                 !this.state.userObjective ? React.DOM.button({onClick: this.completeObjective, type: "submit", className: "btn btn-success"}, "Complete Objective") : null, 
+                 this.state.userObjective ? React.DOM.button({onClick: this.showJournal, type: "submit", className: "btn btn-success"}, "Write Journal Entry") : null, 
+                React.DOM.button({type: "submit", className: "btn btn-default"}, "Add to Mission"), 
+                 this.state.userObjective ? React.DOM.button({onClick: this.notCompleteObjective, type: "submit", className: "btn btn-danger"}, "Did Not Complete") : null
+              )
+          )
+        )
+    }
+});
+
+module.exports = CanvasActions;
+
+},{"../actions/ObjectiveActions":167,"react":147}],173:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -35973,7 +36033,7 @@ var CanvasStats = React.createClass({displayName: 'CanvasStats',
 
 module.exports = CanvasStats;
 
-},{"./DonutChart.jsx":173,"react":147}],173:[function(require,module,exports){
+},{"./DonutChart.jsx":174,"react":147}],174:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36016,7 +36076,7 @@ var DonutChart = React.createClass({displayName: 'DonutChart',
 
 module.exports = DonutChart;
 
-},{"jquery":2,"react":147}],174:[function(require,module,exports){
+},{"jquery":2,"react":147}],175:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36081,7 +36141,7 @@ var Filters = React.createClass({displayName: 'Filters',
 
 module.exports = Filters;
 
-},{"react":147}],175:[function(require,module,exports){
+},{"react":147}],176:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36137,7 +36197,7 @@ var Header = React.createClass({displayName: 'Header',
 
 module.exports = Header;
 
-},{"react":147}],176:[function(require,module,exports){
+},{"react":147}],177:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36178,7 +36238,7 @@ var JournalList = React.createClass({displayName: 'JournalList',
           );
         });
         return (
-          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10"}, 
             React.DOM.div({className: "table-responsive"}, 
               React.DOM.table({className: "table"}, 
                 React.DOM.thead(null, 
@@ -36202,7 +36262,7 @@ var JournalList = React.createClass({displayName: 'JournalList',
 
 module.exports = JournalList;
 
-},{"react":147}],177:[function(require,module,exports){
+},{"react":147}],178:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36213,6 +36273,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
+var SidebarLeft = require('./SidebarLeft.jsx');
 
 var JournalPage = React.createClass({displayName: 'JournalPage',
     getInitialState: function() {
@@ -36266,7 +36327,7 @@ var JournalPage = React.createClass({displayName: 'JournalPage',
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    React.DOM.div({className: "main col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6"}, 
+                    React.DOM.div({className: "main-side col-md-offset-6 col-sm-offset-6 col-md-6 col-sm-6"}, 
                       React.DOM.h3(null,  this.props.journal.journal), 
                       React.DOM.h5(null, "by ", React.DOM.a({href: '/author/' + this.props.journal.author_id},  this.props.journal.author)), 
                       React.DOM.div(null, 
@@ -36283,7 +36344,7 @@ var JournalPage = React.createClass({displayName: 'JournalPage',
 
 module.exports = JournalPage;
 
-},{"./Canvas.jsx":171,"./Header.jsx":175,"./SidebarRight.jsx":189,"react":147}],178:[function(require,module,exports){
+},{"./Canvas.jsx":171,"./Header.jsx":176,"./SidebarLeft.jsx":190,"./SidebarRight.jsx":191,"react":147}],179:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36311,7 +36372,7 @@ var List = React.createClass({displayName: 'List',
           );
         });
         return (
-          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10"}, 
             React.DOM.div({className: "table-responsive"}, 
               React.DOM.table({className: "table"}, 
                 React.DOM.thead(null, 
@@ -36342,7 +36403,7 @@ var List = React.createClass({displayName: 'List',
 
 module.exports = List;
 
-},{"react":147}],179:[function(require,module,exports){
+},{"react":147}],180:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36415,7 +36476,9 @@ var ListPage = React.createClass({displayName: 'ListPage',
                  this.state.sidebarRight ? SidebarRight({by: this.state.by}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    List({list: this.state.list, by: this.state.by, header: header})
+                    React.DOM.div({className: "main"}, 
+                        List({list: this.state.list, by: this.state.by, header: header})
+                    )
                 )
             )
         )
@@ -36424,7 +36487,7 @@ var ListPage = React.createClass({displayName: 'ListPage',
 
 module.exports = ListPage;
 
-},{"../actions/ListActions":164,"../stores/ListStore":194,"./Canvas.jsx":171,"./Header.jsx":175,"./List.jsx":178,"./SidebarLeft.jsx":188,"./SidebarRight.jsx":189,"react":147}],180:[function(require,module,exports){
+},{"../actions/ListActions":164,"../stores/ListStore":196,"./Canvas.jsx":171,"./Header.jsx":176,"./List.jsx":179,"./SidebarLeft.jsx":190,"./SidebarRight.jsx":191,"react":147}],181:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36435,6 +36498,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
+var SidebarLeft = require('./SidebarLeft.jsx');
 var ObjectiveList = require('./ObjectiveList.jsx');
 var JournalList = require('./JournalList.jsx');
 var MissionList = require('./MissionList.jsx');
@@ -36542,7 +36606,9 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    list
+                    React.DOM.div({className: "main"}, 
+                        list
+                    )
                 )
             )
         )
@@ -36551,7 +36617,7 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
 
 module.exports = LocationPage;
 
-},{"../actions/LocationActions":165,"../stores/LocationStore":195,"./Canvas.jsx":171,"./Header.jsx":175,"./JournalList.jsx":176,"./MissionList.jsx":183,"./ObjectiveList.jsx":185,"./SidebarRight.jsx":189,"react":147}],181:[function(require,module,exports){
+},{"../actions/LocationActions":165,"../stores/LocationStore":197,"./Canvas.jsx":171,"./Header.jsx":176,"./JournalList.jsx":177,"./MissionList.jsx":184,"./ObjectiveList.jsx":187,"./SidebarLeft.jsx":190,"./SidebarRight.jsx":191,"react":147}],182:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36590,7 +36656,7 @@ var LoginForm = React.createClass({displayName: 'LoginForm',
 
 module.exports = LoginForm;
 
-},{"react":147}],182:[function(require,module,exports){
+},{"react":147}],183:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36642,7 +36708,7 @@ var LoginPage = React.createClass({displayName: 'LoginPage',
 
 module.exports = LoginPage;
 
-},{"./Canvas.jsx":171,"./Header.jsx":175,"./LoginForm.jsx":181,"./SidebarRight.jsx":189,"react":147}],183:[function(require,module,exports){
+},{"./Canvas.jsx":171,"./Header.jsx":176,"./LoginForm.jsx":182,"./SidebarRight.jsx":191,"react":147}],184:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36685,7 +36751,7 @@ var MissionList = React.createClass({displayName: 'MissionList',
           );
         });
         return (
-          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10"}, 
             React.DOM.div({className: "table-responsive"}, 
               React.DOM.table({className: "table"}, 
                 React.DOM.thead(null, 
@@ -36709,7 +36775,7 @@ var MissionList = React.createClass({displayName: 'MissionList',
 
 module.exports = MissionList;
 
-},{"react":147}],184:[function(require,module,exports){
+},{"react":147}],185:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36720,6 +36786,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
+var SidebarLeft = require('./SidebarLeft.jsx');
 var JournalList = require('./JournalList.jsx');
 var ObjectiveList = require('./ObjectiveList.jsx');
 var MissionStore = require('../stores/MissionStore');
@@ -36802,7 +36869,9 @@ var MissionPage = React.createClass({displayName: 'MissionPage',
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
                     Canvas({img: this.state.img}), 
-                    list
+                    React.DOM.div({className: "main"}, 
+                        list
+                    )
                 )
             )
         )
@@ -36811,7 +36880,30 @@ var MissionPage = React.createClass({displayName: 'MissionPage',
 
 module.exports = MissionPage;
 
-},{"../actions/MissionActions":166,"../stores/MissionStore":196,"./Canvas.jsx":171,"./Header.jsx":175,"./JournalList.jsx":176,"./ObjectiveList.jsx":185,"./SidebarRight.jsx":189,"react":147}],185:[function(require,module,exports){
+},{"../actions/MissionActions":166,"../stores/MissionStore":198,"./Canvas.jsx":171,"./Header.jsx":176,"./JournalList.jsx":177,"./ObjectiveList.jsx":187,"./SidebarLeft.jsx":190,"./SidebarRight.jsx":191,"react":147}],186:[function(require,module,exports){
+/**
+ * @jsx React.DOM
+ */
+/**
+ *  Objective Canvas displays the objective buttons, stats and charts.
+ */
+var React = require('react');
+var CanvasActions = require('./CanvasActions.jsx');
+
+var ObjectiveCanvas = React.createClass({displayName: 'ObjectiveCanvas',
+    render: function() {
+        return (
+            React.DOM.div(null, 
+                React.DOM.div({className: "block"}), 
+                 this.props.user ? CanvasActions({objective: this.props.objective, user: this.props.user, userObjective: this.props.userObjective}) : null
+            )
+        )
+    }
+});
+
+module.exports = ObjectiveCanvas;
+
+},{"./CanvasActions.jsx":172,"react":147}],187:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36848,13 +36940,13 @@ var ObjectiveList = React.createClass({displayName: 'ObjectiveList',
                !author ? React.DOM.td(null, React.DOM.a({href: '/location/State/' + objective.state_id}, objective.state)) : null, 
                !author ? React.DOM.td(null, objective.objective_journal_cnt) : null, 
                !author ? React.DOM.td(null, objective.objective_mission_cnt) : null, 
-               !author ?  React.DOM.td(null, "0") : null, 
+               !author ?  React.DOM.td(null, objective.objective_complete_cnt) : null, 
                !author ?  React.DOM.td(null, "0") : null
             )
           );
         });
         return (
-          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main"}, 
+          React.DOM.div({className: "col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10"}, 
             React.DOM.div({className: "table-responsive"}, 
               React.DOM.table({className: "table"}, 
                 React.DOM.thead(null, 
@@ -36880,7 +36972,7 @@ var ObjectiveList = React.createClass({displayName: 'ObjectiveList',
 
 module.exports = ObjectiveList;
 
-},{"react":147}],186:[function(require,module,exports){
+},{"react":147}],188:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -36891,10 +36983,13 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
+var SidebarLeft = require('./SidebarLeft.jsx');
 var JournalList = require('./JournalList.jsx');
 var MissionList = require('./MissionList.jsx');
 var ObjectiveStore = require('../stores/ObjectiveStore');
 var ObjectiveActions = require('../actions/ObjectiveActions');
+var UserStore = require('../stores/UserStore');
+var UserActions = require('../actions/UserActions');
 
 var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
     getInitialState: function() {
@@ -36917,12 +37012,16 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
                     url: '/objective/' + this.props.objective.objective_id
                 }
             ],
-            by: this.props.params.by,
+            objective: this.props.objective,
+            by: 'objective',
             id: this.props.params.id,
+            user: this.props.user,
             sidebarRight: false,
             sidebarLeft: false,
             results: [],
             display: 'Journals',
+            userProgress: {},
+            userObjective: false,
             filters: {
                 display: [
                   {
@@ -36940,11 +37039,19 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
         };
     },
     componentDidMount: function() {
-        this.unsubscribe = ObjectiveStore.listen(this.displayChanged);
+        this.unsubscribeObjective = ObjectiveStore.listen(this.displayChanged);
         ObjectiveActions.load(this.state.display, this.state.by, this.state.id);
+
+        if (this.props.user) {
+            this.unsubscribeUser = UserStore.listen(this.loadUser);
+            UserActions.load(this.props.user.username);
+        }
     },
     componentWillUnmount: function() {
-        this.unsubscribe();
+        this.unsubscribeObjective();
+        if (this.props.user) {
+            this.unsubscribeUser();
+        }
     },
     displayChanged: function(results) {
         var filters = this.state.filters;
@@ -36967,6 +37074,20 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
             });
         }
     },
+    loadUser: function(user) {
+        var userObjective;
+        for (var i = 0; i < user.objectives.length; i++) {
+            console.log(user.objectives[i].objective_id);
+            console.log(this.state.objective.objective_id)
+            if (user.objectives[i].objective_id === this.state.objective.objective_id) {
+                userObjective = true;
+            }
+        }
+        this.setState({
+            userProgress: user,
+            userObjective: userObjective
+        });
+    },
     render: function() {
         var list;
         if (this.state.display === 'Journals') {
@@ -36980,8 +37101,10 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
                  this.state.sidebarLeft ? SidebarLeft({user: this.props.user}) : null, 
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
-                    Canvas({img: this.state.img}), 
-                    list
+                    Canvas({img: this.state.img, objective: this.state.objective, user: this.state.user, userObjective: this.state.userObjective}), 
+                    React.DOM.div({className: "main"}, 
+                        list
+                    )
                 )
             )
         )
@@ -36990,7 +37113,7 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
 
 module.exports = ObjectivePage;
 
-},{"../actions/ObjectiveActions":167,"../stores/ObjectiveStore":197,"./Canvas.jsx":171,"./Header.jsx":175,"./JournalList.jsx":176,"./MissionList.jsx":183,"./SidebarRight.jsx":189,"react":147}],187:[function(require,module,exports){
+},{"../actions/ObjectiveActions":167,"../actions/UserActions":168,"../stores/ObjectiveStore":199,"../stores/UserStore":200,"./Canvas.jsx":171,"./Header.jsx":176,"./JournalList.jsx":177,"./MissionList.jsx":184,"./SidebarLeft.jsx":190,"./SidebarRight.jsx":191,"react":147}],189:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -37062,7 +37185,7 @@ var ProgressStats = React.createClass({displayName: 'ProgressStats',
 
 module.exports = ProgressStats;
 
-},{"./BarChart.jsx":170,"lodash":3,"react":147}],188:[function(require,module,exports){
+},{"./BarChart.jsx":170,"lodash":3,"react":147}],190:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -37099,7 +37222,7 @@ var SidebarRight = React.createClass({displayName: 'SidebarRight',
 
 module.exports = SidebarRight;
 
-},{"react":147}],189:[function(require,module,exports){
+},{"react":147}],191:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -37152,7 +37275,6 @@ var SidebarRight = React.createClass({displayName: 'SidebarRight',
           );
         });
         var filters = this.props.filters;
-        console.log(filters);
         return (
           React.DOM.div({className: "sidebar-right sidebar"}, 
             React.DOM.ul(null, 
@@ -37169,7 +37291,7 @@ var SidebarRight = React.createClass({displayName: 'SidebarRight',
 
 module.exports = SidebarRight;
 
-},{"./Filters.jsx":174,"react":147}],190:[function(require,module,exports){
+},{"./Filters.jsx":175,"react":147}],192:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -37212,7 +37334,7 @@ var SignupForm = React.createClass({displayName: 'SignupForm',
 
 module.exports = SignupForm;
 
-},{"react":147}],191:[function(require,module,exports){
+},{"react":147}],193:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -37264,7 +37386,7 @@ var ListPage = React.createClass({displayName: 'ListPage',
 
 module.exports = ListPage;
 
-},{"./Canvas.jsx":171,"./Header.jsx":175,"./SidebarRight.jsx":189,"./SignupForm.jsx":190,"react":147}],192:[function(require,module,exports){
+},{"./Canvas.jsx":171,"./Header.jsx":176,"./SidebarRight.jsx":191,"./SignupForm.jsx":192,"react":147}],194:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -37313,7 +37435,7 @@ var UserCanvas = React.createClass({displayName: 'UserCanvas',
 
 module.exports = UserCanvas;
 
-},{"./CanvasStats.jsx":172,"./ProgressStats.jsx":187,"react":147}],193:[function(require,module,exports){
+},{"./CanvasStats.jsx":173,"./ProgressStats.jsx":189,"react":147}],195:[function(require,module,exports){
 var Reflux = require('reflux');
 var AuthorActions = require('../actions/AuthorActions');
 var $ = require('jquery');
@@ -37359,7 +37481,7 @@ var AuthorStore = Reflux.createStore({
 
 module.exports = AuthorStore;
 
-},{"../actions/AuthorActions":163,"jquery":2,"reflux":156}],194:[function(require,module,exports){
+},{"../actions/AuthorActions":163,"jquery":2,"reflux":156}],196:[function(require,module,exports){
 var Reflux = require('reflux');
 var ListActions = require('../actions/ListActions');
 var $ = require('jquery');
@@ -37395,7 +37517,7 @@ var ListStore = Reflux.createStore({
 
 module.exports = ListStore;
 
-},{"../actions/ListActions":164,"jquery":2,"reflux":156}],195:[function(require,module,exports){
+},{"../actions/ListActions":164,"jquery":2,"reflux":156}],197:[function(require,module,exports){
 var Reflux = require('reflux');
 var LocationActions = require('../actions/LocationActions');
 var $ = require('jquery');
@@ -37441,7 +37563,7 @@ var LocationStore = Reflux.createStore({
 
 module.exports = LocationStore;
 
-},{"../actions/LocationActions":165,"jquery":2,"reflux":156}],196:[function(require,module,exports){
+},{"../actions/LocationActions":165,"jquery":2,"reflux":156}],198:[function(require,module,exports){
 var Reflux = require('reflux');
 var MissionActions = require('../actions/MissionActions');
 var $ = require('jquery');
@@ -37483,7 +37605,7 @@ var MissionStore = Reflux.createStore({
 
 module.exports = MissionStore;
 
-},{"../actions/MissionActions":166,"jquery":2,"reflux":156}],197:[function(require,module,exports){
+},{"../actions/MissionActions":166,"jquery":2,"reflux":156}],199:[function(require,module,exports){
 var Reflux = require('reflux');
 var ObjectiveActions = require('../actions/ObjectiveActions');
 var $ = require('jquery');
@@ -37493,6 +37615,8 @@ var ObjectiveStore = Reflux.createStore({
         this._results = {};
         this._display = '';
         this.listenTo(ObjectiveActions.load, this.load);
+        this.listenTo(ObjectiveActions.complete, this.complete);
+        this.listenTo(ObjectiveActions.notComplete, this.notComplete);
     },
     load: function(display, by, id) {
         this._display = display;
@@ -37518,6 +37642,12 @@ var ObjectiveStore = Reflux.createStore({
         this._results = {};
         ObjectiveStore.trigger(this._results);
     },
+    complete: function(id, username) {
+        $.post("/api/1/completeObjective/" + id + "/" + username);
+    },
+    notComplete: function(id, username) {
+        $.post("/api/1/notCompleteObjective/" + id + "/" + username);
+    },
     getDefaultData: function() {
         return this._results;
     }
@@ -37525,7 +37655,7 @@ var ObjectiveStore = Reflux.createStore({
 
 module.exports = ObjectiveStore;
 
-},{"../actions/ObjectiveActions":167,"jquery":2,"reflux":156}],198:[function(require,module,exports){
+},{"../actions/ObjectiveActions":167,"jquery":2,"reflux":156}],200:[function(require,module,exports){
 var Reflux = require('reflux');
 var UserActions = require('../actions/UserActions');
 var $ = require('jquery');
@@ -37554,4 +37684,4 @@ var UserStore = Reflux.createStore({
 
 module.exports = UserStore;
 
-},{"../actions/UserActions":168,"jquery":2,"reflux":156}]},{},[161,162,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192]);
+},{"../actions/UserActions":168,"jquery":2,"reflux":156}]},{},[161,162,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194]);

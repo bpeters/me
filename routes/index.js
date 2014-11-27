@@ -241,11 +241,12 @@ exports.getUserObjectivesById = function(req, res) {
 
 exports.getUserProgressById = function(req, res) {
   Q.all([
+    Q.ninvoke(model, 'getUserObjectivesById', req.params.username),
     Q.ninvoke(model, 'getUserProgressById', req.params.username),
     Q.ninvoke(model, 'getUserStateProgressById', req.params.username),
     Q.ninvoke(model, 'getUserCityProgressById', req.params.username),
   ])
-  .spread(function(progress, states, cities) {
+  .spread(function(objectives, progress, states, cities) {
     var _states = [];
     var _cities = [];
     for (var i = 0; i < states.length; i++) {
@@ -264,7 +265,8 @@ exports.getUserProgressById = function(req, res) {
       username: req.params.username,
       progress: progress,
       states: _states,
-      cities: _cities
+      cities: _cities,
+      objectives: objectives
     };
     res.json(user_progress);
   })
@@ -318,6 +320,52 @@ exports.getNameById = function(req, res) {
   ])
   .spread(function(name) {
     res.json(name);
+  })
+  .fail(function (err) {
+    return next(err);
+  });
+};
+
+exports.completeObjective = function(req, res) {
+  Q.all([
+    Q.ninvoke(model, 'updateObjectiveCompleteCount', req.params.id),
+    Q.ninvoke(model, 'updateUserProgress', req.params.username)
+  ])
+  .spread(function(objective, userProgress) {
+    Q.all([
+      Q.ninvoke(model, 'addObjectiveToUser', objective, req.params.username),
+      Q.ninvoke(model, 'updateUserStateProgress', objective, req.params.username),
+      Q.ninvoke(model, 'updateUserCityProgress', objective, req.params.username)
+    ])
+    .spread(function(userObjective, stateProgress, cityProgress) {
+      res.json(userObjective);
+    })
+    .fail(function (err) {
+      return next(err);
+    });
+  })
+  .fail(function (err) {
+    return next(err);
+  });
+};
+
+exports.notCompleteObjective = function(req, res) {
+  Q.all([
+    Q.ninvoke(model, 'notUpdateObjectiveCompleteCount', req.params.id),
+    Q.ninvoke(model, 'notUpdateUserProgress', req.params.username)
+  ])
+  .spread(function(objective, userProgress) {
+    Q.all([
+      Q.ninvoke(model, 'notAddObjectiveToUser', objective, req.params.username),
+      Q.ninvoke(model, 'notUpdateUserStateProgress', objective, req.params.username),
+      Q.ninvoke(model, 'notUpdateUserCityProgress', objective, req.params.username)
+    ])
+    .spread(function(userObjective, stateProgress, cityProgress) {
+      res.json(userObjective);
+    })
+    .fail(function (err) {
+      return next(err);
+    });
   })
   .fail(function (err) {
     return next(err);

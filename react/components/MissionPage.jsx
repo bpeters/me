@@ -8,6 +8,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
+var SidebarLeft = require('./SidebarLeft.jsx');
 var JournalList = require('./JournalList.jsx');
 var ObjectiveList = require('./ObjectiveList.jsx');
 var MissionStore = require('../stores/MissionStore');
@@ -90,7 +91,9 @@ var MissionPage = React.createClass({
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} id={this.state.id} filters={this.state.filters} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} />
-                    {list}
+                    <div className='main'>
+                        {list}
+                    </div>
                 </div>
             </div>
         )

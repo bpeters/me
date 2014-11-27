@@ -70,7 +70,9 @@ var ListPage = React.createClass({
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} /> : null }
                 <div className="row">
                     <Canvas img={this.state.img} />
-                    <List list={this.state.list} by={this.state.by} header={header} />
+                    <div className='main'>
+                        <List list={this.state.list} by={this.state.by} header={header} />
+                    </div>
                 </div>
             </div>
         )

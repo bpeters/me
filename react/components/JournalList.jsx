@@ -38,7 +38,7 @@ var JournalList = React.createClass({
           );
         });
         return (
-          <div className='col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10 main'>
+          <div className='col-sm-offset-1 col-md-offset-1 col-md-10 col-sm-10'>
             <div className='table-responsive'>
               <table className='table'>
                 <thead>

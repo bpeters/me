@@ -14,6 +14,7 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var passwordHash = require('password-hash');
 var LocalStrategy = require('passport-local').Strategy;
+var Q = require('q');
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -141,6 +142,10 @@ app.get('/api/1/getUserObjectives/:username', routes.getUserObjectivesById);
 app.get('/api/1/getUserProgress/:username', routes.getUserProgressById);
 app.get('/api/1/getList/:by', routes.getList);
 app.get('/api/1/getName/:by/:id', routes.getNameById);
+
+//Private API
+app.post('/api/1/completeObjective/:id/:username', ensureAuthenticated, routes.completeObjective);
+app.post('/api/1/notCompleteObjective/:id/:username', ensureAuthenticated, routes.notCompleteObjective);
 
 var port = Number(process.env.PORT || 3000);
 app.listen(port, function() {

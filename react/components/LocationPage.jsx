@@ -8,6 +8,7 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
+var SidebarLeft = require('./SidebarLeft.jsx');
 var ObjectiveList = require('./ObjectiveList.jsx');
 var JournalList = require('./JournalList.jsx');
 var MissionList = require('./MissionList.jsx');

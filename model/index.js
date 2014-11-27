@@ -358,6 +358,23 @@ exports.updateObjectiveCompleteCount = function (id, callback) {
   });
 };
 
+exports.notUpdateObjectiveCompleteCount = function (id, callback) {
+  var query = new Parse.Query(Objective);
+  query.equalTo('objective_id', parseInt(id,0));
+  query.first({
+    success: function(objective) {
+      console.log("Successfully retrieved " + objective.get('objective') + ".");
+      objective.set("objective_complete_cnt",  objective.get('objective_complete_cnt') - 1);
+      objective.save();
+      return callback(null, objective.attributes);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
 exports.updateUserProgress = function (username, callback) {
   var query = new Parse.Query(UserProgress);
   query.equalTo('username', username);
@@ -375,7 +392,24 @@ exports.updateUserProgress = function (username, callback) {
   });
 };
 
-exports.AddObjectiveToUser = function (objective, username, callback) {
+exports.notUpdateUserProgress = function (username, callback) {
+  var query = new Parse.Query(UserProgress);
+  query.equalTo('username', username);
+  query.first({
+    success: function(user) {
+      console.log("Successfully retrieved " + user.get('username') + ".");
+      user.set("objective_complete_cnt",  user.get('objective_complete_cnt') - 1);
+      user.save();
+      return callback(null, user.attributes);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.addObjectiveToUser = function (objective, username, callback) {
   var userObjective = new UserObjectives();
   userObjective.set("username", username);
   userObjective.set("objective_id", objective.objective_id);
@@ -390,6 +424,22 @@ exports.AddObjectiveToUser = function (objective, username, callback) {
       return callback(null, userObjective.attributes);
     },
     error:function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.notAddObjectiveToUser = function (objective, username, callback) {
+  var query = new Parse.Query(UserObjectives);
+  query.equalTo('objective_id', objective.objective_id);
+  query.equalTo('username', username);
+  query.first({
+    success: function(user) {
+      user.destroy({});
+      return callback(null, '');
+    },
+    error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
       return callback(error, null);
     }
@@ -434,6 +484,24 @@ exports.updateUserStateProgress = function (objective, username, callback) {
           }
         });
       }
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.notUpdateUserStateProgress = function (objective, username, callback) {
+  var query = new Parse.Query(UserStateProgress);
+  query.equalTo('username', username);
+  query.equalTo('state_id', parseInt(objective.state_id,0));
+  query.first({
+    success: function(user) {
+      console.log("Successfully retrieved " + user.get('username') + ".");
+      user.set("objective_complete_cnt",  user.get('objective_complete_cnt') - 1);
+      user.save();
+      return callback(null, user.attributes);
     },
     error: function(error) {
       console.log("Error: " + error.code + " " + error.message);
@@ -487,3 +555,22 @@ exports.updateUserCityProgress = function (objective, username, callback) {
     }
   });
 };
+
+exports.notUpdateUserCityProgress = function (objective, username, callback) {
+  var query = new Parse.Query(UserCityProgress);
+  query.equalTo('username', username);
+  query.equalTo('city_id', parseInt(objective.city_id,0));
+  query.first({
+    success: function(user) {
+      console.log("Successfully retrieved " + user.get('username') + ".");
+      user.set("objective_complete_cnt",  user.get('objective_complete_cnt') - 1);
+      user.save();
+      return callback(null, user.attributes);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+

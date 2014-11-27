@@ -8,10 +8,13 @@ var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
 var SidebarRight = require('./SidebarRight.jsx');
+var SidebarLeft = require('./SidebarLeft.jsx');
 var JournalList = require('./JournalList.jsx');
 var MissionList = require('./MissionList.jsx');
 var ObjectiveStore = require('../stores/ObjectiveStore');
 var ObjectiveActions = require('../actions/ObjectiveActions');
+var UserStore = require('../stores/UserStore');
+var UserActions = require('../actions/UserActions');
 
 var ObjectivePage = React.createClass({
     getInitialState: function() {
@@ -42,6 +45,8 @@ var ObjectivePage = React.createClass({
             sidebarLeft: false,
             results: [],
             display: 'Journals',
+            userProgress: {},
+            userObjective: false,
             filters: {
                 display: [
                   {
@@ -59,11 +64,19 @@ var ObjectivePage = React.createClass({
         };
     },
     componentDidMount: function() {
-        this.unsubscribe = ObjectiveStore.listen(this.displayChanged);
+        this.unsubscribeObjective = ObjectiveStore.listen(this.displayChanged);
         ObjectiveActions.load(this.state.display, this.state.by, this.state.id);
+
+        if (this.props.user) {
+            this.unsubscribeUser = UserStore.listen(this.loadUser);
+            UserActions.load(this.props.user.username);
+        }
     },
     componentWillUnmount: function() {
-        this.unsubscribe();
+        this.unsubscribeObjective();
+        if (this.props.user) {
+            this.unsubscribeUser();
+        }
     },
     displayChanged: function(results) {
         var filters = this.state.filters;
@@ -86,6 +99,18 @@ var ObjectivePage = React.createClass({
             });
         }
     },
+    loadUser: function(user) {
+        var userObjective;
+        for (var i = 0; i < user.objectives.length; i++) {
+            if (user.objectives[i].objective_id === this.state.objective.objective_id) {
+                userObjective = true;
+            }
+        }
+        this.setState({
+            userProgress: user,
+            userObjective: userObjective
+        });
+    },
     render: function() {
         var list;
         if (this.state.display === 'Journals') {
@@ -99,7 +124,7 @@ var ObjectivePage = React.createClass({
                 { this.state.sidebarLeft ? <SidebarLeft user={this.props.user} /> : null }
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} id={this.state.id} filters={this.state.filters} /> : null }
                 <div className="row">
-                    <Canvas img={this.state.img} objective={this.state.objective} user={this.state.user} />
+                    <Canvas img={this.state.img} objective={this.state.objective} user={this.state.user} userObjective={this.state.userObjective} />
                     <div className='main'>
                         {list}
                     </div>

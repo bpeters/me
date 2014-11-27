@@ -25,7 +25,7 @@ var Canvas = React.createClass({
         return (
             <div style={style} alt={img.display} className={canvasClass}>
                 { this.props.author ? <UserCanvas userProgress={this.props.userProgress} /> : null }
-                { this.props.objective ? <ObjectiveCanvas objective={this.props.objective} user={this.props.user} /> : null }
+                { this.props.objective ? <ObjectiveCanvas objective={this.props.objective} user={this.props.user} userObjective={this.props.userObjective} /> : null }
             </div>
         )
     }

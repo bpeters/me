@@ -145,6 +145,7 @@ app.get('/api/1/getName/:by/:id', routes.getNameById);
 
 //Private API
 app.post('/api/1/completeObjective/:id/:username', routes.completeObjective);
+app.post('/api/1/notCompleteObjective/:id/:username', routes.notCompleteObjective);
 
 var port = Number(process.env.PORT || 3000);
 app.listen(port, function() {

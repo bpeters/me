@@ -22,7 +22,7 @@ var AuthorPage = React.createClass({
         return {
             img : {
                 display: this.props.author.author,
-                url: 'images/author/' + 1 + '.jpg',
+                url: '',
                 half: true
             },
             nav: [

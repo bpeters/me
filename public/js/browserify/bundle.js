@@ -35636,7 +35636,7 @@ if (props.page === 'ListPage') {
 } else if (props.page === 'SignupPage') {
   page = SignupPage({params: props.params, user: props.user, messages: props.messages});
 } else if (props.page === 'LocationPage') {
-  page = LocationPage({params: props.params, user: props.user, location: props.location});
+  page = LocationPage({params: props.params, user: props.user, location: props.location, type: props.type});
 } else if (props.page === 'ObjectivePage') {
   page = ObjectivePage({params: props.params, user: props.user, objective: props.objective});
 } else if (props.page === 'JournalPage') {
@@ -35736,7 +35736,7 @@ var AuthorPage = React.createClass({displayName: 'AuthorPage',
         return {
             img : {
                 display: this.props.author.author,
-                url: 'images/author/' + 1 + '.jpg',
+                url: '',
                 half: true
             },
             nav: [
@@ -35899,21 +35899,37 @@ var UserCanvas = require('./UserCanvas.jsx');
 var ObjectiveCanvas = require('./ObjectiveCanvas.jsx');
 
 var Canvas = React.createClass({displayName: 'Canvas',
-    render: function() {
-        var img = this.props.img;
-        var canvasClass;
-        var style = {
-          backgroundColor: '#f4f4f4'
+      getInitialState: function() {
+        return {
+          img: this.props.img
         };
-        if (img.display === 'Login' || img.display === 'Signup') {
+      },
+      componentWillReceiveProps: function(nextProps) {
+        this.setState({
+          img: nextProps.img
+        });
+      },
+    render: function() {
+        var canvasClass;
+        var style;
+        if (this.state.img.url) {
+            style = {
+              backgroundImage: 'url(' + this.state.img.url + ')'
+            };
+        } else {
+            style = {
+              backgroundColor: '#f4f4f4'
+            };
+        }
+        if (this.state.img.display === 'Login' || this.state.img.display === 'Signup') {
           canvasClass = 'canvas-login';
-        } else if (img.half) {
+        } else if (this.state.img.half) {
             canvasClass = 'canvas-half col-md-6 col-sm-6';
         } else {
           canvasClass = 'canvas';
         }
         return (
-            React.DOM.div({style: style, alt: img.display, className: canvasClass}, 
+            React.DOM.div({style: style, alt: this.state.img.display, className: canvasClass}, 
                  this.props.author ? UserCanvas({userProgress: this.props.userProgress}) : null, 
                  this.props.objective ? ObjectiveCanvas({objective: this.props.objective, user: this.props.user, userObjective: this.props.userObjective}) : null
             )
@@ -35961,7 +35977,6 @@ var CanvasActions = React.createClass({displayName: 'CanvasActions',
       
     },
     render: function() {
-        console.log(this.state.userObjective);
         return (
           React.DOM.div({className: "row canvas-actions"}, 
               React.DOM.div({className: "col-md-12"}, 
@@ -36435,8 +36450,8 @@ var ListPage = React.createClass({displayName: 'ListPage',
                 url: '/list/' + this.props.params.by
             }],
             img : {
-                display: display,
-                url: '/images/' + this.props.params.by + '.jpg'
+                display: '',
+                url: ''
             },
             by: this.props.params.by,
             sidebarRight: false,
@@ -36452,8 +36467,13 @@ var ListPage = React.createClass({displayName: 'ListPage',
         this.unsubscribe();
     },
     listChanged: function(list) {
+        var i = Math.floor((Math.random() * list.length));
         this.setState({
-            list: list
+            list: list,
+            img: {
+                display: list[i].name,
+                url: list[i].image
+            }
         });
     },
     showSidebar: function(sidebar) {
@@ -36507,18 +36527,15 @@ var LocationActions = require('../actions/LocationActions');
 
 var LocationPage = React.createClass({displayName: 'LocationPage',
     getInitialState: function() {
-        var url;
         var nav = [];
-        if (this.props.params.by === 'state') {
-            url = '/images/state/' + 1 + '.jpg';
+        if (this.props.type === 'state') {
             nav = [
                 {
                     display: this.props.location.state,
                     url: '/location/state/' + this.props.location.state_id
                 }
             ];
-        } else if (this.props.params.by === 'city') {
-            url = '/images/city/' + 1 + '.jpg';
+        } else if (this.props.type === 'city') {
             nav = [
                 {
                     display: this.props.location.state,
@@ -36533,10 +36550,10 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
         return {
             img : {
                 display: this.props.location.name,
-                url: url
+                url: this.props.location.image
             },
             nav: nav,
-            by: this.props.params.by,
+            by: this.props.type,
             id: this.props.params.id,
             sidebarRight: false,
             sidebarLeft: false,
@@ -36678,7 +36695,7 @@ var LoginPage = React.createClass({displayName: 'LoginPage',
             }],
             img : {
                 display: 'Login',
-                url: '/images/login.jpg'
+                url: ''
             },
             by: '',
             messages: this.props.messages,
@@ -36802,7 +36819,7 @@ var MissionPage = React.createClass({displayName: 'MissionPage',
             nav: [
                 {
                     display: this.props.mission.mission,
-                    url: '/mission/' + this.props.mission.mission_id
+                    url: ''
                 }
             ],
             by: 'mission',
@@ -36996,7 +37013,7 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
         return {
             img : {
                 display: this.props.objective.objective,
-                url: 'images/objective/' + 1 + '.jpg'
+                url: ''
             },
             nav: [
                 {
@@ -37077,8 +37094,6 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
     loadUser: function(user) {
         var userObjective;
         for (var i = 0; i < user.objectives.length; i++) {
-            console.log(user.objectives[i].objective_id);
-            console.log(this.state.objective.objective_id)
             if (user.objectives[i].objective_id === this.state.objective.objective_id) {
                 userObjective = true;
             }
@@ -37356,7 +37371,7 @@ var ListPage = React.createClass({displayName: 'ListPage',
             }],
             img : {
                 display: 'Signup',
-                url: '/images/signup.jpg'
+                url: ''
             },
             by: '',
             messages: this.props.messages,

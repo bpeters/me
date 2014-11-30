@@ -27,7 +27,7 @@ if (props.page === 'ListPage') {
 } else if (props.page === 'SignupPage') {
   page = <SignupPage params={props.params} user={props.user} messages={props.messages} />;
 } else if (props.page === 'LocationPage') {
-  page = <LocationPage params={props.params} user={props.user} location={props.location} />;
+  page = <LocationPage params={props.params} user={props.user} location={props.location} type={props.type}/>;
 } else if (props.page === 'ObjectivePage') {
   page = <ObjectivePage params={props.params} user={props.user} objective={props.objective} />;
 } else if (props.page === 'JournalPage') {

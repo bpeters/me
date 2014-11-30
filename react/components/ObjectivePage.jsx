@@ -21,7 +21,7 @@ var ObjectivePage = React.createClass({
         return {
             img : {
                 display: this.props.objective.objective,
-                url: 'images/objective/' + 1 + '.jpg'
+                url: ''
             },
             nav: [
                 {

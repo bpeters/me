@@ -68,18 +68,41 @@ exports.account = function(req, res) {
 
 };
 
-exports.location = function(req, res) {
-  var by_id = getById(req.params.by);
+exports.city = function(req, res) {
   Q.all([
-    Q.ninvoke(model, 'getNameById', req.params.by, by_id, req.params.id),
+    Q.ninvoke(model, 'getCityById', req.params.id),
   ])
   .spread(function(location) {
-    var title = req.params.by + " Of " + location.name;
+    var title = "City Of " + location.name;
     title = title.charAt(0).toUpperCase() + title.slice(1);
     var markup = React.renderComponentToString(App({
       page: 'LocationPage',
       user: req.user,
       location: location,
+      params: req.params,
+      type: 'city',
+      title: title
+    }));
+    res.send('<!DOCTYPE html>' + markup);
+  })
+  .fail(function (err) {
+    return next(err);
+  });
+
+};
+
+exports.state = function(req, res) {
+  Q.all([
+    Q.ninvoke(model, 'getStateById', req.params.id),
+  ])
+  .spread(function(location) {
+    var title = "State Of " + location.name;
+    title = title.charAt(0).toUpperCase() + title.slice(1);
+    var markup = React.renderComponentToString(App({
+      page: 'LocationPage',
+      user: req.user,
+      location: location,
+      type: 'state',
       params: req.params,
       title: title
     }));
@@ -313,13 +336,24 @@ exports.getList = function(req, res) {
   });
 };
 
-exports.getNameById = function(req, res) {
-  var by_id = getById(req.params.by);
+exports.getCityById = function(req, res) {
   Q.all([
-    Q.ninvoke(model, 'getNameById', req.params.by, by_id, req.params.id),
+    Q.ninvoke(model, 'getCityById', req.params.id),
   ])
-  .spread(function(name) {
-    res.json(name);
+  .spread(function(city) {
+    res.json(city);
+  })
+  .fail(function (err) {
+    return next(err);
+  });
+};
+
+exports.getStateById = function(req, res) {
+  Q.all([
+    Q.ninvoke(model, 'getStateById', req.params.id),
+  ])
+  .spread(function(state) {
+    res.json(state);
   })
   .fail(function (err) {
     return next(err);

@@ -17,18 +17,15 @@ var LocationActions = require('../actions/LocationActions');
 
 var LocationPage = React.createClass({
     getInitialState: function() {
-        var url;
         var nav = [];
-        if (this.props.params.by === 'state') {
-            url = '/images/state/' + 1 + '.jpg';
+        if (this.props.type === 'state') {
             nav = [
                 {
                     display: this.props.location.state,
                     url: '/location/state/' + this.props.location.state_id
                 }
             ];
-        } else if (this.props.params.by === 'city') {
-            url = '/images/city/' + 1 + '.jpg';
+        } else if (this.props.type === 'city') {
             nav = [
                 {
                     display: this.props.location.state,
@@ -43,10 +40,10 @@ var LocationPage = React.createClass({
         return {
             img : {
                 display: this.props.location.name,
-                url: url
+                url: this.props.location.image
             },
             nav: nav,
-            by: this.props.params.by,
+            by: this.props.type,
             id: this.props.params.id,
             sidebarRight: false,
             sidebarLeft: false,

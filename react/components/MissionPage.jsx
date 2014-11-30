@@ -24,7 +24,7 @@ var MissionPage = React.createClass({
             nav: [
                 {
                     display: this.props.mission.mission,
-                    url: '/mission/' + this.props.mission.mission_id
+                    url: ''
                 }
             ],
             by: 'mission',

@@ -301,7 +301,8 @@ exports.getList = function (by, by_id, callback) {
           id: results[i].get(by_id),
           objectives: results[i].get(by + '_objective_cnt'),
           journals: results[i].get(by + '_journal_cnt'),
-          missions: results[i].get(by + '_mission_cnt')
+          missions: results[i].get(by + '_mission_cnt'),
+          image: results[i].get(by + '_img').url()
         };
         list.push(object);
       }
@@ -315,18 +316,40 @@ exports.getList = function (by, by_id, callback) {
   });
 };
 
-exports.getNameById = function (by, by_id, id, callback) {
+exports.getCityById = function (id, callback) {
   var query = new Parse.Query(City);
-  query.equalTo(by_id, parseInt(id,0));
-  query.find({
+  query.equalTo('city_id', parseInt(id,0));
+  query.first({
     success: function(results) {
-      console.log("Successfully retrieved " + results[0].get(by) + ".");
+      console.log("Successfully retrieved " + results.get('city') + ".");
       var object = {
-        name: results[0].get(by),
-        city: results[0].get('city'),
-        city_id: results[0].get('city_id'),
-        state : results[0].get('state'),
-        state_id : results[0].get('state_id')
+        name: results.get('city'),
+        city: results.get('city'),
+        city_id: results.get('city_id'),
+        state : results.get('state'),
+        state_id : results.get('state_id'),
+        image: results.get('city_img').url()
+      };
+      return callback(null, object);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.getStateById = function (id, callback) {
+  var query = new Parse.Query(State);
+  query.equalTo('state_id', parseInt(id,0));
+  query.first({
+    success: function(results) {
+      console.log("Successfully retrieved " + results.get('state') + ".");
+      var object = {
+        name: results.get('state'),
+        state : results.get('state'),
+        state_id : results.get('state_id'),
+        image: results.get('state_img').url()
       };
       return callback(null, object);
     },

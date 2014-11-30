@@ -19,7 +19,7 @@ var LoginPage = React.createClass({
             }],
             img : {
                 display: 'Login',
-                url: '/images/login.jpg'
+                url: ''
             },
             by: '',
             messages: this.props.messages,

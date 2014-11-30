@@ -19,7 +19,7 @@ var ListPage = React.createClass({
             }],
             img : {
                 display: 'Signup',
-                url: '/images/signup.jpg'
+                url: ''
             },
             by: '',
             messages: this.props.messages,

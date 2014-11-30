@@ -29,8 +29,8 @@ var ListPage = React.createClass({
                 url: '/list/' + this.props.params.by
             }],
             img : {
-                display: display,
-                url: '/images/' + this.props.params.by + '.jpg'
+                display: '',
+                url: ''
             },
             by: this.props.params.by,
             sidebarRight: false,
@@ -46,8 +46,13 @@ var ListPage = React.createClass({
         this.unsubscribe();
     },
     listChanged: function(list) {
+        var i = Math.floor((Math.random() * list.length));
         this.setState({
-            list: list
+            list: list,
+            img: {
+                display: list[i].name,
+                url: list[i].image
+            }
         });
     },
     showSidebar: function(sidebar) {

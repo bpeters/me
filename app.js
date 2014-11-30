@@ -119,7 +119,8 @@ app.get('/', routes.index);
 app.get('/login', routes.login);
 app.get('/signup', routes.signup);
 app.get('/list/:by', routes.list);
-app.get('/location/:by/:id', routes.location);
+app.get('/location/city/:id', routes.city);
+app.get('/location/state/:id', routes.state);
 app.get('/objective/:id', routes.objective);
 app.get('/journal/:id', routes.journal);
 app.get('/mission/:id', routes.mission);
@@ -141,7 +142,8 @@ app.get('/api/1/getMissionJournals/:by/:id', routes.getMissionJournalsById);
 app.get('/api/1/getUserObjectives/:username', routes.getUserObjectivesById);
 app.get('/api/1/getUserProgress/:username', routes.getUserProgressById);
 app.get('/api/1/getList/:by', routes.getList);
-app.get('/api/1/getName/:by/:id', routes.getNameById);
+app.get('/api/1/getCity/:id', routes.getCityById);
+app.get('/api/1/getState/:id', routes.getStateById);
 
 //Private API
 app.post('/api/1/completeObjective/:id/:username', ensureAuthenticated, routes.completeObjective);

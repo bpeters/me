@@ -21,15 +21,11 @@ var CanvasActions = React.createClass({
     },
     completeObjective: function() {
       ObjectiveActions.complete(this.props.objective.objective_id, this.props.user.username);
-      this.setState({
-        userObjective: true
-      });
+      this.props.onClick({completed: true});
     },
     notCompleteObjective: function() {
       ObjectiveActions.notComplete(this.props.objective.objective_id, this.props.user.username);
-      this.setState({
-        userObjective: false
-      });
+      this.props.onClick({completed: false});
     },
     showJournal: function() {
       

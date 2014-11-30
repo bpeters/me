@@ -117,14 +117,22 @@ exports.state = function(req, res) {
 exports.objective = function(req, res) {
   Q.all([
     Q.ninvoke(model, 'getObjectiveById', 'objective_id', req.params.id),
+    Q.ninvoke(model, 'countCompletedByObjective', req.params.id),
+    Q.ninvoke(model, 'countJournalsByObjective', req.params.id),
+    Q.ninvoke(model, 'countMissionsByObjective', req.params.id),
   ])
-  .spread(function(objective) {
+  .spread(function(objective, completed, journals, missions) {
     var title = objective[0].attributes.objective;
     title = title.charAt(0).toUpperCase() + title.slice(1);
     var markup = React.renderComponentToString(App({
       page: 'ObjectivePage',
       user: req.user,
       objective: objective[0].attributes,
+      stats: {
+        completed: completed,
+        journals: journals,
+        missions: missions
+      },
       params: req.params,
       title: title
     }));

@@ -203,6 +203,51 @@ exports.getUserObjectivesById = function (username, callback) {
   });
 };
 
+exports.countCompletedByObjective = function (id, callback) {
+  var query = new Parse.Query(UserObjectives);
+  query.equalTo('objective_id', parseInt(id,0));
+  query.count({
+    success: function(count) {
+      console.log("Successfully counted " + count + " completed");
+      return callback(null, count);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.countJournalsByObjective = function (id, callback) {
+  var query = new Parse.Query(Journal);
+  query.equalTo('objective_id', parseInt(id,0));
+  query.count({
+    success: function(count) {
+      console.log("Successfully counted " + count + " journals");
+      return callback(null, count);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.countMissionsByObjective = function (id, callback) {
+  var query = new Parse.Query(MissionObjectives);
+  query.equalTo('objective_id', parseInt(id,0));
+  query.count({
+    success: function(count) {
+      console.log("Successfully counted " + count + " missions");
+      return callback(null, count);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
 exports.getUserProgressById = function (username, callback) {
   var query = new Parse.Query(UserProgress);
   query.equalTo('username', username);

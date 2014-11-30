@@ -185,6 +185,8 @@
 .block{
   width: 100%;
   height: 430px;
+  padding-top: 80px;
+  padding-left: 20px;
 }
 .canvas-actions {
   margin-left: 20px;
@@ -228,6 +230,12 @@
   background-color: rgba(0,0,0,0.1);
   margin-left: 20px;
   float: left;
+}
+.objective-stats h3 {
+  font-size: 15px;
+  margin: 10px;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.8);
 }
 .user-info {
   float: left;

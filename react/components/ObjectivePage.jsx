@@ -37,6 +37,7 @@ var ObjectivePage = React.createClass({
                     url: '/objective/' + this.props.objective.objective_id
                 }
             ],
+            stats: this.props.stats,
             objective: this.props.objective,
             by: 'objective',
             id: this.props.params.id,
@@ -124,7 +125,7 @@ var ObjectivePage = React.createClass({
                 { this.state.sidebarLeft ? <SidebarLeft user={this.props.user} /> : null }
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} id={this.state.id} filters={this.state.filters} /> : null }
                 <div className="row">
-                    <Canvas img={this.state.img} objective={this.state.objective} user={this.state.user} userObjective={this.state.userObjective} />
+                    <Canvas img={this.state.img} objective={this.state.objective} user={this.state.user} userObjective={this.state.userObjective} stats={this.state.stats}/>
                     <div className='main'>
                         {list}
                     </div>

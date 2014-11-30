@@ -29,7 +29,7 @@ if (props.page === 'ListPage') {
 } else if (props.page === 'LocationPage') {
   page = <LocationPage params={props.params} user={props.user} location={props.location} type={props.type}/>;
 } else if (props.page === 'ObjectivePage') {
-  page = <ObjectivePage params={props.params} user={props.user} objective={props.objective} />;
+  page = <ObjectivePage params={props.params} user={props.user} objective={props.objective} stats={props.stats}/>;
 } else if (props.page === 'JournalPage') {
   page = <JournalPage params={props.params} user={props.user} journal={props.journal} />;
 } else if (props.page === 'MissionPage') {

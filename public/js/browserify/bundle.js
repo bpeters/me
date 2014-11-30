@@ -35638,7 +35638,7 @@ if (props.page === 'ListPage') {
 } else if (props.page === 'LocationPage') {
   page = LocationPage({params: props.params, user: props.user, location: props.location, type: props.type});
 } else if (props.page === 'ObjectivePage') {
-  page = ObjectivePage({params: props.params, user: props.user, objective: props.objective});
+  page = ObjectivePage({params: props.params, user: props.user, objective: props.objective, stats: props.stats});
 } else if (props.page === 'JournalPage') {
   page = JournalPage({params: props.params, user: props.user, journal: props.journal});
 } else if (props.page === 'MissionPage') {
@@ -35931,7 +35931,7 @@ var Canvas = React.createClass({displayName: 'Canvas',
         return (
             React.DOM.div({style: style, alt: this.state.img.display, className: canvasClass}, 
                  this.props.author ? UserCanvas({userProgress: this.props.userProgress}) : null, 
-                 this.props.objective ? ObjectiveCanvas({objective: this.props.objective, user: this.props.user, userObjective: this.props.userObjective}) : null
+                 this.props.objective ? ObjectiveCanvas({objective: this.props.objective, user: this.props.user, userObjective: this.props.userObjective, stats: this.props.stats}) : null
             )
         )
     }
@@ -35963,15 +35963,11 @@ var CanvasActions = React.createClass({displayName: 'CanvasActions',
     },
     completeObjective: function() {
       ObjectiveActions.complete(this.props.objective.objective_id, this.props.user.username);
-      this.setState({
-        userObjective: true
-      });
+      this.props.onClick({completed: true});
     },
     notCompleteObjective: function() {
       ObjectiveActions.notComplete(this.props.objective.objective_id, this.props.user.username);
-      this.setState({
-        userObjective: false
-      });
+      this.props.onClick({completed: false});
     },
     showJournal: function() {
       
@@ -36908,11 +36904,38 @@ var React = require('react');
 var CanvasActions = require('./CanvasActions.jsx');
 
 var ObjectiveCanvas = React.createClass({displayName: 'ObjectiveCanvas',
+    getInitialState: function() {
+      return {
+        completed: this.props.stats.completed,
+        journals: this.props.stats.journals,
+        missions: this.props.stats.missions,
+        userObjective: this.props.userObjective
+      };
+    },
+    handleClick: function(child) {
+      if (child.completed) {
+        this.setState({
+          completed: this.state.completed + 1,
+          userObjective: true
+        });
+      } else {
+         this.setState({
+          completed: this.state.completed - 1,
+          userObjective: false
+        });
+      }
+    },
     render: function() {
         return (
             React.DOM.div(null, 
-                React.DOM.div({className: "block"}), 
-                 this.props.user ? CanvasActions({objective: this.props.objective, user: this.props.user, userObjective: this.props.userObjective}) : null
+                React.DOM.div({className: "block row"}, 
+                  React.DOM.div({className: "objective-stats col-md-3 col-sm-3"}, 
+                    React.DOM.h3(null, "Completed: ", this.state.completed), 
+                    React.DOM.h3(null, "Journals: ", this.state.journals), 
+                    React.DOM.h3(null, "Missions: ", this.state.missions)
+                  )
+                ), 
+                 this.props.user ? CanvasActions({onClick: this.handleClick, objective: this.props.objective, user: this.props.user, userObjective: this.state.userObjective}) : null
             )
         )
     }
@@ -37029,6 +37052,7 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
                     url: '/objective/' + this.props.objective.objective_id
                 }
             ],
+            stats: this.props.stats,
             objective: this.props.objective,
             by: 'objective',
             id: this.props.params.id,
@@ -37116,7 +37140,7 @@ var ObjectivePage = React.createClass({displayName: 'ObjectivePage',
                  this.state.sidebarLeft ? SidebarLeft({user: this.props.user}) : null, 
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
-                    Canvas({img: this.state.img, objective: this.state.objective, user: this.state.user, userObjective: this.state.userObjective}), 
+                    Canvas({img: this.state.img, objective: this.state.objective, user: this.state.user, userObjective: this.state.userObjective, stats: this.state.stats}), 
                     React.DOM.div({className: "main"}, 
                         list
                     )

@@ -203,9 +203,24 @@ exports.getUserObjectivesById = function (username, callback) {
   });
 };
 
-exports.countCompletedByObjective = function (id, callback) {
+exports.countObjectivesById= function (by, id, callback) {
+  var query = new Parse.Query(Objective);
+  query.equalTo(by, parseInt(id,0));
+  query.count({
+    success: function(count) {
+      console.log("Successfully counted " + count + " objectives");
+      return callback(null, count);
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+      return callback(error, null);
+    }
+  });
+};
+
+exports.countCompletedById= function (by, id, callback) {
   var query = new Parse.Query(UserObjectives);
-  query.equalTo('objective_id', parseInt(id,0));
+  query.equalTo(by, parseInt(id,0));
   query.count({
     success: function(count) {
       console.log("Successfully counted " + count + " completed");
@@ -218,9 +233,9 @@ exports.countCompletedByObjective = function (id, callback) {
   });
 };
 
-exports.countJournalsByObjective = function (id, callback) {
+exports.countJournalsById = function (by, id, callback) {
   var query = new Parse.Query(Journal);
-  query.equalTo('objective_id', parseInt(id,0));
+  query.equalTo(by, parseInt(id,0));
   query.count({
     success: function(count) {
       console.log("Successfully counted " + count + " journals");
@@ -233,9 +248,9 @@ exports.countJournalsByObjective = function (id, callback) {
   });
 };
 
-exports.countMissionsByObjective = function (id, callback) {
+exports.countMissionsById = function (by, id, callback) {
   var query = new Parse.Query(MissionObjectives);
-  query.equalTo('objective_id', parseInt(id,0));
+  query.equalTo(by, parseInt(id,0));
   query.count({
     success: function(count) {
       console.log("Successfully counted " + count + " missions");

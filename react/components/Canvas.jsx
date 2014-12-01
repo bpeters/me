@@ -7,6 +7,7 @@
 var React = require('react');
 var UserCanvas = require('./UserCanvas.jsx');
 var ObjectiveCanvas = require('./ObjectiveCanvas.jsx');
+var LocationCanvas = require('./LocationCanvas.jsx');
 
 var Canvas = React.createClass({
       getInitialState: function() {
@@ -42,6 +43,7 @@ var Canvas = React.createClass({
             <div style={style} alt={this.state.img.display} className={canvasClass}>
                 { this.props.author ? <UserCanvas userProgress={this.props.userProgress} /> : null }
                 { this.props.objective ? <ObjectiveCanvas objective={this.props.objective} user={this.props.user} userObjective={this.props.userObjective} stats={this.props.stats}/> : null }
+                { this.props.location ? <LocationCanvas location={this.props.location} user={this.props.user} stats={this.props.stats}/> : null }
             </div>
         )
     }

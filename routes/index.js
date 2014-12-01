@@ -71,14 +71,24 @@ exports.account = function(req, res) {
 exports.city = function(req, res) {
   Q.all([
     Q.ninvoke(model, 'getCityById', req.params.id),
+    Q.ninvoke(model, 'countObjectivesById', 'city_id', req.params.id),
+    Q.ninvoke(model, 'countCompletedById', 'city_id', req.params.id),
+    Q.ninvoke(model, 'countJournalsById', 'city_id', req.params.id),
+    Q.ninvoke(model, 'countMissionsById', 'city_id', req.params.id)
   ])
-  .spread(function(location) {
+  .spread(function(location, objectives, completed, journals, missions) {
     var title = "City Of " + location.name;
     title = title.charAt(0).toUpperCase() + title.slice(1);
     var markup = React.renderComponentToString(App({
       page: 'LocationPage',
       user: req.user,
       location: location,
+      stats: {
+        objectives: objectives,
+        completed: completed,
+        journals: journals,
+        missions: missions
+      },
       params: req.params,
       type: 'city',
       title: title
@@ -94,14 +104,24 @@ exports.city = function(req, res) {
 exports.state = function(req, res) {
   Q.all([
     Q.ninvoke(model, 'getStateById', req.params.id),
+    Q.ninvoke(model, 'countObjectivesById', 'state_id', req.params.id),
+    Q.ninvoke(model, 'countCompletedById', 'state_id', req.params.id),
+    Q.ninvoke(model, 'countJournalsById', 'state_id', req.params.id),
+    Q.ninvoke(model, 'countMissionsById', 'state_id', req.params.id)
   ])
-  .spread(function(location) {
+  .spread(function(location, objectives, completed, journals, missions) {
     var title = "State Of " + location.name;
     title = title.charAt(0).toUpperCase() + title.slice(1);
     var markup = React.renderComponentToString(App({
       page: 'LocationPage',
       user: req.user,
       location: location,
+      stats: {
+        objectives: objectives,
+        completed: completed,
+        journals: journals,
+        missions: missions
+      },
       type: 'state',
       params: req.params,
       title: title
@@ -117,9 +137,9 @@ exports.state = function(req, res) {
 exports.objective = function(req, res) {
   Q.all([
     Q.ninvoke(model, 'getObjectiveById', 'objective_id', req.params.id),
-    Q.ninvoke(model, 'countCompletedByObjective', req.params.id),
-    Q.ninvoke(model, 'countJournalsByObjective', req.params.id),
-    Q.ninvoke(model, 'countMissionsByObjective', req.params.id),
+    Q.ninvoke(model, 'countCompletedById', 'objective_id', req.params.id),
+    Q.ninvoke(model, 'countJournalsById', 'objective_id', req.params.id),
+    Q.ninvoke(model, 'countMissionsById', 'objective_id', req.params.id),
   ])
   .spread(function(objective, completed, journals, missions) {
     var title = objective[0].attributes.objective;

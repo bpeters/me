@@ -112,7 +112,7 @@ var LocationPage = React.createClass({
                 { this.state.sidebarLeft ? <SidebarLeft user={this.props.user} /> : null }
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} id={this.state.id} filters={this.state.filters} /> : null }
                 <div className="row">
-                    <Canvas img={this.state.img} />
+                    <Canvas location={this.props.location} user={this.state.user} img={this.state.img} stats={this.props.stats} />
                     <div className='main'>
                         {list}
                     </div>

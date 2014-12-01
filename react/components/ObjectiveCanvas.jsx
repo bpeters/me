@@ -1,9 +1,7 @@
 /**
  * @jsx React.DOM
  */
-/**
- *  Objective Canvas displays the objective buttons, stats and charts.
- */
+
 var React = require('react');
 var CanvasActions = require('./CanvasActions.jsx');
 
@@ -33,7 +31,7 @@ var ObjectiveCanvas = React.createClass({
         return (
             <div>
                 <div className="block row">
-                  <div className="objective-stats col-md-3 col-sm-3">
+                  <div className="objective-stats col-md-2 col-sm-2">
                     <h3>Completed: {this.state.completed}</h3>
                     <h3>Journals: {this.state.journals}</h3>
                     <h3>Missions: {this.state.missions}</h3>

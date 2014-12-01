@@ -1,9 +1,7 @@
 /**
  * @jsx React.DOM
  */
-/**
- *  Objective Canvas displays the objective buttons, stats and charts.
- */
+
 var React = require('react');
 var ObjectiveActions = require('../actions/ObjectiveActions');
 

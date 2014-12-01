@@ -1,9 +1,7 @@
 /**
  * @jsx React.DOM
  */
-/**
- *  User Canvas displays the user stats and charts.
- */
+
 var React = require('react');
 var CanvasStats = require('./CanvasStats.jsx');
 var ProgressStats = require('./ProgressStats.jsx');

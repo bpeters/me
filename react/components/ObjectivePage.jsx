@@ -1,9 +1,7 @@
 /**
  * @jsx React.DOM
  */
-/**
- *  Objective Page displays objective details
- */
+
 var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');

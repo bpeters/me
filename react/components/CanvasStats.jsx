@@ -1,9 +1,7 @@
 /**
  * @jsx React.DOM
  */
-/**
- *  Canvas Stats shows stats related to the page it represents.
- */
+
 var React = require('react');
 var DonutChart = require('./DonutChart.jsx');
 
@@ -26,8 +24,8 @@ var CanvasStats = React.createClass({
         var data = [
             {
                 value: this.state.complete,
-                color:"rgba(0,0,0,0.5)",
-                highlight: "rgba(0,0,0,.8)",
+                color:"rgba(0,0,0,0.8)",
+                highlight: "rgba(0,0,0,1)",
                 label: "Completed"
             },
             {

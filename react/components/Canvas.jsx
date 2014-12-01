@@ -1,9 +1,7 @@
 /**
  * @jsx React.DOM
  */
-/**
- *  Canvas displays the wide img for the page.
- */
+
 var React = require('react');
 var UserCanvas = require('./UserCanvas.jsx');
 var ObjectiveCanvas = require('./ObjectiveCanvas.jsx');

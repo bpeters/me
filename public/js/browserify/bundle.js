@@ -35891,9 +35891,7 @@ module.exports = BarChart;
 /**
  * @jsx React.DOM
  */
-/**
- *  Canvas displays the wide img for the page.
- */
+
 var React = require('react');
 var UserCanvas = require('./UserCanvas.jsx');
 var ObjectiveCanvas = require('./ObjectiveCanvas.jsx');
@@ -35992,9 +35990,7 @@ module.exports = CanvasActions;
 /**
  * @jsx React.DOM
  */
-/**
- *  Canvas Stats shows stats related to the page it represents.
- */
+
 var React = require('react');
 var DonutChart = require('./DonutChart.jsx');
 
@@ -36017,8 +36013,8 @@ var CanvasStats = React.createClass({displayName: 'CanvasStats',
         var data = [
             {
                 value: this.state.complete,
-                color:"rgba(0,0,0,0.5)",
-                highlight: "rgba(0,0,0,.8)",
+                color:"rgba(0,0,0,0.8)",
+                highlight: "rgba(0,0,0,1)",
                 label: "Completed"
             },
             {
@@ -36509,7 +36505,7 @@ module.exports = ListPage;
  */
 
 var React = require('react');
-var CanvasActions = require('./CanvasActions.jsx');
+var CanvasStats = require('./CanvasStats.jsx');
 
 var LocationCanvas = React.createClass({displayName: 'LocationCanvas',
     render: function() {
@@ -36522,7 +36518,8 @@ var LocationCanvas = React.createClass({displayName: 'LocationCanvas',
                     React.DOM.h3(null, "Journals: ", this.props.stats.journals), 
                     React.DOM.h3(null, "Missions: ", this.props.stats.missions)
                   )
-                )
+                ), 
+                 this.props.user ? CanvasStats({progress: this.props.stats.progress, title: 'Objective Progress', chartId: 'user-progress'}) : null
             )
         )
     }
@@ -36530,13 +36527,11 @@ var LocationCanvas = React.createClass({displayName: 'LocationCanvas',
 
 module.exports = LocationCanvas;
 
-},{"./CanvasActions.jsx":172,"react":147}],182:[function(require,module,exports){
+},{"./CanvasStats.jsx":173,"react":147}],182:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
-/**
- *  Location Page displays objectives by location (City, State, Etc.)
- */
+
 var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
@@ -36645,7 +36640,7 @@ var LocationPage = React.createClass({displayName: 'LocationPage',
                  this.state.sidebarLeft ? SidebarLeft({user: this.props.user}) : null, 
                  this.state.sidebarRight ? SidebarRight({by: this.state.by, id: this.state.id, filters: this.state.filters}) : null, 
                 React.DOM.div({className: "row"}, 
-                    Canvas({location: this.props.location, user: this.state.user, img: this.state.img, stats: this.props.stats}), 
+                    Canvas({location: this.props.location, user: this.props.user, img: this.state.img, stats: this.props.stats}), 
                     React.DOM.div({className: "main"}, 
                         list
                     )
@@ -37041,9 +37036,7 @@ module.exports = ObjectiveList;
 /**
  * @jsx React.DOM
  */
-/**
- *  Objective Page displays objective details
- */
+
 var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
@@ -37454,9 +37447,7 @@ module.exports = ListPage;
 /**
  * @jsx React.DOM
  */
-/**
- *  User Canvas displays the user stats and charts.
- */
+
 var React = require('react');
 var CanvasStats = require('./CanvasStats.jsx');
 var ProgressStats = require('./ProgressStats.jsx');

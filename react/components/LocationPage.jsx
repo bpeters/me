@@ -1,9 +1,7 @@
 /**
  * @jsx React.DOM
  */
-/**
- *  Location Page displays objectives by location (City, State, Etc.)
- */
+
 var React = require('react');
 var Header = require('./Header.jsx');
 var Canvas = require('./Canvas.jsx');
@@ -112,7 +110,7 @@ var LocationPage = React.createClass({
                 { this.state.sidebarLeft ? <SidebarLeft user={this.props.user} /> : null }
                 { this.state.sidebarRight ? <SidebarRight by={this.state.by} id={this.state.id} filters={this.state.filters} /> : null }
                 <div className="row">
-                    <Canvas location={this.props.location} user={this.state.user} img={this.state.img} stats={this.props.stats} />
+                    <Canvas location={this.props.location} user={this.props.user} img={this.state.img} stats={this.props.stats} />
                     <div className='main'>
                         {list}
                     </div>

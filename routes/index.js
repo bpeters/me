@@ -74,9 +74,22 @@ exports.city = function(req, res) {
     Q.ninvoke(model, 'countObjectivesById', 'city_id', req.params.id),
     Q.ninvoke(model, 'countCompletedById', 'city_id', req.params.id),
     Q.ninvoke(model, 'countJournalsById', 'city_id', req.params.id),
-    Q.ninvoke(model, 'countMissionsById', 'city_id', req.params.id)
+    Q.ninvoke(model, 'countMissionsById', 'city_id', req.params.id),
+    Q.ninvoke(model, 'getUserCityProgressById', req.user ? req.user.username : null)
   ])
-  .spread(function(location, objectives, completed, journals, missions) {
+  .spread(function(location, objectives, completed, journals, missions, cities) {
+    var progress = {};
+    for (var c = 0; c < cities.length; c++) {
+      if (cities[c].attributes.city_id === location.city_id) {
+        progress['complete'] = cities[c].attributes.objective_complete_cnt;
+        progress['total'] = cities[c].attributes.objective_total_cnt;
+        progress['precentage'] = Math.round(progress.complete / progress.total * 100);
+      } else {
+        progress['complete'] = 0;
+        progress['total'] = objectives;
+        progress['precentage'] = Math.round(progress.complete / progress.total * 100);
+      }
+    }
     var title = "City Of " + location.name;
     title = title.charAt(0).toUpperCase() + title.slice(1);
     var markup = React.renderComponentToString(App({
@@ -84,6 +97,7 @@ exports.city = function(req, res) {
       user: req.user,
       location: location,
       stats: {
+        progress: progress,
         objectives: objectives,
         completed: completed,
         journals: journals,
@@ -107,9 +121,22 @@ exports.state = function(req, res) {
     Q.ninvoke(model, 'countObjectivesById', 'state_id', req.params.id),
     Q.ninvoke(model, 'countCompletedById', 'state_id', req.params.id),
     Q.ninvoke(model, 'countJournalsById', 'state_id', req.params.id),
-    Q.ninvoke(model, 'countMissionsById', 'state_id', req.params.id)
+    Q.ninvoke(model, 'countMissionsById', 'state_id', req.params.id),
+    Q.ninvoke(model, 'getUserStateProgressById', req.user ? req.user.username : null)
   ])
-  .spread(function(location, objectives, completed, journals, missions) {
+  .spread(function(location, objectives, completed, journals, missions, states) {
+    var progress = {};
+    for (var c = 0; c < states.length; c++) {
+      if (states[c].attributes.state_id === location.state_id) {
+        progress['complete'] = states[c].attributes.objective_complete_cnt;
+        progress['total'] = states[c].attributes.objective_total_cnt;
+        progress['precentage'] = Math.round(progress.complete / progress.total * 100);
+      } else {
+        progress['complete'] = 0;
+        progress['total'] = objectives;
+        progress['precentage'] = Math.round(progress.complete / progress.total * 100);
+      }
+    }
     var title = "State Of " + location.name;
     title = title.charAt(0).toUpperCase() + title.slice(1);
     var markup = React.renderComponentToString(App({
@@ -117,6 +144,7 @@ exports.state = function(req, res) {
       user: req.user,
       location: location,
       stats: {
+        progress: progress,
         objectives: objectives,
         completed: completed,
         journals: journals,

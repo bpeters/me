@@ -1,6 +1,10 @@
 var _      = require('lodash');
 var Parse = require('parse').Parse;
-Parse.initialize("AJqqFg9xC3sJPNqtsVXfrciFru214GQaAOvtu2Rk", "WIX18adoCiZ8at8fGfswLndYg9pudHw8cCfvFTIY");
+var config = require('config');
+var parseKey = config.get('Parse.key');
+var parseSecret = config.get('Parse.secret');
+
+Parse.initialize(parseKey, parseSecret);
 
 var Objective = Parse.Object.extend("Objective");
 var Journal = Parse.Object.extend("Journal");
